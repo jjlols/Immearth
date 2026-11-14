@@ -4,11 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Folder for the Earth Jukebox space photo of the day. Add photo.jpg and caption.txt here.">
-  <title>Space photo of the day folder | Earth Jukebox</title>
+  <title>Space photo of the day | Earth Jukebox</title>
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <a class="skip-link" href="#photo-folder-title">Skip to content</a>
+  <header class="site-header">
+    <div class="notice">
+      <p>A NASA Space Apps Challenge 2026 project. This is not an official NASA website.</p>
+    </div>
+    <div class="bar">
+      <a class="wordmark" href="../index.html">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="wordmark-text">Earth Jukebox</span>
+      </a>
+      <nav class="primary-nav" aria-label="Main">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../index.html#maps">Maps</a></li>
+          <li><a href="./" aria-current="page">Photo of the day</a></li>
+          <li><a href="../../overlay/index.html">Layer explorer</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
   <main class="band">
     <p class="eyebrow">Photo folder</p>
     <h1 id="photo-folder-title" tabindex="-1">Space photo of the day</h1>
@@ -25,6 +44,18 @@
     <p id="photo-missing">No photo file yet.</p>
     <p><a class="button button-secondary" href="../index.html">Back to Earth Jukebox</a></p>
   </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-title">Earth Information Jukebox</p>
+        <p>A NASA Space Apps Challenge project. Not an official NASA website.</p>
+      </div>
+      <ul aria-label="Related links">
+        <li><a href="../index.html">Earth Jukebox home</a></li>
+        <li><a href="../../overlay/index.html">Layer explorer</a></li>
+      </ul>
+    </div>
+  </footer>
   <script>
     const files = ["photo.jpg", "photo.jpeg", "photo.png", "photo.webp", "photo.gif"];
     const image = document.querySelector("#daily-photo");

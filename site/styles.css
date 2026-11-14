@@ -221,7 +221,18 @@ h3:focus-visible {
   border-bottom: 1px solid var(--rule);
 }
 
-.primary-nav a:hover {
+.bar > .primary-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+
+.bar > .primary-nav a {
+  border-bottom: 0;
+}
+
+.primary-nav a:hover,
+.primary-nav a[aria-current="page"] {
   color: var(--blue-deep);
   text-decoration: underline;
   text-decoration-thickness: 2px;
