@@ -1,67 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111b26">
-  <meta name="description" content="Explore five NASA Earth Information Center visualizations as independently colored, focusable layers.">
-  <title>Earth, layered — NASA EIC overlay studio</title>
-  <link rel="stylesheet" href="overlay.css?v=3">
-  <script src="overlay.js?v=3" type="module"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a1825">
+<meta name="description" content="One geographic Earth with linked, intact NASA scientific visualization fields.">
+<title>Earth, layered — Geographic observation canvas</title>
+<link rel="stylesheet" href="overlay.css?v=8"><script type="module" src="region-overlay.js?v=8"></script>
 </head>
 <body>
-  <a class="skip-link" href="#layer-controls">Skip to layer controls</a>
-  <header class="masthead">
-    <div class="brand"><span class="brand-symbol" aria-hidden="true"><span></span></span><span>SPACE APPS <span class="brand-divider">/</span> EIC</span></div>
-    <div class="dataset-status"><span class="live-dot" aria-hidden="true"></span>05 NASA visualizations <span class="status-divider">/</span> composed locally</div>
-  </header>
-  <main>
-    <section class="intro" aria-labelledby="page-title">
-      <div>
-        <p class="eyebrow">AN EXPLORATORY EARTH OBSERVATORY</p>
-        <h1 id="page-title">Earth, <em>layered.</em></h1>
-      </div>
-      <p class="intro-description">Five planetary perspectives.<br>One shared canvas, infinitely explorable.</p>
-    </section>
-
-    <div id="error" class="error" role="alert" hidden></div>
-
-    <div class="studio-layout">
-      <section class="canvas-panel" aria-labelledby="canvas-title">
-        <div class="canvas-topline">
-          <div><span class="small-label">COMPOSITE 001</span><h2 id="canvas-title">Global perspectives</h2></div>
-          <button type="button" id="reset-focus" class="text-button" hidden>Show all layers <span aria-hidden="true">↗</span></button>
-        </div>
-        <div class="canvas-frame">
-          <div id="map-canvas" class="map-canvas" role="img" aria-label="A composed view of NASA Earth visualization layers. Use the adjacent controls to select an individual metric.">
-            <div class="map-blueprint" aria-hidden="true"></div>
-            <div id="map-layers" class="map-layers"></div>
-            <div class="map-grid" aria-hidden="true"></div>
-            <div class="coordinates coordinates-top" aria-hidden="true"><span>180° W</span><span>0°</span><span>180° E</span></div>
-            <div class="coordinates coordinates-bottom" aria-hidden="true"><span>EXPLORATORY COMPOSITE</span><span>GEOREFERENCING NOT VERIFIED</span></div>
-            <div class="canvas-loading" id="loading"><span class="loading-ring" aria-hidden="true"></span><p>Composing planetary perspectives</p></div>
-          </div>
-          <div class="canvas-footer"><span><span class="square-color" aria-hidden="true"></span><span id="mode-label">All layers in view</span></span><span>ORIGINAL SOURCE COLORS</span></div>
-        </div>
-        <div class="layer-detail" id="layer-detail" aria-live="polite" aria-atomic="true">
-          <p class="detail-kicker">THE SHARED CANVAS</p>
-          <p class="detail-description">Every metric remains distinct. Choose a layer to bring it into focus, or use the visibility switches to explore your own composition.</p>
-        </div>
-        <p class="map-disclaimer"><span aria-hidden="true">ⓘ</span> Source maps vary in extent and annotation. Tints provide visual differentiation, not shared scientific units. For exploration, not quantitative comparison.</p>
-      </section>
-
-      <aside class="controls-panel" id="layer-controls" aria-labelledby="controls-heading" tabindex="-1">
-        <div class="controls-heading"><div><p class="eyebrow">COMPOSITION</p><h2 id="controls-heading">The metrics</h2></div><span class="metric-count">05</span></div>
-        <p class="controls-description">Select a metric to make it stand out.<br>Switch layers off to shape the composition.</p>
-        <div id="layer-list" class="layer-list" role="group" aria-label="Visualization layers"></div>
-        <div class="controls-bottom">
-          <div class="control-row"><span>Background visibility</span><label class="switch"><input type="checkbox" id="base-toggle" checked><span class="switch-track" aria-hidden="true"></span><span class="sr-only">Show subdued basemap</span></label></div>
-          <button id="reset-all" class="reset-button" type="button"><span aria-hidden="true">↻</span> Reset composition</button>
-          <p class="keyboard-hint"><kbd>↑</kbd><kbd>↓</kbd> Navigate <span>·</span> <kbd>Enter</kbd> Focus <span>·</span> <kbd>Esc</kbd> Clear</p>
-        </div>
-      </aside>
-    </div>
-    <footer class="page-footer"><span>EARTH INFORMATION CENTER <span class="brand-divider">/</span> NASA SCIENTIFIC VISUALIZATION STUDIO</span><span>Local imagery. Independent layers. A new perspective.</span></footer>
-  </main>
-</body>
-</html>
+<header class="masthead"><div class="brand"><span class="brand-symbol" aria-hidden="true"><span></span></span><span>EARTH INFORMATION CENTER <span class="brand-divider">/</span> NASA SVS</span></div><div class="dataset-status"><span class="live-dot" aria-hidden="true"></span>05 source fields <span class="status-divider">/</span> one geography</div></header>
+<main>
+<section class="intro"><div><p class="eyebrow">A GEOGRAPHIC OBSERVATION CANVAS</p><h1 id="page-title">One planet.<br><em>Many perspectives.</em></h1></div><p class="intro-description">Scientific fields, not stacked screenshots.<br>Explore their relationships above actual geography.</p></section>
+<div id="error" class="error" role="alert" hidden></div>
+<div class="studio-layout geographic-layout">
+<section class="map-column" aria-labelledby="map-heading">
+<div class="canvas-topline"><div><span class="small-label">GEOSPATIAL COMPOSITE</span><h2 id="map-heading"><span id="focus-label">All geographic fields</span></h2></div><span class="field-count" id="display-mode">Flat projection / source colors</span></div>
+<div class="geographic-map" id="map-canvas" tabindex="0" role="img" aria-label="Natural Earth land polygons beneath independent NASA scientific raster fields. Use field controls for focus and opacity.">
+<img class="shared-basemap" src="assets/basemap.png" alt="Natural Earth land polygons and coastlines; no scientific visualization in background"><div id="map-layers" class="map-layers"></div>
+<div class="map-graticule" aria-hidden="true"><span>180° W</span><span class="north">90° N</span><span>0°</span><span class="south">90° S</span><span>180° E</span></div>
+<div id="loading" class="canvas-loading"><span class="loading-ring" aria-hidden="true"></span><p>Preparing Earth and its source fields</p></div>
+<div class="map-east" aria-hidden="true">30°</div><div class="map-west" aria-hidden="true">30°</div>
+</div>
+<p class="map-disclaimer"><strong>One geography, distinct sources.</strong> <span id="active-disclaimer">All intact NASA source fields share Natural Earth geographic polygons. Source scientific palette variation is preserved.</span></p>
+<div class="field-script">
+<span><i class="mini-symbol line-symbol" aria-hidden="true"></i>Land: Natural Earth public-domain vectors</span>
+<span><i class="mini-symbol cross-symbol" aria-hidden="true"></i>Fires: official NASA EXR intensity</span>
+<span class="source-cal">Opacity is a display layer control, not data filtering</span>
+</div>
+</section>
+<aside class="layer-controls" aria-label="Metric composition controls">
+<div class="controls-heading"><div><p class="eyebrow">FIELD EXPLORER</p><h2>Source perspectives</h2></div><span class="metric-count" aria-label="Five metrics">05</span></div>
+<p class="controls-description">Select a field to bring it forward.<br>Adjust its opacity; the science remains intact.</p>
+<div id="layer-list" class="field-list" aria-label="Data layers"></div>
+<div class="controls-bottom"><div class="control-row"><span>Show geography</span><label><input type="checkbox" id="base-toggle" checked aria-label="Show geographic basemap"> Land & coastlines</label></div><div class="solo-toggle"><label><input type="checkbox" id="mode-toggle" aria-label="Show only the selected field"> Selected field only</label><span>View the complete source field</span></div><button type="button" id="reset-all" class="reset-button"><span aria-hidden="true">↻</span> Reset composition</button><p class="keyboard-hint"><kbd>↑</kbd><kbd>↓</kbd> Focus navigation <span>·</span> <kbd>Esc</kbd> Clear focus</p></div>
+</aside>
+</div>
+<section class="reading-note" aria-labelledby="reading-title"><h3 id="reading-title">How to read this map</h3><p><strong>These are complete scientific source rasters.</strong> No arbitrary “top percent” mask removes CO, NOx, or temperature variation. Fire marker placement comes from NASA’s geographic EXR. Rainfall retains NASA’s native alpha. Continuous fields use <em>uniform opacity</em> to coexist above geography; selected layers become fully opaque above the base. This is exploratory visual composition, not a calibrated data fusion. Source acquisition times, map coverage and numerical scales remain distinct; matching aspect ratio does not establish identical scientific geotransforms. Use the provenance metadata in <code>markers.json</code> for context.</p></section>
+<footer class="page-footer"><span>NASA SCIENTIFIC VISUALIZATION STUDIO <span class="brand-divider">/</span> NATURAL EARTH PUBLIC DOMAIN MAP DATA</span><span>Source data remains independent.</span></footer>
+</main>
+</body></html>

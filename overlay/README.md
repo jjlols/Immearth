@@ -1,110 +1,92 @@
-# Independent EIC overlay viewer
+# Geographic NASA Earth layer explorer
 
-This standalone package reads the downloader's PNGs without modifying them.
-It is a **visual exploration tool**, not calibrated geospatial data fusion.
-The build output in `../overlay-site/` stays untracked and completely separate
-from the site's app and the image acquisition pipeline.
+This **local** viewer places complete NASA scientific raster fields above one
+geographic background. It does not stack opaque screenshots indiscriminately
+and does not turn global data fields into sparse top-percentile splotches.
+The natural background is not a scientific visualization. It is generated locally
+from **Natural Earth**, public-domain 1:110m vector map polygons.
 
-## Build and preview
-
-Use the same virtualenv as the downloader (Pillow is required only to build):
+## Start it
 
 ```bash
-python build_overlay_site.py
-python3 -m http.server 8000 --directory overlay-site
+.venv/bin/python -m pip install -r requirements-overlay.txt
+.venv/bin/python build_geographic_overlays.py
+python3 -m http.server 8000 --bind 127.0.0.1 --directory /full/path/to/repo/overlay-site
 ```
 
-Open `http://localhost:8000`. No JavaScript packages, APIs, remote scripts,
-CDN, or Python server are needed once the output directory is generated.
-Deploy that directory to any static HTTP host. Do not open it with `file://`;
-the browser must be allowed to fetch the local JSON manifest and layer assets.
+**http://localhost:8000**
 
-Keep the generated directory in `overlay-site/` or gitignore your custom
-output. Do not deploy the Python script itself.
+Do not accidentally leave a local server serving a previous worktree. Rebuild
+`overlay-site/` after changing source assets and refresh the browser. There is
+no runtime CDN/DeepSpace/browser JS-framework dependency. Use the DeepSpace
+documented publishing tools for future production hosting.
 
-## Layer contract
+## What is scientific, and what is just composition?
 
-`overlay/layers.json` is the editable catalog. Each layer has a unique stable
-`id`, `label`, `shortLabel`, accessible symbol `mark`, PNG `source`, UI identification
-`color`, stacking `order`, display `opacity`, and prose `description`.
-`order` determines both stack and control order.
+The **basemap is only geography**. It consists of ocean, land polygons,
+coastlines and a low-contrast graticule. There is intentionally **no** humidity,
+temperature, or other metric-scientific visualization in it.
 
-At build time, the generator creates these **independent, deployable layers**:
+- **Rainfall:** official NASA `imergert_alpha.now.png`, preserving native
+  transparent-cell alpha and complete original scientific RGB.
+- **Fires:** `VIIRS_fires_latest.exr` supplies raw float32 BGRA and
+  `VIIRS_fires_latest.png` supplies same-variable approved preview RGB. Dots
+  stay geolocated. Their rgba support is their inherent fire signal—not the
+  blue ocean colored by hue.
+- **CO, NOx, and temperature:** `data/images/` original scientific field RGB
+  is retained **pixel-for-pixel** without best-pixel picks, quantiles, tiles,
+  peak masks, arbitrary hotspots or changing units.
 
-- `layers/{id}.png`: exact bit-for-bit copy of the original NASA download
-- `layers.json`: sourced asset SHA-256, original size, browser URL and metadata
-- Original source RGB colors are preserved exactly; catalog colors identify the
-selected UI layer only, not the source scientific color scale
+CO, NOx, and temperature are dense continuous global images; NASA provides no
+unified transparent per-pixel scientific marker raster for all these layers on
+the SVS pages. There is no arbitrary transform that lets one spontaneously
+create sparse point observations and call them the original data. This app does
+not fabricate one: those complete fields coexist with **uniform opacity**.
 
-To change a palette or add a metric, update the catalog and rerun the build.
-The generator verifies that input paths stay within this project.
-No quantitative calibration is inferred from these UI identification colors.
+Per-metric opacity sliders and `Display` checkbox changes control presentation,
+not data filtering. Selecting a metric brings its normal full field forward and
+gives it full source opacity. **Selected field only** hides the other rasters to
+see all original scientific details without interference. Use original source
+colorbars / `color_scales/` for unit interpretation, never mixed RGB pixels as
+physical values.
 
-## Interaction and future integration
+A single 2:1 view does not establish identical geotransforms in all NASA source
+assets. Matching extents is a normal-display assumption, not scientific affine
+registration. Source times can also differ, especially NASA's current fire asset
+and first-frame atmospheric products. See `time_basis`, `source_projection` and
+`source/source_url` in `markers.json`. Use georeferenced original GEOS rasters
+for calibration-grade colocated analytic merging.
 
-The default view stacks all five original-color maps. Clicking a metric brings
-that opaque map to the front, slightly raises its scale, and dims its peers
-without recoloring them. Clicking it again restores the shared view.
+## Controls / future integration
 
-Each metric has a separate visibility switch. `Show all layers`, `Reset
-composition`, and the background visibility switch always work. Arrow keys
-navigate between metric focus buttons; Enter or Space selects, and Escape
-clears focus. Reduced-motion preferences are respected.
-
-Static UI controls call a small exported `OverlayController` class. Its state
-is addressable by layer ID; there are no global booleans tied to CSS class
-order. The future site's event bus/frontend can reuse this controller or the
-instance's frozen browser API:
+Stable metric `id`s select independent visible/opacity/focused states. The new
+`OverlayController` has:
 
 ```js
-window.eicOverlay.select('carbon_monoxide');     // focus CO
-window.eicOverlay.select(null);                  // restore full composition
-window.eicOverlay.setVisibility('active_fires', false);
-window.eicOverlay.setVisibility('active_fires', true);
-window.eicOverlay.reset();                       // visible layers, no focus
-window.eicOverlay.getState();                    // layers, focus, background
+window.eicOverlay.select('nitrogen_oxides');
+window.eicOverlay.setVisibility('carbon_monoxide', false); // checkbox
+window.eicOverlay.setLayerOpacity('nitrogen_oxides', 0.2);  // slider
+window.eicOverlay.setOnlySelected(true);                  // selection only
+window.eicOverlay.select(null);                           // overall view
+window.eicOverlay.reset();                                // saved defaults
 ```
 
-A host app can also import `OverlayController` from `overlay.js`, listen for
-`change` events, and map `getState()` to its own CSS/canvas/WebGL renderer.
+Metric buttons are accessible by labels. Arrow keys navigate and Space/Enter
+select. Escape clears focus. Reduced-motion media queries respect preferences.
+Generated map files and dynamic buttons are simple, static host-ready assets.
 
-## Projection and scientific limitations
+## Validation
 
-The PNGs do not come with a common projection transform. They have different
-pixel dimensions, full-frame map extents, overlay labels, and temporal ranges.
-They are stretched to a shared 2:1 canvas without changing source colors. Position is
-therefore approximate **display alignment only**, not proof of a shared
-latitude/longitude registration. Do not combine their colors arithmetically
-and interpret the result as scientific values. The viewer deliberately says
-so in the interface and generated manifest.
+```bash
+.venv/bin/python -m pytest -q tests
+.venv/bin/python -m py_compile build_geographic_overlays.py
+node --check overlay/region-overlay.js
+# Browser regression, with local optional Playwright development install:
+node scripts/test_geographic_browser.cjs
+```
 
-For a future scientifically registered map, obtain georeferenced source data
-or transformation metadata for each source, align per projection, and preserve
-each metric's own units and actual scale. This needs a separate scientific
-pipeline; no such calibration is claimed here.
-
-## Concurrency / scope
-
-This implementation lives in its own Git worktree/branch. It does not alter
-`download_eic.py`, `data/`, root config, the existing test file, or the second
-agent's color-scales worktree. Generated images remain untracked preview assets.
-
-## Verification
-
-Run the repository's full Python tests. The optional browser QA uses locally
-installed Playwright/Chromium only during development; neither is a runtime
-dependency. Browser QA covers canvas content, focus/dimming, reset, visibility, keyboard
-navigation, an empty composition, manifest/image failures, delayed asset loading, and reduced motion.
-
-### Color treatment
-
-Source images are copied directly into each independent canvas, with opacity
-1. No grayscale, tinting, increased contrast, or scientific color remap is
-applied. Selecting a metric slightly dims its peers and gives it an outline
-and 1.015× scale lift without changing its pixels. Source-specific backdrop,
-coastlines, labels, and geographic visualization remain as NASA provides them.
-Lower layers can naturally be hidden by opaque upper layers; use the visibility
-switches and selection to explore every original map. Focus really moves the selected
-opaque map above its peers, not merely above their drawing order.
-The earlier tint beta is no longer active. hard-refresh the browser to
-bypass cached JS/CSS after rebuilding versions v3 or later.
+The current local basemap palette is entirely specified by `overlay/sources.json`.
+Unit tests show standalone polygon geometry contains no climate data, source
+RGB is complete for global layers, native rain alpha exists, and current fires
+use the official floating-point raster. Browser checks validate loading, source
+pixels, focus/solo controls, opacity, keyboard interaction and narrow mobile.

@@ -1,0 +1,62 @@
+{
+  "version": 3,
+  "projection": "Flat 2:1 normalized display geography; shared aspect ratio is a preview assumption, not a verified identical affine geotransform.",
+  "basemap": {
+    "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson",
+    "path": "assets/natural-earth-land.geojson",
+    "license": "https://www.naturalearthdata.com/about/terms-of-use/",
+    "credit": "Made with Natural Earth, public domain 1:110m land geometry",
+    "size": [4096,2048],
+    "ocean": [12,35,59,255],
+    "land": [50,80,76,255],
+    "coastline": [122,172,157,255]
+  },
+  "layers": [
+    {
+      "id":"precipitation",
+      "type":"transparent_png",
+      "url":"https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/imergert_alpha.now.png",
+      "opacity":0.9,
+      "time_basis":"standalone NASA now alpha (MT media group at download)",
+      "source_projection":"flat_2x1_dedicated_global_transparent_layer",
+      "defaultSelected":true
+    },
+    {
+      "id":"active_fires",
+      "type":"exr_fire",
+      "url":"https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/VIIRS_fires_latest.exr",
+      "colormap_url":"https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/VIIRS_fires_latest.png",
+      "opacity":1,
+      "time_basis":"NASA most-recent VIIRS fires asset",
+      "source_projection":"NASA 2:1 equirectangular float32 raster",
+      "defaultSelected":true
+    },
+    {
+      "id":"carbon_monoxide",
+      "type":"complete_field",
+      "source":"data/images/carbon_monoxide.png",
+      "opacity":0.66,
+      "time_basis":"NASA GEOS-CF primary animation first decoded frame",
+      "source_projection":"NASA flat GEOS scientific field with baked relief",
+      "defaultSelected":true
+    },
+    {
+      "id":"nitrogen_oxides",
+      "type":"complete_field",
+      "source":"data/images/nitrogen_oxides.png",
+      "opacity":0.66,
+      "time_basis":"NASA GEOS-CF primary animation first decoded frame",
+      "source_projection":"NASA flat GEOS scientific field with baked relief",
+      "defaultSelected":true
+    },
+    {
+      "id":"near_surface_temperature",
+      "type":"complete_field",
+      "source":"data/images/near_surface_temperature.png",
+      "opacity":0.66,
+      "time_basis":"NASA GEOS-FP primary animation first decoded frame",
+      "source_projection":"NASA flat GEOS scientific field with baked relief",
+      "defaultSelected":true
+    }
+  ]
+}
