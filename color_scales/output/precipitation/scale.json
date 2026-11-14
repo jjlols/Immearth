@@ -1,0 +1,843 @@
+{
+  "schema_version": "1.0",
+  "category": "precipitation",
+  "status": "extracted",
+  "source_url": "https://svs.gsfc.nasa.gov/4285/",
+  "validated_source_url": "https://svs.gsfc.nasa.gov/4285/",
+  "page_title": "Near Real-Time Global Precipitation from the Global Precipitation Measurement Constellation",
+  "scientific_variable": "IMERG liquid and frozen precipitation rates",
+  "variable_verification": "verified",
+  "units": "mm/hour",
+  "legend_type": "multiple_discrete_colorbars",
+  "classification": "categorical",
+  "scale_type": "logarithmic/irregular bins with overflow",
+  "scale_verification": "estimated",
+  "numerical_range": {
+    "minimum_labeled_boundary": 0.1,
+    "maximum_labeled_boundary": 50.0,
+    "overflow_unbounded": true
+  },
+  "tick_labels": [
+    {
+      "label": "0.1",
+      "value": 0.1,
+      "pixel_position": 40,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": "below scale"
+    },
+    {
+      "label": "0.2",
+      "value": 0.2,
+      "pixel_position": 76,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "0.3",
+      "value": 0.3,
+      "pixel_position": 112,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "0.5",
+      "value": 0.5,
+      "pixel_position": 148,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "1",
+      "value": 1.0,
+      "pixel_position": 184,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "2",
+      "value": 2.0,
+      "pixel_position": 220,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "3",
+      "value": 3.0,
+      "pixel_position": 256,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "5",
+      "value": 5.0,
+      "pixel_position": 292,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "10",
+      "value": 10.0,
+      "pixel_position": 328,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "20",
+      "value": 20.0,
+      "pixel_position": 364,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": null
+    },
+    {
+      "label": "50",
+      "value": 50.0,
+      "pixel_position": 400,
+      "position_source": "reviewed NASA raster tick anchor",
+      "qualitative_extension": "overflow"
+    }
+  ],
+  "legends": [
+    {
+      "name": "liquid",
+      "units": "mm/hour",
+      "scale_type": "logarithmic_bins_with_overflow",
+      "source_asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+      "source_asset_sha256": "142cc28a613e7ff5a3e16e2d5664b0146909fc841f8d41f66da96ecfb757f436",
+      "colorbar_image": "colorbar_liquid.png",
+      "orientation": "horizontal",
+      "colorbar_bounding_box": [
+        40,
+        29,
+        440,
+        74
+      ],
+      "categories": [
+        {
+          "category_index": 0,
+          "rgb": [
+            0,
+            129,
+            20
+          ],
+          "description": "below the first displayed 0.1 mm/hour boundary",
+          "lower_bound": null,
+          "upper_bound": null,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 1,
+          "rgb": [
+            0,
+            139,
+            82
+          ],
+          "description": "between 0.1 and 0.2 mm/hour",
+          "lower_bound": 0.1,
+          "upper_bound": 0.2,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 2,
+          "rgb": [
+            0,
+            179,
+            48
+          ],
+          "description": "between 0.2 and 0.3 mm/hour",
+          "lower_bound": 0.2,
+          "upper_bound": 0.3,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 3,
+          "rgb": [
+            96,
+            211,
+            0
+          ],
+          "description": "between 0.3 and 0.5 mm/hour",
+          "lower_bound": 0.3,
+          "upper_bound": 0.5,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 4,
+          "rgb": [
+            180,
+            231,
+            0
+          ],
+          "description": "between 0.5 and 1.0 mm/hour",
+          "lower_bound": 0.5,
+          "upper_bound": 1.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 5,
+          "rgb": [
+            255,
+            251,
+            0
+          ],
+          "description": "between 1.0 and 2.0 mm/hour",
+          "lower_bound": 1.0,
+          "upper_bound": 2.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 6,
+          "rgb": [
+            255,
+            196,
+            0
+          ],
+          "description": "between 2.0 and 3.0 mm/hour",
+          "lower_bound": 2.0,
+          "upper_bound": 3.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 7,
+          "rgb": [
+            255,
+            147,
+            0
+          ],
+          "description": "between 3.0 and 5.0 mm/hour",
+          "lower_bound": 3.0,
+          "upper_bound": 5.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 8,
+          "rgb": [
+            255,
+            0,
+            0
+          ],
+          "description": "between 5.0 and 10.0 mm/hour",
+          "lower_bound": 5.0,
+          "upper_bound": 10.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 9,
+          "rgb": [
+            200,
+            0,
+            0
+          ],
+          "description": "between 10.0 and 20.0 mm/hour",
+          "lower_bound": 10.0,
+          "upper_bound": 20.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 10,
+          "rgb": [
+            145,
+            0,
+            0
+          ],
+          "description": "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)",
+          "lower_bound": 20.0,
+          "upper_bound": null,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        }
+      ],
+      "tick_labels": [
+        {
+          "label": "0.1",
+          "value": 0.1,
+          "pixel_position": 40,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": "below scale"
+        },
+        {
+          "label": "0.2",
+          "value": 0.2,
+          "pixel_position": 76,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "0.3",
+          "value": 0.3,
+          "pixel_position": 112,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "0.5",
+          "value": 0.5,
+          "pixel_position": 148,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "1",
+          "value": 1.0,
+          "pixel_position": 184,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "2",
+          "value": 2.0,
+          "pixel_position": 220,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "3",
+          "value": 3.0,
+          "pixel_position": 256,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "5",
+          "value": 5.0,
+          "pixel_position": 292,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "10",
+          "value": 10.0,
+          "pixel_position": 328,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "20",
+          "value": 20.0,
+          "pixel_position": 364,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "50",
+          "value": 50.0,
+          "pixel_position": 400,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": "overflow"
+        }
+      ]
+    },
+    {
+      "name": "frozen",
+      "units": "mm/hour",
+      "scale_type": "logarithmic_bins_with_overflow",
+      "source_asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png",
+      "source_asset_sha256": "8b302edb6c888ef95b8454aefa627edc1426b04eabc00f628b9c488f9eb7d99a",
+      "colorbar_image": "colorbar_frozen.png",
+      "orientation": "horizontal",
+      "colorbar_bounding_box": [
+        40,
+        29,
+        420,
+        74
+      ],
+      "categories": [
+        {
+          "category_index": 0,
+          "rgb": [
+            69,
+            255,
+            255
+          ],
+          "description": "below the first displayed 0.1 mm/hour boundary",
+          "lower_bound": null,
+          "upper_bound": null,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 1,
+          "rgb": [
+            73,
+            221,
+            255
+          ],
+          "description": "between 0.1 and 0.2 mm/hour",
+          "lower_bound": 0.1,
+          "upper_bound": 0.2,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 2,
+          "rgb": [
+            77,
+            187,
+            255
+          ],
+          "description": "between 0.2 and 0.3 mm/hour",
+          "lower_bound": 0.2,
+          "upper_bound": 0.3,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 3,
+          "rgb": [
+            79,
+            154,
+            255
+          ],
+          "description": "between 0.3 and 0.5 mm/hour",
+          "lower_bound": 0.3,
+          "upper_bound": 0.5,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 4,
+          "rgb": [
+            81,
+            122,
+            255
+          ],
+          "description": "between 0.5 and 1.0 mm/hour",
+          "lower_bound": 0.5,
+          "upper_bound": 1.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 5,
+          "rgb": [
+            82,
+            93,
+            255
+          ],
+          "description": "between 1.0 and 2.0 mm/hour",
+          "lower_bound": 1.0,
+          "upper_bound": 2.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 6,
+          "rgb": [
+            83,
+            70,
+            255
+          ],
+          "description": "between 2.0 and 3.0 mm/hour",
+          "lower_bound": 2.0,
+          "upper_bound": 3.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 7,
+          "rgb": [
+            90,
+            47,
+            217
+          ],
+          "description": "between 3.0 and 5.0 mm/hour",
+          "lower_bound": 3.0,
+          "upper_bound": 5.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 8,
+          "rgb": [
+            115,
+            33,
+            187
+          ],
+          "description": "between 5.0 and 10.0 mm/hour",
+          "lower_bound": 5.0,
+          "upper_bound": 10.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 9,
+          "rgb": [
+            140,
+            20,
+            156
+          ],
+          "description": "between 10.0 and 20.0 mm/hour",
+          "lower_bound": 10.0,
+          "upper_bound": 20.0,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        },
+        {
+          "category_index": 10,
+          "rgb": [
+            140,
+            20,
+            156
+          ],
+          "description": "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)",
+          "lower_bound": 20.0,
+          "upper_bound": null,
+          "left_tick_approximate": true,
+          "right_tick_approximate": true,
+          "tick_is_at_bin_left_edge": true
+        }
+      ],
+      "tick_labels": [
+        {
+          "label": "0.1",
+          "value": 0.1,
+          "pixel_position": 40,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": "below scale"
+        },
+        {
+          "label": "0.2",
+          "value": 0.2,
+          "pixel_position": 76,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "0.3",
+          "value": 0.3,
+          "pixel_position": 112,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "0.5",
+          "value": 0.5,
+          "pixel_position": 148,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "1",
+          "value": 1.0,
+          "pixel_position": 184,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "2",
+          "value": 2.0,
+          "pixel_position": 220,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "3",
+          "value": 3.0,
+          "pixel_position": 256,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "5",
+          "value": 5.0,
+          "pixel_position": 292,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "10",
+          "value": 10.0,
+          "pixel_position": 328,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "20",
+          "value": 20.0,
+          "pixel_position": 364,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": null
+        },
+        {
+          "label": "50",
+          "value": 50.0,
+          "pixel_position": 400,
+          "position_source": "reviewed NASA raster tick anchor",
+          "qualitative_extension": "overflow"
+        }
+      ]
+    }
+  ],
+  "sampled_rgb_colors": [
+    {
+      "legend": "liquid",
+      "rgb": [
+        0,
+        129,
+        20
+      ],
+      "category": "below the first displayed 0.1 mm/hour boundary"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        0,
+        139,
+        82
+      ],
+      "category": "between 0.1 and 0.2 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        0,
+        179,
+        48
+      ],
+      "category": "between 0.2 and 0.3 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        96,
+        211,
+        0
+      ],
+      "category": "between 0.3 and 0.5 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        180,
+        231,
+        0
+      ],
+      "category": "between 0.5 and 1.0 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        255,
+        251,
+        0
+      ],
+      "category": "between 1.0 and 2.0 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        255,
+        196,
+        0
+      ],
+      "category": "between 2.0 and 3.0 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        255,
+        147,
+        0
+      ],
+      "category": "between 3.0 and 5.0 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        255,
+        0,
+        0
+      ],
+      "category": "between 5.0 and 10.0 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        200,
+        0,
+        0
+      ],
+      "category": "between 10.0 and 20.0 mm/hour"
+    },
+    {
+      "legend": "liquid",
+      "rgb": [
+        145,
+        0,
+        0
+      ],
+      "category": "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        69,
+        255,
+        255
+      ],
+      "category": "below the first displayed 0.1 mm/hour boundary"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        73,
+        221,
+        255
+      ],
+      "category": "between 0.1 and 0.2 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        77,
+        187,
+        255
+      ],
+      "category": "between 0.2 and 0.3 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        79,
+        154,
+        255
+      ],
+      "category": "between 0.3 and 0.5 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        81,
+        122,
+        255
+      ],
+      "category": "between 0.5 and 1.0 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        82,
+        93,
+        255
+      ],
+      "category": "between 1.0 and 2.0 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        83,
+        70,
+        255
+      ],
+      "category": "between 2.0 and 3.0 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        90,
+        47,
+        217
+      ],
+      "category": "between 3.0 and 5.0 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        115,
+        33,
+        187
+      ],
+      "category": "between 5.0 and 10.0 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        140,
+        20,
+        156
+      ],
+      "category": "between 10.0 and 20.0 mm/hour"
+    },
+    {
+      "legend": "frozen",
+      "rgb": [
+        140,
+        20,
+        156
+      ],
+      "category": "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)"
+    }
+  ],
+  "value_mapping": [],
+  "numeric_interpolation_supported": false,
+  "interpolation_method": null,
+  "extraction_method": "official_standalone_discrete_colorbars_exact_rgb_runs",
+  "source_asset_url": [
+    "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+    "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+  ],
+  "source_image_path": null,
+  "colorbar_bounding_box": [
+    [
+      40,
+      29,
+      440,
+      74
+    ],
+    [
+      40,
+      29,
+      420,
+      74
+    ]
+  ],
+  "extraction_timestamp": "2026-11-14T19:51:09Z",
+  "verification_status": "estimated",
+  "warnings": [],
+  "limitations": [
+    "RGB samples alone do not establish a scientific color-to-value mapping.",
+    "NASA supplied ten regular rain/snow interval patches plus an overflow extension; interval boundary inclusivity is not encoded in official metadata.",
+    "A separate grey swatch exists on the left and may indicate no rain/missing/other; no numeric meaning is assigned.",
+    "Numeric bins were read and manually reviewed from official raster labels. No authoritative machine-readable mapping was found."
+  ],
+  "source_notes": {},
+  "ocr": {
+    "available": false,
+    "labels": [],
+    "requires_review": true
+  },
+  "scale_found": true,
+  "numerical_values_verified": false,
+  "orientation": "horizontal",
+  "value_direction": "left-to-right along displayed colorbar; categorical interval order for discrete legends"
+}
