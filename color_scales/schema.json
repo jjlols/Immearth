@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EIC scale record",
+  "type": "object",
+  "required": ["schema_version", "category", "status", "source_url", "scientific_variable", "units", "scale_type", "sampled_rgb_colors", "value_mapping", "numeric_interpolation_supported", "extraction_timestamp", "verification_status", "warnings", "limitations", "scale_found", "numerical_values_verified"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "category": {"enum": ["precipitation", "active_fires", "carbon_monoxide", "nitrogen_oxides", "near_surface_temperature"]},
+    "status": {"enum": ["extracted", "extracted_from_official_video", "uncalibrated_palette_extracted", "failed"]},
+    "units": {"type": ["string", "null"]},
+    "scale_type": {"type": "string"},
+    "numerical_range": {"type": ["object", "null"]},
+    "source_asset_url": {"type": ["string", "array", "null"]},
+    "source_image_path": {"type": ["string", "null"]},
+    "colorbar_bounding_box": {"type": ["array", "null"]},
+    "sampled_rgb_colors": {"type": "array"},
+    "value_mapping": {"type": "array"},
+    "numeric_interpolation_supported": {"type": "boolean"},
+    "scale_found": {"type": "boolean"},
+    "numerical_values_verified": {"const": false},
+    "verification_status": {"enum": ["estimated", "unknown", "verified"]},
+    "extraction_timestamp": {"type": "string", "format": "date-time"},
+    "warnings": {"type": "array"},
+    "limitations": {"type": "array"}
+  }
+}

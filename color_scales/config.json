@@ -1,0 +1,41 @@
+{
+  "source_timeout_seconds": 45,
+  "video_probe_timeout_seconds": 90,
+  "video_probe_bytes": 536870912,
+  "max_palette_samples": 128,
+  "categories": {
+    "precipitation": {
+      "source_url": "https://svs.gsfc.nasa.gov/4285/",
+      "scientific_variable": "IMERG liquid and frozen precipitation rates",
+      "units": "mm/hour",
+      "manual_crops": {}
+    },
+    "active_fires": {
+      "source_url": "https://svs.gsfc.nasa.gov/5113/",
+      "scientific_variable": "Moving five-day window of VIIRS fire radiative power (FRP)",
+      "units": "MW",
+      "manual_crops": {}
+    },
+    "carbon_monoxide": {
+      "source_url": "https://svs.gsfc.nasa.gov/5115/",
+      "validated_source_url": "https://svs.gsfc.nasa.gov/5153/",
+      "scientific_variable": "Near-surface carbon monoxide (CO) concentration from GEOS-CF",
+      "units": "parts per billion by volume (ppbv)",
+      "source_mismatch": "SVS 5115 is Global Atmospheric Carbon Dioxide (CO2), not CO. The validated CO visualization is SVS 5153; only SVS 5153 supplies this category's legend.",
+      "manual_crops": {}
+    },
+    "nitrogen_oxides": {
+      "source_url": "https://svs.gsfc.nasa.gov/5154/",
+      "scientific_variable": "Near-surface nitrogen oxides (NO + NO2) concentration from GEOS-CF",
+      "units": "parts per billion by volume (ppbv)",
+      "manual_crops": {}
+    },
+    "near_surface_temperature": {
+      "source_url": "https://svs.gsfc.nasa.gov/5147/",
+      "scientific_variable": "Near-surface air temperature (T2M; GEOS-FP, 2 m in the detailed description)",
+      "units": "degrees Celsius (°C)",
+      "short_description_mismatch": "The short page description says 3 m above the surface; the detailed page description and T2M legend say 2 m. The detailed value is used and the discrepancy is preserved here.",
+      "manual_crops": {}
+    }
+  }
+}
