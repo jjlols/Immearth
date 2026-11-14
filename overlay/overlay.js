@@ -73,33 +73,17 @@ function textElement(tag, className, text) {
   return element;
 }
 
-function drawTint(layer) {
+function drawOriginal(layer) {
   const item = elements.get(layer.id);
   const ctx = item.ctx;
   if (!item.image?.complete || !item.image.naturalHeight) return;
   const { width, height } = item.image;
   item.canvas.width = width;
   item.canvas.height = height;
-  const tint = layer.color.match(/[a-f\d]{2}/gi).map(value => Number.parseInt(value, 16));
+  ctx.clearRect(0, 0, width, height);
+  // Preserve each source pixel exactly: no tint, hue shift, mask, or grayscale.
   ctx.drawImage(item.image, 0, 0, width, height);
-  const pixels = ctx.getImageData(0, 0, width, height);
-  for (let i = 0; i < pixels.data.length; i += 4) {
-    const red = pixels.data[i], green = pixels.data[i + 1], blue = pixels.data[i + 2];
-    const max = Math.max(red, green, blue), min = Math.min(red, green, blue);
-    const saturation = max - min;
-    const luminance = .2126 * red + .7152 * green + .0722 * blue;
-    // Luminance-preserving tint with alpha from source energy. Avoid bleaching
-    // colors through multiply-then-screen or full-canvas screen blending.
-    const tone = Math.min(205, 14 + max * .53 + saturation * .25) / 255;
-    pixels.data[i] = Math.round(tint[0] * tone);
-    pixels.data[i + 1] = Math.round(tint[1] * tone);
-    pixels.data[i + 2] = Math.round(tint[2] * tone);
-    const alpha = luminance < 8 ? 0 : 20 + Math.min(185, saturation * 1.45 + max * .3);
-    pixels.data[i + 3] = Math.round(alpha * (pixels.data[i + 3] / 255));
-  }
-  ctx.putImageData(pixels, 0, 0);
-  ctx.globalCompositeOperation = 'source-over';
-  item.canvas.dataset.tint = layer.color;
+  item.canvas.dataset.originalColor = 'true';
 }
 
 function renderModel() {
@@ -112,7 +96,7 @@ function renderModel() {
     item.row.setAttribute('aria-current', String(layer.id === state.focusedId));
     item.row.classList.toggle('is-off', !layer.visible);
     item.button.setAttribute('aria-pressed', String(layer.id === state.focusedId));
-    item.canvas.style.zIndex = String(state.focusedId ? 30 + layer.order : layer.order);
+    item.canvas.style.zIndex = String(layer.id === state.focusedId ? 20 : layer.order);
     item.visibility.checked = layer.visible;
   }
   $('#map-canvas').classList.toggle('no-base', !state.basemapVisible);
@@ -184,9 +168,10 @@ function createLayerUI(layer) {
   $('#layer-list').append(row);
   elements.set(layer.id, { row, button, visibility: checkbox, canvas: null, image: null, ctx: null });
 
-  // A native canvas per metric enables tints and separate visibility/focus states.
+  // A native canvas per metric preserves original pixels with independent visibility/focus states.
   const canvas = document.createElement('canvas');
   canvas.className = 'map-layer';
+  canvas.dataset.layerId = layer.id;
   canvas.style.setProperty('--layer-color', layer.color);
   canvas.style.setProperty('--layer-opacity', String(layer.opacity));
   canvas.style.zIndex = String(layer.order);
@@ -205,7 +190,7 @@ function loadLayer(layer) {
   const source = layer.url;
   image.decoding = 'async';
   item.ready = new Promise((resolve, reject) => {
-  image.onload = () => { item.image = image; drawTint(layer); resolve(image); };
+  image.onload = () => { item.image = image; drawOriginal(layer); resolve(image); };
   image.onerror = () => {
     $('#loading').hidden = true;
     $('#error').hidden = false;

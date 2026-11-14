@@ -11,15 +11,31 @@ const assert = require('node:assert/strict');
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(process.env.EIC_OVERLAY_URL || 'http://localhost:8765');
     await page.waitForFunction(() => document.body.dataset.ready === 'true');
-    await page.waitForFunction(() => [...document.querySelectorAll('canvas')].every(canvas => canvas.width > 0 && canvas.dataset.tint));
-    const bitmap = await page.evaluate(() => [...document.querySelectorAll('canvas')].map(canvas => {
-      const ctx = canvas.getContext('2d');
-      const pixel = ctx.getImageData(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 1, 1).data;
-      return Array.from(pixel);
-    }));
-    // A full-canvas screen fill previously saturated midpoints near white (248+).
-    // Per-pixel source luminance masks must leave at least one un-clipped channel.
-    for (const pixel of bitmap) assert.ok(Math.min(pixel[0], pixel[1], pixel[2]) < 235, `Clipped R/G/B layer pixel: ${pixel}`);
+    await page.waitForFunction(() => [...document.querySelectorAll('canvas')].every(canvas => canvas.width > 0 && canvas.dataset.originalColor));
+
+    // No filters or source pixel recoloring should remain.
+    assert.equal(await page.locator('canvas[data-original-color="true"]').count(), 5);
+    const exactColors = await page.evaluate(async () => {
+      for (const layer of window.eicOverlay.getState().layers) {
+        const canvas = [...document.querySelectorAll('canvas')].find(el => el.dataset.layerId === layer.id);
+        const source = new Image();
+        source.src = layer.url;
+        await source.decode();
+        const expected = document.createElement('canvas'); expected.width = source.naturalWidth; expected.height = source.naturalHeight;
+        const ctx = expected.getContext('2d'); ctx.drawImage(source, 0, 0);
+        const positions = [[25, 48], [512, 512], [1024, 700], [1500, 300]];
+        for (const [x, y] of positions.filter(([x, y]) => x < source.naturalWidth && y < source.naturalHeight)) {
+          if (canvas.width !== expected.width || canvas.height !== expected.height) return false;
+          const left = canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+          const right = ctx.getImageData(x, y, 1, 1).data;
+          if (!left.every((value, index) => value === right[index])) return false;
+        }
+      }
+      return true;
+    });
+    assert.equal(exactColors, true, 'Each source image must retain exact RGB pixels');
+    const noColorFilters = await page.locator('canvas').evaluateAll(canvases => canvases.every(canvas => getComputedStyle(canvas).filter === 'none'));
+    assert.equal(noColorFilters, true);
     assert.equal(await page.locator('canvas').evaluateAll(canvases => new Set(canvases.map(canvas => getComputedStyle(canvas).mixBlendMode)).size), 1);
     assert.equal(await page.locator('canvas').first().evaluate(canvas => getComputedStyle(canvas).mixBlendMode), 'normal');
     await page.screenshot({ path: '/tmp/eic-overlay-desktop.png', fullPage: true });
@@ -29,6 +45,9 @@ const assert = require('node:assert/strict');
     assert.equal(await page.evaluate(() => window.eicOverlay.getState().focusedId), 'carbon_monoxide');
     assert.equal(await page.locator('canvas.is-selected').count(), 1);
     assert.equal(await page.locator('canvas.is-muted').count(), 4);
+    assert.equal(await page.locator('canvas.is-selected').evaluate(canvas => getComputedStyle(canvas).zIndex), '20');
+    assert.equal(await page.locator('canvas.is-selected').evaluate(canvas => getComputedStyle(canvas).opacity), '1');
+    assert.equal(await page.locator('canvas.is-selected').evaluate(canvas => getComputedStyle(canvas).filter), 'none');
     await page.waitForTimeout(700);
     await page.screenshot({ path: '/tmp/eic-overlay-selected.png', fullPage: true });
     await page.getByRole('button', { name: 'Focus Carbon monoxide', exact: true }).click();
@@ -67,7 +86,7 @@ const assert = require('node:assert/strict');
     assert.match(await page.locator('#error').textContent(), /503/);
     assert.equal(await page.locator('#loading').isVisible(), false);
     await page.unroute('**/layers.json');
-    await page.route('**/layers/carbon_monoxide.webp', route => route.abort());
+    await page.route('**/layers/carbon_monoxide.png', route => route.abort());
     await page.reload();
     await page.locator('#error').waitFor({ state: 'visible' });
     assert.match(await page.locator('#error').textContent(), /Unable to decode Carbon monoxide/);

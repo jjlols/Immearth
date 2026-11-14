@@ -36,11 +36,11 @@ def test_build_writes_independent_assets_and_manifest(tmp_path, monkeypatch):
     manifest = json.loads((result / "layers.json").read_text())
     assert [layer["id"] for layer in manifest["layers"]] == ["second", "first"]
     for layer in manifest["layers"]:
-        assert layer["url"] == f"layers/{layer['id']}.webp"
+        assert layer["url"] == f"layers/{layer['id']}.png"
         assert layer["original_size"] == [64, 32]
         assert layer["source_sha256"]
         assert layer["visible"]
-        assert Image.open(result / layer["url"]).format == "WEBP"
+        assert Image.open(result / layer["url"]).format == "PNG"
     assert "not georeferenced" not in manifest["projection"]["status"]
     assert "not_georeferencing" not in manifest["projection"]["status"]
     assert "approximate" in manifest["projection"]["status"]

@@ -50,19 +50,17 @@ def build(output: Path, catalog: Path = ROOT / "overlay" / "layers.json") -> Pat
         source = (catalog.parent / layer.pop("source")).resolve()
         if not source.is_relative_to(ROOT.resolve()):
             raise ValueError(f"Source must be inside the project: {source}")
-        target = output / "layers" / f"{layer['id']}.webp"
+        target = output / "layers" / f"{layer['id']}.png"
         with Image.open(source) as image:
             image.load()
             if image.width < 1 or image.height < 1:
                 raise ValueError(f"Empty image: {source}")
             original_size = list(image.size)
-            rgb = image.convert("RGB")
-            # Offline preview-only resampling; the original downloader images are unchanged.
-            rgb.thumbnail((2048, 1024), Image.Resampling.LANCZOS)
-            rgb.save(target, "WEBP", quality=91, method=6)
-            layer.update(width=rgb.width, height=rgb.height, aspect_ratio=rgb.width / rgb.height)
+        # Preserve the original raster exactly; no resampling or RGB conversion.
+        shutil.copyfile(source, target)
+        layer.update(width=original_size[0], height=original_size[1], aspect_ratio=original_size[0] / original_size[1])
         layer.update(
-            url=f"layers/{layer['id']}.webp",
+            url=f"layers/{layer['id']}.png",
             source_sha256=sha256(source),
             original_size=original_size,
             visible=True,

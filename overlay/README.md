@@ -25,26 +25,26 @@ output. Do not deploy the Python script itself.
 ## Layer contract
 
 `overlay/layers.json` is the editable catalog. Each layer has a unique stable
-`id`, `label`, `shortLabel`, accessible symbol `mark`, PNG `source`, tint
-`color`, stacking `order`, default `opacity`, and prose `description`.
+`id`, `label`, `shortLabel`, accessible symbol `mark`, PNG `source`, UI identification
+`color`, stacking `order`, display `opacity`, and prose `description`.
 `order` determines both stack and control order.
 
 At build time, the generator creates these **independent, deployable layers**:
 
-- `layers/{id}.webp`: same aspect ratio as the source, resized within 2048×1024
+- `layers/{id}.png`: exact bit-for-bit copy of the original NASA download
 - `layers.json`: sourced asset SHA-256, original size, browser URL and metadata
-- Canvas tinting is runtime, per layer; original PNGs are never destructively edited
+- Original source RGB colors are preserved exactly; catalog colors identify the
+selected UI layer only, not the source scientific color scale
 
 To change a palette or add a metric, update the catalog and rerun the build.
 The generator verifies that input paths stay within this project.
-No quantitative calibration is inferred from these perceptual tints.
+No quantitative calibration is inferred from these UI identification colors.
 
 ## Interaction and future integration
 
-The default view shows all five layers as differently colored, translucent
-screens. Clicking a metric desaturates/dims its peers, boosts that layer's
-opacity and saturation treatment, gives it a soft tint-colored halo, and
-slightly increases its scale. Clicking it again restores the shared view.
+The default view stacks all five original-color maps. Clicking a metric brings
+that opaque map to the front, slightly raises its scale, and dims its peers
+without recoloring them. Clicking it again restores the shared view.
 
 Each metric has a separate visibility switch. `Show all layers`, `Reset
 composition`, and the background visibility switch always work. Arrow keys
@@ -72,7 +72,7 @@ A host app can also import `OverlayController` from `overlay.js`, listen for
 
 The PNGs do not come with a common projection transform. They have different
 pixel dimensions, full-frame map extents, overlay labels, and temporal ranges.
-They are stretched to a shared 2:1 canvas and tinted for preview. Position is
+They are stretched to a shared 2:1 canvas without changing source colors. Position is
 therefore approximate **display alignment only**, not proof of a shared
 latitude/longitude registration. Do not combine their colors arithmetically
 and interpret the result as scientific values. The viewer deliberately says
@@ -98,10 +98,13 @@ navigation, an empty composition, manifest/image failures, delayed asset loading
 
 ### Color treatment
 
-Layers are individually recolored from pixels using source maximum-channel
-energy and saturation. Neutral/dark regions receive reduced alpha; tints are
-composed through normal alpha, not a blend that repeatedly screens full-canvas
-pixels to white. Because the original colorbars and coastlines remain part of
-the PNG raster, this is a visual remix rather than a transparency-calibrated
-scientific extract. `--force`-refresh the browser to bypass cached JS/CSS after
-rebuilding older preview versions.
+Source images are copied directly into each independent canvas, with opacity
+1. No grayscale, tinting, increased contrast, or scientific color remap is
+applied. Selecting a metric slightly dims its peers and gives it an outline
+and 1.015× scale lift without changing its pixels. Source-specific backdrop,
+coastlines, labels, and geographic visualization remain as NASA provides them.
+Lower layers can naturally be hidden by opaque upper layers; use the visibility
+switches and selection to explore every original map. Focus really moves the selected
+opaque map above its peers, not merely above their drawing order.
+The earlier tint beta is no longer active. hard-refresh the browser to
+bypass cached JS/CSS after rebuilding versions v3 or later.

@@ -13,9 +13,9 @@
       "mark": "P",
       "source": "../data/images/precipitation.png",
       "color": "#48c8f5",
-      "description": "Near real-time precipitation from NASA’s Global Precipitation Measurement constellation.",
+      "description": "Near real-time precipitation from NASA\u2019s Global Precipitation Measurement constellation.",
       "order": 0,
-      "opacity": 0.58
+      "opacity": 1
     },
     {
       "id": "active_fires",
@@ -26,7 +26,7 @@
       "color": "#ff875e",
       "description": "Active fires observed by VIIRS. Fire intensity is shown in a moving five-day window.",
       "order": 1,
-      "opacity": 0.74
+      "opacity": 1
     },
     {
       "id": "carbon_monoxide",
@@ -35,9 +35,9 @@
       "mark": "CO",
       "source": "../data/images/carbon_monoxide.png",
       "color": "#d5a1ff",
-      "description": "Near-surface carbon monoxide estimated by NASA’s GEOS-CF model.",
+      "description": "Near-surface carbon monoxide estimated by NASA\u2019s GEOS-CF model.",
       "order": 2,
-      "opacity": 0.62
+      "opacity": 1
     },
     {
       "id": "nitrogen_oxides",
@@ -46,9 +46,9 @@
       "mark": "NOx",
       "source": "../data/images/nitrogen_oxides.png",
       "color": "#80e6aa",
-      "description": "Nitrogen oxide and nitrogen dioxide concentrations estimated by NASA’s GEOS-CF model.",
+      "description": "Nitrogen oxide and nitrogen dioxide concentrations estimated by NASA\u2019s GEOS-CF model.",
       "order": 3,
-      "opacity": 0.64
+      "opacity": 1
     },
     {
       "id": "near_surface_temperature",
@@ -57,9 +57,9 @@
       "mark": "T",
       "source": "../data/images/near_surface_temperature.png",
       "color": "#ffdd73",
-      "description": "Near-surface temperature from NASA’s GEOS-FP weather analysis and forecast system.",
+      "description": "Near-surface temperature from NASA\u2019s GEOS-FP weather analysis and forecast system.",
       "order": 4,
-      "opacity": 0.57
+      "opacity": 1
     }
   ]
 }
