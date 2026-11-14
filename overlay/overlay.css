@@ -38,11 +38,11 @@ h2 { font-size: 17px; font-weight: 500; letter-spacing: -.3px; margin: 7px 0 0; 
 .canvas-frame { border: 1px solid #3a4b59; border-radius: 3px; background: #152230; overflow: hidden; }
 .map-canvas { position: relative; aspect-ratio: 1.88; background: #142230; overflow: hidden; isolation: isolate; }
 .map-layers { position: absolute; inset: 0; }
-.map-layer { --layer-opacity: .65; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; filter: grayscale(1) brightness(.9) contrast(1.16) sepia(.1); mix-blend-mode: screen; opacity: var(--layer-opacity); transition: opacity .6s ease, filter .6s ease, transform .6s ease; }
-.map-layer.is-tinted { filter: grayscale(1) brightness(1.45) contrast(1.1); mix-blend-mode: screen; }
+.map-layer { --layer-opacity: .65; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; filter: none; opacity: var(--layer-opacity); transition: opacity .6s ease, filter .6s ease, transform .6s ease; }
+.map-layer.is-tinted { filter: brightness(1.08) saturate(1.08); }
 .map-layer.is-hidden { opacity: 0; pointer-events: none; }
-.map-layer.is-muted { filter: grayscale(1) brightness(.51) contrast(1) !important; opacity: calc(var(--layer-opacity) * .32); mix-blend-mode: screen; transform: scale(.985); }
-.map-layer.is-selected { opacity: 1; filter: grayscale(1) brightness(1.65) drop-shadow(0 0 12px var(--layer-color)); mix-blend-mode: screen; z-index: 20; transform: scale(1.028); }
+.map-layer.is-muted { filter: grayscale(1) brightness(.66); opacity: calc(var(--layer-opacity) * .38); transform: scale(.985); }
+.map-layer.is-selected { opacity: .96; filter: brightness(1.17) saturate(1.3) drop-shadow(0 0 10px var(--layer-color)); z-index: 20; transform: scale(1.028); }
 .map-blueprint { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, #3e5568 0, #25384c 43%, #12202e 78%); opacity: .7; transition: opacity .3s; }
 .map-canvas.no-base .map-blueprint { opacity: 0; }
 .map-canvas.no-base { background: #060c13; }

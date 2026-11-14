@@ -95,3 +95,13 @@ Run the repository's full Python tests. The optional browser QA uses locally
 installed Playwright/Chromium only during development; neither is a runtime
 dependency. Browser QA covers canvas content, focus/dimming, reset, visibility, keyboard
 navigation, an empty composition, manifest/image failures, delayed asset loading, and reduced motion.
+
+### Color treatment
+
+Layers are individually recolored from pixels using source maximum-channel
+energy and saturation. Neutral/dark regions receive reduced alpha; tints are
+composed through normal alpha, not a blend that repeatedly screens full-canvas
+pixels to white. Because the original colorbars and coastlines remain part of
+the PNG raster, this is a visual remix rather than a transparency-calibrated
+scientific extract. `--force`-refresh the browser to bypass cached JS/CSS after
+rebuilding older preview versions.

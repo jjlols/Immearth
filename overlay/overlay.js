@@ -80,16 +80,26 @@ function drawTint(layer) {
   const { width, height } = item.image;
   item.canvas.width = width;
   item.canvas.height = height;
-  ctx.clearRect(0, 0, width, height);
+  const tint = layer.color.match(/[a-f\d]{2}/gi).map(value => Number.parseInt(value, 16));
   ctx.drawImage(item.image, 0, 0, width, height);
-  // Recolor a decoded map independently, not by changing source files.
-  ctx.globalCompositeOperation = 'multiply';
-  ctx.fillStyle = layer.color;
-  ctx.fillRect(0, 0, width, height);
-  ctx.globalCompositeOperation = 'screen';
-  ctx.fillStyle = layer.color;
-  ctx.fillRect(0, 0, width, height);
+  const pixels = ctx.getImageData(0, 0, width, height);
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    const red = pixels.data[i], green = pixels.data[i + 1], blue = pixels.data[i + 2];
+    const max = Math.max(red, green, blue), min = Math.min(red, green, blue);
+    const saturation = max - min;
+    const luminance = .2126 * red + .7152 * green + .0722 * blue;
+    // Luminance-preserving tint with alpha from source energy. Avoid bleaching
+    // colors through multiply-then-screen or full-canvas screen blending.
+    const tone = Math.min(205, 14 + max * .53 + saturation * .25) / 255;
+    pixels.data[i] = Math.round(tint[0] * tone);
+    pixels.data[i + 1] = Math.round(tint[1] * tone);
+    pixels.data[i + 2] = Math.round(tint[2] * tone);
+    const alpha = luminance < 8 ? 0 : 20 + Math.min(185, saturation * 1.45 + max * .3);
+    pixels.data[i + 3] = Math.round(alpha * (pixels.data[i + 3] / 255));
+  }
+  ctx.putImageData(pixels, 0, 0);
   ctx.globalCompositeOperation = 'source-over';
+  item.canvas.dataset.tint = layer.color;
 }
 
 function renderModel() {

@@ -9,9 +9,19 @@ const assert = require('node:assert/strict');
     const page = await browser.newPage({ viewport: { width: 1440, height: 1050 } });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto('http://localhost:8765');
+    await page.goto(process.env.EIC_OVERLAY_URL || 'http://localhost:8765');
     await page.waitForFunction(() => document.body.dataset.ready === 'true');
-    await page.waitForFunction(() => [...document.querySelectorAll('canvas')].every(canvas => canvas.getContext('2d').getImageData(50, 50, 1, 1).data[3] > 0));
+    await page.waitForFunction(() => [...document.querySelectorAll('canvas')].every(canvas => canvas.width > 0 && canvas.dataset.tint));
+    const bitmap = await page.evaluate(() => [...document.querySelectorAll('canvas')].map(canvas => {
+      const ctx = canvas.getContext('2d');
+      const pixel = ctx.getImageData(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 1, 1).data;
+      return Array.from(pixel);
+    }));
+    // A full-canvas screen fill previously saturated midpoints near white (248+).
+    // Per-pixel source luminance masks must leave at least one un-clipped channel.
+    for (const pixel of bitmap) assert.ok(Math.min(pixel[0], pixel[1], pixel[2]) < 235, `Clipped R/G/B layer pixel: ${pixel}`);
+    assert.equal(await page.locator('canvas').evaluateAll(canvases => new Set(canvases.map(canvas => getComputedStyle(canvas).mixBlendMode)).size), 1);
+    assert.equal(await page.locator('canvas').first().evaluate(canvas => getComputedStyle(canvas).mixBlendMode), 'normal');
     await page.screenshot({ path: '/tmp/eic-overlay-desktop.png', fullPage: true });
     assert.equal(await page.locator('#error').isVisible(), false);
     assert.equal(await page.locator('canvas').count(), 5);
