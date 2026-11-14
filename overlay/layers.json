@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "title": "Earth, layered",
+  "description": "Five NASA visualizations, one exploratory canvas.",
+  "sources": {
+    "downloader_metadata": "../data/metadata.json"
+  },
+  "layers": [
+    {
+      "id": "precipitation",
+      "label": "Precipitation",
+      "shortLabel": "Rain & snow",
+      "mark": "P",
+      "source": "../data/images/precipitation.png",
+      "color": "#48c8f5",
+      "description": "Near real-time precipitation from NASA\u2019s Global Precipitation Measurement constellation.",
+      "order": 0,
+      "opacity": 1
+    },
+    {
+      "id": "active_fires",
+      "label": "Active fires",
+      "shortLabel": "Fire radiative power",
+      "mark": "F",
+      "source": "../data/images/active_fires.png",
+      "color": "#ff875e",
+      "description": "Active fires observed by VIIRS. Fire intensity is shown in a moving five-day window.",
+      "order": 1,
+      "opacity": 1
+    },
+    {
+      "id": "carbon_monoxide",
+      "label": "Carbon monoxide",
+      "shortLabel": "Near-surface CO",
+      "mark": "CO",
+      "source": "../data/images/carbon_monoxide.png",
+      "color": "#d5a1ff",
+      "description": "Near-surface carbon monoxide estimated by NASA\u2019s GEOS-CF model.",
+      "order": 2,
+      "opacity": 1
+    },
+    {
+      "id": "nitrogen_oxides",
+      "label": "Nitrogen oxides",
+      "shortLabel": "Near-surface NOx",
+      "mark": "NOx",
+      "source": "../data/images/nitrogen_oxides.png",
+      "color": "#80e6aa",
+      "description": "Nitrogen oxide and nitrogen dioxide concentrations estimated by NASA\u2019s GEOS-CF model.",
+      "order": 3,
+      "opacity": 1
+    },
+    {
+      "id": "near_surface_temperature",
+      "label": "Temperature",
+      "shortLabel": "Near-surface air",
+      "mark": "T",
+      "source": "../data/images/near_surface_temperature.png",
+      "color": "#ffdd73",
+      "description": "Near-surface temperature from NASA\u2019s GEOS-FP weather analysis and forecast system.",
+      "order": 4,
+      "opacity": 1
+    }
+  ]
+}

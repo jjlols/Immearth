@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111b26">
+  <meta name="description" content="Explore five NASA Earth Information Center visualizations as independently colored, focusable layers.">
+  <title>Earth, layered — NASA EIC overlay studio</title>
+  <link rel="stylesheet" href="overlay.css?v=3">
+  <script src="overlay.js?v=3" type="module"></script>
+</head>
+<body>
+  <a class="skip-link" href="#layer-controls">Skip to layer controls</a>
+  <header class="masthead">
+    <div class="brand"><span class="brand-symbol" aria-hidden="true"><span></span></span><span>SPACE APPS <span class="brand-divider">/</span> EIC</span></div>
+    <div class="dataset-status"><span class="live-dot" aria-hidden="true"></span>05 NASA visualizations <span class="status-divider">/</span> composed locally</div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">AN EXPLORATORY EARTH OBSERVATORY</p>
+        <h1 id="page-title">Earth, <em>layered.</em></h1>
+      </div>
+      <p class="intro-description">Five planetary perspectives.<br>One shared canvas, infinitely explorable.</p>
+    </section>
+
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <div class="studio-layout">
+      <section class="canvas-panel" aria-labelledby="canvas-title">
+        <div class="canvas-topline">
+          <div><span class="small-label">COMPOSITE 001</span><h2 id="canvas-title">Global perspectives</h2></div>
+          <button type="button" id="reset-focus" class="text-button" hidden>Show all layers <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="canvas-frame">
+          <div id="map-canvas" class="map-canvas" role="img" aria-label="A composed view of NASA Earth visualization layers. Use the adjacent controls to select an individual metric.">
+            <div class="map-blueprint" aria-hidden="true"></div>
+            <div id="map-layers" class="map-layers"></div>
+            <div class="map-grid" aria-hidden="true"></div>
+            <div class="coordinates coordinates-top" aria-hidden="true"><span>180° W</span><span>0°</span><span>180° E</span></div>
+            <div class="coordinates coordinates-bottom" aria-hidden="true"><span>EXPLORATORY COMPOSITE</span><span>GEOREFERENCING NOT VERIFIED</span></div>
+            <div class="canvas-loading" id="loading"><span class="loading-ring" aria-hidden="true"></span><p>Composing planetary perspectives</p></div>
+          </div>
+          <div class="canvas-footer"><span><span class="square-color" aria-hidden="true"></span><span id="mode-label">All layers in view</span></span><span>ORIGINAL SOURCE COLORS</span></div>
+        </div>
+        <div class="layer-detail" id="layer-detail" aria-live="polite" aria-atomic="true">
+          <p class="detail-kicker">THE SHARED CANVAS</p>
+          <p class="detail-description">Every metric remains distinct. Choose a layer to bring it into focus, or use the visibility switches to explore your own composition.</p>
+        </div>
+        <p class="map-disclaimer"><span aria-hidden="true">ⓘ</span> Source maps vary in extent and annotation. Tints provide visual differentiation, not shared scientific units. For exploration, not quantitative comparison.</p>
+      </section>
+
+      <aside class="controls-panel" id="layer-controls" aria-labelledby="controls-heading" tabindex="-1">
+        <div class="controls-heading"><div><p class="eyebrow">COMPOSITION</p><h2 id="controls-heading">The metrics</h2></div><span class="metric-count">05</span></div>
+        <p class="controls-description">Select a metric to make it stand out.<br>Switch layers off to shape the composition.</p>
+        <div id="layer-list" class="layer-list" role="group" aria-label="Visualization layers"></div>
+        <div class="controls-bottom">
+          <div class="control-row"><span>Background visibility</span><label class="switch"><input type="checkbox" id="base-toggle" checked><span class="switch-track" aria-hidden="true"></span><span class="sr-only">Show subdued basemap</span></label></div>
+          <button id="reset-all" class="reset-button" type="button"><span aria-hidden="true">↻</span> Reset composition</button>
+          <p class="keyboard-hint"><kbd>↑</kbd><kbd>↓</kbd> Navigate <span>·</span> <kbd>Enter</kbd> Focus <span>·</span> <kbd>Esc</kbd> Clear</p>
+        </div>
+      </aside>
+    </div>
+    <footer class="page-footer"><span>EARTH INFORMATION CENTER <span class="brand-divider">/</span> NASA SCIENTIFIC VISUALIZATION STUDIO</span><span>Local imagery. Independent layers. A new perspective.</span></footer>
+  </main>
+</body>
+</html>
