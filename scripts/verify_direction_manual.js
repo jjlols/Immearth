@@ -50,7 +50,9 @@ try {
     assert.equal(await page.locator('[data-direction]').getAttribute('data-direction'), key);
     const output = await diagnostic();
     assert.deepEqual(output.sourcePosition, position);
-    assert.deepEqual(output.nativeSourcePosition, { x: position.x, y: position.z, z: -position.y });
+    assert.ok(Math.abs(output.nativeSourcePosition.x - position.x) < 1e-7);
+    assert.ok(Math.abs(output.nativeSourcePosition.y - position.z) < 1e-7);
+    assert.ok(Math.abs(output.nativeSourcePosition.z + position.y) < 1e-7, 'signed native float -0 and +0 are the same origin component');
     assert.equal(output.route, 'panner-only');
     assert.equal(output.orientation.forward.y, 1, 'a displaced preview stays at an artistic head-local offset');
     await direction('forward');

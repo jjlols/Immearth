@@ -148,7 +148,9 @@ the transient preview.
 The centered source uses listener-local `(0,0,0)` and the direct stereo bypass.
 A preview uses the existing panner at a fixed artistic ±2 m direction offset.
 No additional recording, context, clock, oscillator or separately synthesized
-sound is created. The camera is opt-in and processed locally, while the manual
+sound is created. A short 60 ms output envelope changes direction without
+disconnecting the recording or rebuilding the panner; recognition sensitivity
+and map-remix behavior stay unchanged. The camera is opt-in and processed locally, while the manual
 direction controls test the same interaction without camera permission. Browser
 tests use manual input or synthetic face matrices, not a human head-pose test.
 
@@ -283,7 +285,13 @@ for the current `RemixEngine`, not a replacement transport. The musical graph is
 `shared decoded recording → existing filter/gain branches → master → spatial
 renderer → limiter/analyser → destination`. The renderer defaults to **bypass**,
 which follows the original stereo path; enabled routing instead uses only the
-spatial path. It never connects both at once.
+spatial path. Each path has a gain; complementary envelopes ensure one programme
+contribution at their endpoints. Both branches stay connected so direction
+changes never disconnect an active HRTF processor or crackle the shared
+recording. At exact source/listener coincidence wet gain fades to zero and
+ordinary stereo is restored. Direction-only changes retain that path and
+smoothly ramp its position AudioParams—no restart, HRTF teardown, duplicate
+sample stream or additional clock.
 
 During spatial operation, the existing stereo mix is downmixed once to mono by
 the panner using its documented standard channel-downmix behavior; it is not
@@ -318,7 +326,7 @@ Minimal usage after retaining the one existing engine:
 engine.setSpatialSourcePosition({ x: 1.5, y: 0.25, z: 0 });
 engine.setSpatialListenerPosition({ x: 0, y: 0, z: 0 });
 engine.setSpatialListenerOrientation({ x: 0, y: 1, z: 0 }, { x: 0, y: 0, z: 1 });
-engine.setSpatialDistanceModel({ referenceDistance: 1, maxDistance: 10000, rolloffFactor: 1 });
+engine.setSpatialDistanceModel({ referenceDistance: 2, maxDistance: 10000, rolloffFactor: 1 });
 
 // only existing Play may create/resume context and decoded recording
 await engine.play();
@@ -340,6 +348,10 @@ this minimal implementation's binaural processing.
 Inverse pressure gain is bounded by the `referenceDistance`, so co-location or
 negative/zero relative distances do not produce infinity. A coincident source
 has `directional: false`; an arbitrary front/up azimuth is not manufactured.
+The default two-metre reference distance keeps nearby directional previews at
+unity distance gain, instead of the previous one-metre reference halving music
+at each up/down/left/right preview. Closer/center positions are also bounded
+at unity. Farther callers still attenuate with the inverse model.
 This is artistic distance not scientific geodistance or an absolute perceived
 loudness model. Common `distance/343` **propagation delay is deliberately not
 applied**: doing so would confuse the shared recording phase/repeated buffers or
@@ -353,15 +365,22 @@ plus spatial diagnostics. The splitter feeds meter-only analysers, never the
 output or another music buffer. Files/purposes, test commands and limitations:
 
 - `src/audio/spatialRenderer.js`: local geometry, bounded model and one-route
-  switchable output. No allocation until `RemixEngine` already creates a context.
+  continuously enveloped output. No allocation until `RemixEngine` creates a context.
 - `src/audio/RemixEngine.js`: single lazy context/source/buffer/clock remain;
   only the approved **Deliberate Thought — Kevin MacLeod, CC BY 4.0** recording.
-- `test-js/spatial-renderer.test.js` and expanded sonification/origin tests:
+- `test-js/spatial-renderer-contract.test.js`, `listener-origin-contract.test.js`,
+  and expanded sonification tests:
   directions, seams, invalid values, centre-route uniqueness, co-location,
   unsupported/legacy listener contexts, buffer/replay/lifecycle and inert origin.
 - `npm run test:spatial` against a **fresh current-source Vite** server:
   independent offline stereo `ChannelMerger` signal; known positive/negative
   differing inputs and per-channel RMS/peak, not a subjective-listening claim.
+- `npm run test:origin-signal` measures offline origin restoration: after a
+  rightward source returns to the listener, the original unequal stereo channels
+  retain a 2:1 RMS ratio (not summed or silently lost).
+- `npm run test:spatial-transitions` measures successive and interrupted turns
+  for finite bounded output, a retained panner, and bounded sample jumps. This
+  catches graph discontinuity; it does not prove subjective headphone quality.
 - The normal Chromium audit also checks mute/bypass, hidden fields/Solo, one
   decode/source with no spatial fetch, pause/reset/replay and narrow layout.
 
