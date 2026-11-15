@@ -1,0 +1,13 @@
+{
+  "layer": "active_fires",
+  "title": "Active fire radiative power",
+  "summary": "Active fire radiative power. These values are estimated from NASA's published colorbar, not official data. No one-degree cell had enough pixels close to the legend to estimate a value. The colorbar, the date, and the legend text in the lower left are masked out. Those colors belong to the legend, not to fires on the map. Outside that masked legend, this image is dark land and ocean. Those colors are far from the fire colorbar, so they stay empty instead of becoming a fire value.",
+  "units": "MW",
+  "scale_verification": "estimated",
+  "value_min": null,
+  "value_max": null,
+  "highest": null,
+  "lowest": null,
+  "coverage_percent": 0.0,
+  "caveat": "These values are estimated from NASA's published colorbar, not official data."
+}

@@ -1,0 +1,25 @@
+{
+  "layer": "carbon_monoxide",
+  "title": "Near-surface carbon monoxide",
+  "summary": "Near-surface carbon monoxide. These values are estimated from NASA's published colorbar, not official data. Across the grid, estimated values run from about 49.4 parts per billion by volume to about 493.2 parts per billion by volume. The highest estimated values, about 493.2 parts per billion by volume, fall in or near East Asia, around 30 degrees north and 122 degrees east. The lowest estimated values, about 49.4 parts per billion by volume, fall in or near South America, around 41 degrees south and 62 degrees west. About 99 percent of Earth's surface had a color close enough to the legend to decode. A cell is left empty when fewer than 30 percent of its pixels match the legend. The NASA and GMAO logo and the date badge are masked out so they are not read as carbon monoxide.",
+  "units": "parts per billion by volume (ppbv)",
+  "scale_verification": "estimated",
+  "value_min": 49.4,
+  "value_max": 493.2,
+  "highest": {
+    "value": 493.2,
+    "latitude": 29.5,
+    "longitude": 122.5,
+    "region": "East Asia",
+    "cell_count": 20
+  },
+  "lowest": {
+    "value": 49.4,
+    "latitude": -41.0,
+    "longitude": -62.0,
+    "region": "South America",
+    "cell_count": 3
+  },
+  "coverage_percent": 99.0,
+  "caveat": "These values are estimated from NASA's published colorbar, not official data."
+}

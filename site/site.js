@@ -130,7 +130,33 @@ const aliases = {
   fire: "fires",
   heat: "temperature",
   nox: "nitrogen oxides",
+  "turn to the left": "turn left",
+  "look left": "turn left",
+  "face left": "turn left",
+  "turn to the right": "turn right",
+  "look right": "turn right",
+  "face right": "turn right",
+  "face forward": "recenter",
+  "look forward": "recenter",
+  center: "recenter",
+  centre: "recenter",
+  "play test tones": "test tones",
+  "play the test tones": "test tones",
+  "play tones": "test tones",
 };
+
+commands["turn left"] = () => (window.earthAudio
+  ? window.earthAudio.nudgeHeading(-15, { announce: "none" })
+  : "Immersive listening is not available.");
+commands["turn right"] = () => (window.earthAudio
+  ? window.earthAudio.nudgeHeading(15, { announce: "none" })
+  : "Immersive listening is not available.");
+commands.recenter = () => (window.earthAudio
+  ? window.earthAudio.recenter({ announce: "none" })
+  : "Immersive listening is not available.");
+commands["test tones"] = () => (window.earthAudio
+  ? window.earthAudio.startTestTones()
+  : "Immersive listening is not available.");
 
 function overviewText() {
   return document.querySelector("#page-overview").innerText.trim();
@@ -172,6 +198,11 @@ function matchName(heard) {
 
 function runCommand(phrase) {
   const heard = phrase.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+  if (hasPhrase(heard, "stop test tones") || hasPhrase(heard, "stop the test tones") || hasPhrase(heard, "stop tones")) {
+    const message = window.earthAudio ? window.earthAudio.stopTestTones() : "Test tones are not available.";
+    voiceHint(message);
+    return true;
+  }
   if (hasPhrase(heard, "stop listening") || hasPhrase(heard, "voice off")) {
     stopListening();
     return true;

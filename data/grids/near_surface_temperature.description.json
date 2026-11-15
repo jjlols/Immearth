@@ -1,0 +1,25 @@
+{
+  "layer": "near_surface_temperature",
+  "title": "Near-surface temperature",
+  "summary": "Near-surface temperature. These values are estimated from NASA's published colorbar, not official data. Across the grid, estimated values run from about 38.7 degrees Celsius below zero to about 39.8 degrees Celsius. The highest estimated values, about 39.8 degrees Celsius, fall in or near Australia, around 18 degrees south and 125 degrees east. The lowest estimated values, about 38.7 degrees Celsius below zero, fall in or near Antarctica, around 78 degrees south and 78 degrees east. About 99 percent of Earth's surface had a color close enough to the legend to decode. A cell is left empty when fewer than 30 percent of its pixels match the legend. This temperature frame has no colorbar drawn on the map. The NASA and GMAO logo in the upper left and the date badge in the lower left are masked out. The logo's blues and whites would otherwise look like cold temperatures, and the grey date badge is close to the hot end of the legend. The legend's labeled ticks run from 40 degrees Celsius below zero to 40 degrees Celsius. Colors past the last tick are not given a higher number.",
+  "units": "degrees Celsius (\u00b0C)",
+  "scale_verification": "estimated",
+  "value_min": -38.7,
+  "value_max": 39.8,
+  "highest": {
+    "value": 39.8,
+    "latitude": -18.5,
+    "longitude": 125.0,
+    "region": "Australia",
+    "cell_count": 8
+  },
+  "lowest": {
+    "value": -38.7,
+    "latitude": -77.5,
+    "longitude": 77.9,
+    "region": "Antarctica",
+    "cell_count": 885
+  },
+  "coverage_percent": 99.2,
+  "caveat": "These values are estimated from NASA's published colorbar, not official data."
+}

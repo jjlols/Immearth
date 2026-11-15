@@ -215,3 +215,49 @@ See [`AGENTS.md`](AGENTS.md) for changes-scoped agents: **no force push/no hard 
 existing development worktrees; retain attribution; source warnings; honest estimated
 versus verified data boundaries; view-hidden=audible-disabled; explicit start only;
 no brightness/location-as-science attempts; and exact verified test commands.
+
+## Spatial audio
+
+`site/spatial-audio.js` is the shared listening engine. It does not turn map
+data into sound. Temperature and the other layers keep their own sonification
+and hand finished audio nodes to this engine.
+
+Serve the site over HTTP (Web Audio and the camera need a page address, not a
+`file://` document). From the repository root, run `py voice_server.py` or
+`python -m http.server 8765`, then open `http://127.0.0.1:8765/site/`.
+Headphones recommended.
+
+`window.earthAudio` is one `AudioContext`. Create nodes from
+`earthAudio.context` inside a click or key handler. Do not also connect them
+to `context.destination`, or the dry copy will sit in the middle of the head
+and undo the spatial placement.
+
+```javascript
+document.querySelector("#play-test-tones").addEventListener("click", () => {
+  const ctx = earthAudio.context;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.value = 220;
+  gain.gain.value = 0.04;
+  osc.connect(gain);
+  earthAudio.addSource("example", gain, { longitude: 20, latitude: 5 });
+  osc.start();
+});
+```
+
+- `addSource(id, audioNode, { longitude, latitude })` routes the node through an HRTF `PannerNode` on a sphere around the listener. Longitude `0` is straight ahead, positive longitude is east (to the right), and latitude is elevation, with north up.
+- `removeSource(id)` disconnects that source. The caller still owns the node.
+- `setSourcePosition(id, { longitude, latitude })` moves it. The move follows the long way around the sphere instead of passing through the head.
+- `setMuted(id, true)` silences one source. `setMasterVolume(0..1)` is the master gain.
+- `setHeading(degrees)` turns the listener. Positive degrees turn toward the east. The turn is smoothed so the HRTF filters do not click.
+- `recenter()` keeps the sound where it is and calls the direction you are facing now "forward" (heading 0).
+- `on("headingchange", callback)` passes `{ heading, description }`. `off` removes the callback. `describeHeading()` is text such as "Facing Africa, 20 degrees east."
+
+Place names are listening landmarks for the direction in front of you, not political borders. At the start, forward is the prime meridian, so 20 degrees east is described as Africa and 90 degrees west as the Americas. After Recenter, the degrees are measured from that new forward.
+
+`getHeading()`, `nudgeHeading(delta)`, `getSource(id)`, `startTestTones()`, and `stopTestTones()` back the page controls. While test tones play, their ids are `test-tone-front`, `test-tone-right`, `test-tone-back`, and `test-tone-left`.
+
+To hear it: press **Play test tones**. Four soft pentatonic notes fade in, at longitudes 0, 90, 180, and -90. Focus **Listening direction** and use the slider or the left and right arrow keys. Those arrow keys do nothing from the rest of the page. The text line under the title is also announced through the page status region. **Turn left**, **Turn right**, and **Recenter** do the same as the voice phrases `turn left`, `turn right`, `recenter`, and `test tones` (after **Start voice**). `stop test tones` or Escape stops the notes.
+
+**Use camera to turn with your head** stays off until pressed. Tracking runs on this computer. The camera picture is not recorded or uploaded. Turning the button off stops the camera completely. If the face leaves the frame, the last direction holds, then eases back to forward. Permission denied and a missing camera leave a written message, and the slider still works.
