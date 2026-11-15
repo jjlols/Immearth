@@ -118,6 +118,7 @@ test('pre-permission settings, listener-relative source orientation, bounded mod
   assert.equal(panner.positionX.value, 0);
   assert.equal(panner.positionZ.value, -1);
   renderer.setDistanceModel({ referenceDistance: 2, maxDistance: 5, rolloffFactor: 0.5 });
+  assert.equal(renderer.getDiagnostics().direction.directional, true);
   assert.equal(panner.refDistance, 2);
   assert.equal(panner.maxDistance, 5);
   assert.equal(panner.rolloffFactor, 0.5);
@@ -149,4 +150,19 @@ test('unavailable panners preserve ordinary stereo, named equalpower fallback is
   assert.equal(fallback.getDiagnostics().hrirDataset, null);
   fallback.dispose();
   assert.throws(() => new SpatialRenderer({ panningModel: 'CIPIC' }), /HRTF or equalpower/);
+});
+
+test('legacy AudioListener methods and pre-attach enable remain native-context compatible', () => {
+ const context = new MockContext();
+ const positions = [];
+ context.listener.setPosition = (...args) => positions.push(args);
+ context.listener.setOrientation = (...args) => positions.push(args);
+ const renderer = new SpatialRenderer({ transitionSeconds: 0 });
+ renderer.setEnabled(true);
+ const input = new Node(), output = new Node();
+ renderer.attach(context, input, output);
+ assert.deepEqual(input.routes, [context.panners[0]]);
+ assert.deepEqual(positions, [[0, 0, 0], [0, 0, -1, 0, 1, 0]]);
+ renderer.dispose();
+ assert.deepEqual(input.routes, [output]);
 });

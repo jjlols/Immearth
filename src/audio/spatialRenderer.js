@@ -140,8 +140,8 @@ export class SpatialRenderer {
       this.panningModel = this.panner.panningModel;
       // One mix -> one mono source; never infer separate physical left/right
       // channel locations. Bypass retains ordinary stereo and all field gains.
-      this.panner.channelCount = 1;
       this.panner.channelCountMode = 'explicit';
+      this.panner.channelCount = 1;
       Object.assign(this.panner, { distanceModel: 'inverse', refDistance: this.referenceDistance,
         maxDistance: this.maxDistance, rolloffFactor: this.rolloffFactor });
       this.#writeListener();

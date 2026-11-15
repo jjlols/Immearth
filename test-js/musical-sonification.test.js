@@ -165,7 +165,9 @@ test('one explicit Play creates one context and one decoded buffer; reset/replay
  assert.ok(engine.accents.size <= 8);
  assert.equal(engine.ctx.sources.length, 1);
  engine.setVolume(12);
- assert.ok(engine.master.gain.value <= 0.24);
+ assert.ok(engine.master.gain.value <= 0.5);
+ engine.setVolume(0.38);
+ assert.equal(engine.volume, 0.38);
  engine.setMute(true);
  assert.equal(engine.master.gain.value, 0);
  engine.setMute(false);
@@ -290,4 +292,14 @@ test('dispose invalidates a pending decode and cannot later publish or resume re
  assert.equal(engine.buffer, null);
  assert.equal(engine.timer, null);
  assert.equal(engine.isRunning, false);
+});
+
+test('unsupported panners leave the approved recording playable and bypassed', async () => {
+ const engine = await playingEngine({}, class extends MockContext { createPanner() { throw new Error('unsupported'); } });
+ assert.equal(engine.ctx.sources.length, 1);
+ assert.equal(engine.master.connect_type, engine.limiter);
+ assert.equal(engine.spatial.getDiagnostics().enabled, false);
+ assert.throws(() => engine.setSpatialEnabled(true), /PannerNode/);
+ assert.equal(engine.master.connect_type, engine.limiter);
+ await engine.dispose();
 });

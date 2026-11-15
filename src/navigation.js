@@ -1,4 +1,4 @@
-export const VIEWS = ["home", "music", "layers", "photo"];
+export const VIEWS = ["home", "music", "layers"];
 
 export function viewFromLocation() {
   const view = new URLSearchParams(window.location.search).get("view");

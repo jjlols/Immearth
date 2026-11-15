@@ -23,4 +23,26 @@
 .notes-footer{display:none}.map-navigation{padding:30px 0 14px}.map-navigation h2{color:#365c87;font-family:Georgia,serif;font-size:32px;font-weight:400}.map-navigation .eyebrow{letter-spacing:.16em;color:#71859a;font:11px sans-serif}
 @media (max-width:1000px){.workspace-shared{grid-template-columns:1fr}.source-controllers{grid-template-columns:1fr 1fr}.music-console{grid-template-columns:1fr}.listening-tutorial{width:calc(100% - 28px);padding:23px}.intro-block .map-help-nav{margin-top:14px}.intro-block h1{font-size:40px}}
 @media(max-width:650px){.source-controllers{grid-template-columns:1fr}.intro-block{padding:22px}.map-help-nav a,.map-help-nav button{font-size:13px}.intro-block .lede{font-size:15px}}
-@media(prefers-reduced-motion:reduce){.listening-tutorial{transition:none}.progress-rail>span{transition:none}}
+/* Keep exploration central; technical notes stay through the guide/attribution links. */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.guide-label,.voice-description{display:none}
+.region-study.compact{padding:15px 18px 13px;margin-top:15px;border:1px solid #d4e0ed;border-radius:10px;background:#fff}
+.region-study.compact .current-region{font-size:13px;color:#4e667d;line-height:1.5}
+.region-study.compact .regional-grid{gap:8px;margin-top:0;margin-bottom:14px}
+.region-study.compact .region-counts{color:#4e667d;font-size:11px;padding-top:12px}
+.compact-region-panel .region-summary{display:flex;justify-content:space-between;align-items:center;gap:14px;color:#59758d;font-size:14px;line-height:1.45;padding:12px 16px 5px}
+.compact-region-panel .region-summary a{color:#174a73;font-weight:600;text-decoration:none;border-bottom:1px solid currentColor}
+.hist-copy{display:none}.region-study.compact>div:nth-of-type(2){gap:9px}
+.map-navigation>p{margin:20px 0 4px;font-size:15px;line-height:1.5}
+.tiny-attribution{display:none}.track-detail{font-size:14px}.playback-status{font-size:12px}
+.intro-block{padding:22px 30px}.intro-aside{font-size:17px;line-height:1.65;color:#527392;margin:0}.workspace-title{margin-bottom:12px}
+.source-ctls .opacity-readout{font-size:10px}.metric-subtitle{line-height:1.45}.notes-footer{display:none}
+/* Focus this page on the canvas and play, not decoding producer notes in-line. */
+.track-detail,.tiny-attribution,.map-explainer,.learning-floor .guide-label,.intro-aside>br,.notes-footer{display:none!important}
+.record-section-hidden-excess{display:none}
+.source-ctls{padding-bottom:5px}
+.map-workspace{max-width:1100px}
+.expert-field-details{margin-top:.4rem}
+.source-select .metric-text strong{font-size:15px}
+.source-select .metric-text small{font-size:11px}
+.expert-control-dot{pointer-events:none}

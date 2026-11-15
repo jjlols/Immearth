@@ -8,14 +8,18 @@ try {
   const page = await browser.newPage();
   await page.goto(origin, { waitUntil: 'networkidle' });
   const result = await page.evaluate(async () => {
+    let sourcesCreated = 0;
     const { SpatialRenderer, inverseDistanceGain, sphericalDirection } =
-      await import('./src/audio/spatialRenderer.js');
+      await import(`./src/audio/spatialRenderer.js?stereo-audit=${Date.now()}`);
     // Different, opposite-polarity buffer waveforms: half the nominal input
     // amplitude on the right. Their nonzero sum is the renderer's mono input.
     // Neither the input nor metrics provide a second graph-to-destination route.
+    let configuredChannelCount = null;
+    let configuredChannelCountMode = null;
     async function render(position, panningModel = 'HRTF') {
       const context = new OfflineAudioContext({ numberOfChannels: 2, length: 48000, sampleRate: 48000 });
       const source = context.createBufferSource();
+      sourcesCreated++;
       const buffer = context.createBuffer(2, context.length, context.sampleRate);
       const inputLeft = new Float32Array(context.length), inputRight = new Float32Array(context.length);
       for (let i = 0; i < context.length; i++) {
@@ -33,6 +37,8 @@ try {
       const output = context.createGain();
       const renderer = new SpatialRenderer({ panningModel, transitionSeconds: 0 });
       renderer.attach(context, merger, output);
+      configuredChannelCount = renderer.panner?.channelCount ?? null;
+      configuredChannelCountMode = renderer.panner?.channelCountMode ?? null;
       if (position) {
         renderer.setEnabled(true);
         renderer.setSourcePosition(position);
@@ -65,7 +71,6 @@ try {
       return { left: lte, right: rte, differentSigns, correlation: correlation(left, right),
         panningModel: renderer.panningModel, routes: output.numberOfInputs };
     }
-    function assertLocal(condition, message) { if (!condition) throw new Error(message); }
     const [center, right, left, coincident, equalpowerCenter] = await Promise.all([
       render({ x: 0, y: 1, z: 0 }),
       render({ x: 2, y: 0, z: 0 }),
@@ -82,6 +87,8 @@ try {
       coLocatedDirection: sphericalDirection({ x: 0, y: 0, z: 0 }),
       inverseGainAtZero: inverseDistanceGain(0),
       input: { leftAmplitude: 0.3, oppositePolarityRightAmplitude: 0.15, frequenciesHz: [1230, 2875], sourceEvents: 1, generatedOscillators: 0 },
+      sourcesCreated,
+      nativeInputConfiguration: { channelCount: configuredChannelCount, channelCountMode: configuredChannelCountMode },
       equalpowerCenter: { panningModel: equalpowerCenter.panningModel, left: equalpowerCenter.left, right: equalpowerCenter.right },
     };
   });
@@ -95,6 +102,8 @@ try {
   assert.equal(result.coLocatedDirection.directional, false);
   assert.equal(result.inverseGainAtZero, 1);
   assert.equal(result.equalpowerCenter.panningModel, 'equalpower');
+  assert.equal(result.sourcesCreated, 5, 'one prerecorded buffer per independent offline case; no new source during panning');
+  assert.deepEqual(result.nativeInputConfiguration, { channelCount: 1, channelCountMode: 'explicit' });
   console.log(JSON.stringify({ status: 'passed', origin, ...result,
     caveat: 'Numerical OfflineAudioContext channel-RMS/peak checks, not subjective listening, speaker audibility, CIPIC data, or geographic source measurements. HRTF is browser-generic; manual stereo-headphone localization verification is still needed.' }, null, 2));
 } finally {

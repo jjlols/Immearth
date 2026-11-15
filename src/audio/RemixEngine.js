@@ -35,7 +35,7 @@ export class RemixEngine {
     this.lastSourceRate = 1;
     this.isRunning = false;
     this.muted = false;
-    this.volume = 0.22;
+    this.volume = 0.38;
     this.onChange = null;
     this.playRequest = 0;
     this.startedAt = 0;
@@ -280,7 +280,7 @@ export class RemixEngine {
   }
 
   setVolume(value) {
-    this.volume = Math.max(0, Math.min(0.24, finite(Number(value), 0)));
+    this.volume = Math.max(0, Math.min(0.5, finite(Number(value), 0)));
     if (this.master) this.ramp(this.master.gain, this.muted ? 0 : this.volume, 0.05);
     this.onChange?.(this);
   }

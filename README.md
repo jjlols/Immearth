@@ -105,7 +105,7 @@ can then resume as allowed. No autoplay on launch, selecting metrics, region gui
 or Vancouver pin. **Pause** stops scheduling/suspends current context; resume via
 the same explicit listener. **Reset** stops track and scheduled source accents.
 
-- **Master volume** is deliberately limited (24% default/max set upstream)
+- **Master volume** uses default 0.38, cap 0.50. Measured post-limiter RMS is ~1.6× the prior quiet-mix baseline; the original waveform and dry-gain 0.085 remain the source-side envelope.
 - **Mute** receives all player pipeline including backing track; unmute restores it.
 - If too quiet, first check Mute and master slider, OS/browser output level/headphones
   disconnected, app has MP3 source loading resolved, disabled source not active.
@@ -113,21 +113,22 @@ the same explicit listener. **Reset** stops track and scheduled source accents.
   internal image classes can remain silent comfortably, but the licensed backing
   source always needs explicit user play.
 
-Auditory note “inside head” at Vancouver is expressly a future **modeled spatial
-adapter** not live stereo/gain. Source-patterned original isn't louder in higher
+The Vancouver origin is a reserved **metadata reference**, not a real listener GPS
+position or scientific source calculation. Optional local-rendered art uses an
+explicitly synthetic model described below; bypass remains the default. Source-patterned original isn't louder in higher
 scientific quantile nor evil spray-relevant sound of the pollutant chemicals.
 **Do not make the song gain high just because a fixture green button on screen.**
 
-## Spatial origin marker for the future
+## Spatial origin marker and independent local renderer
 
 Crosshair labeled **Vancouver, BC** (49.2827°N, 123.1207°W) serves as the user's
-initiating geolocation reference. Lat/long of these data do not currently control
+user-instructed initiating geographic reference (not requested GPS). Lat/long of these data do not currently control
 time, pitch, rhythm, or automatic pan. Original intended future coordinate origin
 is inside listener head at Vancouver local **0,0,0** when traceable model available,
 not browser cross-shaped mystery. Current map displayed x≈15.8%, y≈22.6%; actual
 raster matches may change with calibrated geodata inputs.
 
-See `src/lib/spatialOrigin.js` and `VANCOUVER_ORIGIN.md` for documented structure.
+See `src/lib/spatialOrigin.js` and `src/lib/VANCOUVER_ORIGIN.md` for documented structure.
 No user geolocation or actual hidden coordinate trick beyond mention of the prompt.
 
 ## Implementation paths — use source files
@@ -200,6 +201,8 @@ required partition.
 `npm run test:browser` uses Playwright/Chromium against `JUKEBOX_URL` (default
 `http://127.0.0.1:8001`). Start a local production server, for example
 `python3 -m http.server 8001 --bind 127.0.0.1 --directory dist`, before running it.
+For a current-source Vite server, run `JUKEBOX_URL=http://127.0.0.1:PORT npm run test:browser`.
+The separate `npm run test:spatial` stereo offline audit uses this same server variable.
 The current production audit passed on **14 November 2026, Node 22.19.0**: it checks
 no context on raw load/navigation, one context/one MP3 decode, buffer duration,
 transport, post-chain signal, Solo/Composition, layer hiding, shared WASD/Home grid
@@ -226,53 +229,102 @@ existing development worktrees; retain attribution; source warnings; honest esti
 versus verified data boundaries; view-hidden=audible-disabled; explicit start only;
 no brightness/location-as-science attempts; and exact verified test commands.
 
-## Spatial audio
+## Opt-in local spatial renderer
 
-`site/spatial-audio.js` is the shared listening engine. It does not turn map
-data into sound. Temperature and the other layers keep their own sonification
-and hand finished audio nodes to this engine.
+`src/audio/spatialRenderer.js` is a small DOM-/React-independent output adapter
+for the current `RemixEngine`, not a replacement transport. The musical graph is
+`shared decoded recording → existing filter/gain branches → master → spatial
+renderer → limiter/analyser → destination`. The renderer defaults to **bypass**,
+which follows the original stereo path; enabled routing instead uses only the
+spatial path. It never connects both at once.
 
-Serve the site over HTTP (Web Audio and the camera need a page address, not a
-`file://` document). From the repository root, run `py voice_server.py` or
-`python -m http.server 8765`, then open `http://127.0.0.1:8765/site/`.
-Headphones recommended.
+During spatial operation, the existing stereo mix is downmixed once to mono by
+the panner using its documented standard channel-downmix behavior; it is not
+interpreted as two prelocalized channels. The generic browser **`PannerNode`
+with `panningModel='HRTF'`** produces the binaural estimate. This is not CIPIC,
+HRIR convolution, or a measured head model. `equalpower` can be explicitly
+selected as a simple device/accessibility fallback. An unavailable Panner leaves
+ordinary stereo playing and reports `available: false`; the explicit opt-in
+control would receive an explanatory error. HRTF/about-headphones messages must
+not imply a guaranteed subjective localization experience.
 
-`voice_server.py` is what Start voice talks to. It spots the site’s command
-phrases on this computer with sherpa-onnx keyword spotting (Apache 2.0). The
-English model downloads into `models/` the first time the server starts.
-Plain `python -m http.server` serves the page, but it does not recognize speech.
+Coordinates are **synthetic listener-local metres**:
+`+x = right/east`, `+y = forward/nominal north`, `+z = up`. At the nominal
+default listener `(0,0,0)`, source `(0,1,0)` is one metre forward. These
+correspond to the reserved Vancouver listening *reference*, not a real GPS lock
+or a geodetic projection. Native Web Audio's convention is internally converted
+to `+x = right`, `+y = up`, `-z = forward`. A supplied facing forward and up are
+normalized, orthogonalized, and used to transform the source into the canonical
+native head frame; orientation angles do not claim measured compass heading.
 
-`window.earthAudio` is one `AudioContext`. Create nodes from
-`earthAudio.context` inside a click or key handler. Do not also connect them
-to `context.destination`, or the dry copy will sit in the middle of the head
-and undo the spatial placement.
+Only explicit Cartesian metre data belongs in this API. Do not pass unlabelled
+latitude/longitude, RGB pixels, 3×4 sample indexes, display aspect ratios or
+Vancouver's marker percentages as positions. This does not move sources when
+WASD moves the palette explorer, start audio on mount/map navigation, or alter
+pitch/timing from coordinates. There are no microphone/camera/geolocation calls
+and no dependency on the older independent guide engine `window.earthAudio`.
 
-```javascript
-document.querySelector("#play-test-tones").addEventListener("click", () => {
-  const ctx = earthAudio.context;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = "sine";
-  osc.frequency.value = 220;
-  gain.gain.value = 0.04;
-  osc.connect(gain);
-  earthAudio.addSource("example", gain, { longitude: 20, latitude: 5 });
-  osc.start();
-});
+Minimal usage after retaining the one existing engine:
+
+```js
+// Setup is inert: no context, buffer, fetch, clock or playback allocation.
+engine.setSpatialSourcePosition({ x: 1.5, y: 0.25, z: 0 });
+engine.setSpatialListenerPosition({ x: 0, y: 0, z: 0 });
+engine.setSpatialListenerOrientation({ x: 0, y: 1, z: 0 }, { x: 0, y: 0, z: 1 });
+engine.setSpatialDistanceModel({ referenceDistance: 1, maxDistance: 10000, rolloffFactor: 1 });
+
+// only existing Play may create/resume context and decoded recording
+await engine.play();
+engine.setSpatialEnabled(true);   // explicit user opt-in; mono downmix+HRTF
+engine.setSpatialEnabled(false);  // Bypass; original stereo recording
 ```
 
-- `addSource(id, audioNode, { longitude, latitude })` routes the node through an HRTF `PannerNode` on a sphere around the listener. Longitude `0` is straight ahead, positive longitude is east (to the right), and latitude is elevation, with north up.
-- `removeSource(id)` disconnects that source. The caller still owns the node.
-- `setSourcePosition(id, { longitude, latitude })` moves it. The move follows the long way around the sphere instead of passing through the head.
-- `setMuted(id, true)` silences one source. `setMasterVolume(0..1)` is the master gain.
-- `setHeading(degrees)` turns the listener. Positive degrees turn toward the east. The turn is smoothed so the HRTF filters do not click.
-- `recenter()` keeps the sound where it is and calls the direction you are facing now "forward" (heading 0).
-- `on("headingchange", callback)` passes `{ heading, description }`. `off` removes the callback. `describeHeading()` is text such as "Facing Africa, 20 degrees east."
+Also exposed are `engine.spatial.getDiagnostics()` and the reusable module's
+`attach(context, existingInputNode, existingOutputNode)` / `dispose()` lifecycle.
+Constructor options permit declared `HRTF` or `equalpower`, an inverse distance
+model, finite reference/max distances and a nonnegative rolloff. SetParameter
+ramp times have a small time constant, not a random near-origin sweep. Pure
+helpers cover distance, listener-relative geometry, Web Audio conversion,
+azimuth `atan2(dx,dy)`, elevation `atan2(dz,√(dx²+dy²))`, spherical wrapping,
+zero-radius behavior, head-radius ITD explanation and bounded inverse gain.
+The ITD/spherical helpers are informational: only the native Panner performs
+this minimal implementation's binaural processing.
 
-Place names are listening landmarks for the direction in front of you, not political borders. At the start, forward is the prime meridian, so 20 degrees east is described as Africa and 90 degrees west as the Americas. After Recenter, the degrees are measured from that new forward.
+Inverse pressure gain is bounded by the `referenceDistance`, so co-location or
+negative/zero relative distances do not produce infinity. A coincident source
+has `directional: false`; an arbitrary front/up azimuth is not manufactured.
+This is artistic distance not scientific geodistance or an absolute perceived
+loudness model. Common `distance/343` **propagation delay is deliberately not
+applied**: doing so would confuse the shared recording phase/repeated buffers or
+add a second source clock. Native panning supplies the selected binaural cues.
 
-`getHeading()`, `nudgeHeading(delta)`, `getSource(id)`, `startTestTones()`, and `stopTestTones()` back the page controls. While test tones play, their ids are `test-tone-front`, `test-tone-right`, `test-tone-back`, and `test-tone-left`.
+No separate soundtrack, oscillator, generated test note, per-palette Panner
+bus or fresh MP3 snippet is created. Source selection/solo/gate behavior stays
+upstream, before one final spatial output. The Stereo `getOutputMetrics()`
+retains `{rms,peak,contextState}` and adds `channels: [{rms,peak}, {rms,peak}]`
+plus spatial diagnostics. The splitter feeds meter-only analysers, never the
+output or another music buffer. Files/purposes, test commands and limitations:
 
-To hear it: press **Play test tones**. Four soft pentatonic notes fade in, at longitudes 0, 90, 180, and -90. Focus **Listening direction** and use the slider or the left and right arrow keys. Those arrow keys do nothing from the rest of the page. The text line under the title is also announced through the page status region. **Turn left**, **Turn right**, and **Recenter** do the same as the voice phrases `turn left`, `turn right`, `recenter`, and `test tones` (after **Start voice**). `stop test tones` or Escape stops the notes.
+- `src/audio/spatialRenderer.js`: local geometry, bounded model and one-route
+  switchable output. No allocation until `RemixEngine` already creates a context.
+- `src/audio/RemixEngine.js`: single lazy context/source/buffer/clock remain;
+  only the approved **Deliberate Thought — Kevin MacLeod, CC BY 4.0** recording.
+- `test-js/spatial-renderer.test.js` and expanded sonification/origin tests:
+  directions, seams, invalid values, centre-route uniqueness, co-location,
+  unsupported/legacy listener contexts, buffer/replay/lifecycle and inert origin.
+- `npm run test:spatial` against a **fresh current-source Vite** server:
+  independent offline stereo `ChannelMerger` signal; known positive/negative
+  differing inputs and per-channel RMS/peak, not a subjective-listening claim.
+- The normal Chromium audit also checks mute/bypass, hidden fields/Solo, one
+  decode/source with no spatial fetch, pause/reset/replay and narrow layout.
 
-**Use camera to turn with your head** stays off until pressed. Tracking runs on this computer. The camera picture is not recorded or uploaded. Turning the button off stops the camera completely. If the face leaves the frame, the last direction holds, then eases back to forward. Permission denied and a missing camera leave a written message, and the slider still works.
+### Legacy static guide—not the Jukebox transport
+
+The older `site/spatial-audio.js` remains a separate static-guide experiment,
+including camera-dependent behavior and controlled oscillator test tones. Those
+sound-generating examples are **not authorized within or imported into**
+`RemixEngine`. The React music experience should use the shared renderer above;
+it does not import `window.earthAudio`, create its second soundtrack or request
+head tracking. The optional generic Panner is not evidence CIPIC is downloaded,
+licensed, transformed, correct or physically validated. **Manual stereo-headphone
+localization and user-experience review remain needed/unverified by this agent.**

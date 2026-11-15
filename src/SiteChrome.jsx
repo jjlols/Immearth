@@ -4,9 +4,8 @@ import EarthRecord from "./EarthRecord.jsx";
 
 const NAV = [
   { view: "home", label: "Home" },
-  { view: "music", label: "Musical remix" },
+  { view: "music", label: "Live Map" },
   { view: "layers", label: "Layer explorer" },
-  { view: "photo", label: "Photo of the day" },
   { view: "music", label: "How to use the map", hash: "map-navigation" },
   { view: "home", label: "Help", hash: "move" },
 ];

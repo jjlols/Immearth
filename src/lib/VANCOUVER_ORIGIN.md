@@ -7,18 +7,22 @@ N, 123.1207° W** (WGS84/EPSG:4326). Longitude increases east-positive:
 the same calculation and is not a claim of pixel-perfect position relative to every
 NASA visualization produced under other/unknown map projections.
 
-## Headspace stage (future use)
+## Reserved geographic metadata and independent artistic renderer
 
-`headspaceListeningFrame()` intentionally reserves a future listener-space model.
+`headspaceListeningFrame()` intentionally preserves its geographic metadata as a
+future geospatial model; it is not an audio locator or a conversion function.
 Vancouver is the reference receiver position. At the reference point, a *modeled*
 binaural source is heard inside the listener's head; its **listener-relative local
-space is `(0,0,0)`**. Gym coordinate-like positive angles/positions are not today’s
-pitch/lattice/time/volume instructions. The current player stays purely musical with
-a shared 69-bpm recording and regional estimated musical features.
+space is `(0,0,0)`**. Independently, `src/audio/spatialRenderer.js` provides an
+optional synthetic local-metre output route with that same *modeled* listener
+origin. It is explicitly not the future calibrated geographic model. Coordinates
+are not today's pitch/lattice/time instructions and never convert these
+coarse raster markers, lat/lon or brightness to source metres. The shared player
+keeps regional estimated musical features on the same decoded recording.
 
 Your target marker only opens geographic explanation. It deliberately **does not**
 create/resume an AudioContext, decode the MP3, change instrumentation, or pan audio.
-The movement “from Vancouver” would later require an explicit source-local coordinate
+Actual movement “from Vancouver” with a scientific source would later require a separate calibrated source-local coordinate
 system, calibrated projections/ranges, amplitude policy, and proper HRTF or an equally
 declared listener-receptive model. It is not the same as fullscreen stereo and not a
 pretend pitch encoding of lat/lon. Existing scientific raster pixels are *not*

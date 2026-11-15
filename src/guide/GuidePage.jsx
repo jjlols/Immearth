@@ -140,9 +140,9 @@ const ALIASES = {
 const OVERVIEW = [
   "Earth Information Jukebox. A NASA Space Apps project, not the official NASA website.",
   "This page presents five NASA Earth maps: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. It also has a space photo of the day. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
-  "Four pages make up the site: this home page, the musical remix, the layer explorer, and the photo of the day. Open them from the menu at the top or from Open a page. The musical remix stays silent until you press Play remix.",
-  "You can search the maps, read what each one shows, and move with Previous and Next. Start voice, then say next, previous, photo, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
-  "3D listening opens the musical map. Explore its regions with W/A/S/D or arrow keys, choose one field or all of them, and select Play remix when you are ready.",
+  "Four pages make up the site: this home page, the musical remix, the layer explorer, and the photo of the day. Open them from the menu at the top or from Open a page. The Live Map stays silent until you press Play remix.",
+  "You can search the maps, read what each one shows, and move with Previous and Next. Start voice, then say next, previous, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
+  "3D listening opens the live map. Explore its regions with W/A/S/D or arrow keys, choose one field or all of them, and select Play remix when you are ready.",
 ];
 
 const COMMAND_NAMES = [
@@ -177,10 +177,10 @@ function probePhoto(url) {
 export default function GuidePage() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
-  const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, photo, or page overview.");
+  const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, or page overview.");
   const [listening, setListening] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
-  const [photo, setPhoto] = useState(null);
+  const [setPhoto] = useState(null);
   const [lastSection, setLastSection] = useState("overview");
   const dialogRef = useRef(null);
   const dialogTitleRef = useRef(null);
@@ -323,29 +323,6 @@ export default function GuidePage() {
   }, []);
 
   useEffect(() => {
-    let cancel = false;
-    const folders = [`${import.meta.env.BASE_URL}photo-of-the-day/`, "site/photo-of-the-day/"];
-    const files = ["photo.jpg", "photo.jpeg", "photo.png", "photo.webp", "photo.gif"];
-    (async () => {
-      for (const folder of folders) {
-        let text = "";
-        try {
-          const response = await fetch(`${folder}caption.txt`);
-          if (response.ok) text = (await response.text()).trim();
-        } catch { /* caption is optional */ }
-        for (const file of files) {
-          const url = `${folder}${file}`;
-          if (await probePhoto(url)) {
-            if (!cancel) setPhoto({ url, text });
-            return;
-          }
-        }
-      }
-    })();
-    return () => { cancel = true; };
-  }, []);
-
-  useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return undefined;
     if (overviewOpen && !dialog.open) dialog.showModal();
@@ -367,7 +344,7 @@ export default function GuidePage() {
             <h1 id="overview-title" tabIndex={-1}><span className="highlight">Hear Earth,</span> not only see it</h1>
             <p className="lede">Five NASA views of our planet, each described in words and turned into music. Read, search, or move through the site by keyboard or by voice.</p>
             <div className="actions">
-              <a className="button button-primary" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}>Play the musical remix</a>
+              <a className="button button-primary" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}>Open Live Map</a>
               <a className="button button-secondary" href="#maps">Explore the maps</a>
               <button type="button" className="button button-secondary" ref={openOverviewRef} aria-haspopup="dialog" aria-controls="overview-dialog" onClick={openOverview}>Read page overview</button>
             </div>
@@ -405,14 +382,14 @@ export default function GuidePage() {
           </div>
           <h3 className="destinations-group">Other pages</h3>
           <ul className="destinations" role="list">
-            <li><a className="destination" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}><strong>Musical remix</strong><span>Hear one recording change with the five maps. Choose one map or all of them, and read what you hear in words.</span><span className="destination-keys">Silent until you press Play remix. W A S D or arrow keys move between 12 regions.</span></a></li>
+            <li><a className="destination" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}><strong>Live Map</strong><span>Choose a metric and hear its estimated palette guide the music.</span><span className="destination-keys">Nothing plays until you press Play remix.</span></a></li>
             <li><a className="destination" href={hrefFor("layers")} onClick={(event) => { event.preventDefault(); goToView("layers"); }}><strong>Layer explorer</strong><span>Stack the five maps on one world map. Show, hide, or focus on any layer.</span><span className="destination-keys">No sound on this page.</span></a></li>
-            <li><a className="destination" href={hrefFor("photo")} onClick={(event) => { event.preventDefault(); goToView("photo"); }}><strong>Photo of the day</strong><span>How to add today’s space picture and its written description.</span><span className="destination-keys">For the team that updates the site.</span></a></li>
+
           </ul>
           <h3 className="destinations-group">On this page</h3>
           <ul className="destinations" role="list">
             <li><a className="destination" href="#maps"><strong>The five maps</strong><span>Each NASA Earth view, described in words, with what it does in the remix.</span></a></li>
-            <li><a className="destination" href={hrefFor("music") + "#map-navigation"} onClick={(event) => { event.preventDefault(); goToView("music", "map-navigation"); }}><strong>3D listening</strong><span>Open the musical map. Move between regions and let your selected field shape the music.</span></a></li>
+            <li><a className="destination" href={hrefFor("music") + "#map-navigation"} onClick={(event) => { event.preventDefault(); goToView("music", "map-navigation"); }}><strong>3D listening</strong><span>Open the live map. Move between regions and let your selected field shape the music.</span></a></li>
             <li><a className="destination" href="#move"><strong>Keyboard and voice help</strong><span>Every key and voice command for each page, in one list.</span></a></li>
           </ul>
         </section>
@@ -460,23 +437,7 @@ export default function GuidePage() {
           <div className="section-head"><p className="eyebrow">Spatial sound</p><h2 id="immersive-title" tabIndex={-1}>3D listening</h2>
             <p>Move through twelve musical map regions and hear one shared recording respond to your chosen field.</p>
             <a className="button button-primary" href={hrefFor('music') + '#map-navigation'} onClick={(event) => { event.preventDefault(); goToView('music', 'map-navigation'); }}>Open the listening map</a>
-            <p className="field-note">A first-visit guide shows you how to use W/A/S/D, arrow keys and region buttons. Nothing plays until you choose Play remix. Headphones are recommended. GPS or camera access is not requested for map exploration.</p>
-          </div>
-        </section>
-
-        <section className="band band-plain" id="photo" aria-labelledby="photo-title">
-          <div className="section-head">
-            <p className="eyebrow">Today</p>
-            <h2 id="photo-title" tabIndex={-1}>Space photo of the day</h2>
-            <p>A new view of Earth or space, with a written description of what it shows.</p>
-          </div>
-          <figure className="photo-frame" hidden={!photo}>
-            {photo && <img src={photo.url} alt={photo.text || "Space photo of the day. Add caption.txt in the photo folder so this picture can be described."} />}
-            <figcaption>{photo?.text || "Add caption.txt next to the photo so people who cannot see it know what it shows."}</figcaption>
-          </figure>
-          <div className="placeholder" hidden={Boolean(photo)}>
-            <p>Today’s photo has not been posted yet. Please check back soon.</p>
-            <p className="placeholder-note"><a href={hrefFor("photo")} onClick={(event) => { event.preventDefault(); goToView("photo"); }}>How the photo is added</a></p>
+            <p className="field-note">A live map shows you how to use W/A/S/D, arrow keys and region buttons. Nothing plays until you choose Play remix. Headphones are recommended. GPS or camera access is not requested for map exploration.</p>
           </div>
         </section>
 
@@ -492,11 +453,11 @@ export default function GuidePage() {
               <ul className="key-list">
                 <li><kbd>Tab</kbd> <span>The first stop is a Skip link that jumps past the menu.</span></li>
               </ul>
-              <p>The menu at the top of every page has Home, Musical remix, Layer explorer, Photo of the day, and Help.</p>
+              <p>The menu at the top of every page has Home, Live Map, Layer explorer, , and Help.</p>
               <p>Color blind colors, at the top right, switches the interface to blue, orange, and patterns. NASA map pictures keep their published colors. Your choice is remembered.</p>
             </div>
             <div className="tile">
-              <h3>Musical remix keys</h3>
+              <h3>Live Map keys</h3>
               <p>Nothing plays until you press Play remix. Pause, Reset, Mute, and Master volume are next to it.</p>
               <ul className="key-list">
                 <li><kbd>W ↑</kbd> <span>Move one region north.</span></li>
@@ -527,7 +488,7 @@ export default function GuidePage() {
             </div>
             <div className="tile">
               <h3>Voice commands</h3>
-              <p>Press Start voice, then say one of these. You can also say rain, fires, heat, photo of the day, read the overview, turn left, turn right, recenter, or test tones.</p>
+              <p>Press Start voice, then say one of these. You can also say rain, fires, heat, read the overview, turn left, turn right, recenter, or test tones.</p>
               <ul className="command-list">
                 {COMMAND_NAMES.map((name) => <li key={name}>{name}</li>)}
               </ul>
@@ -549,10 +510,10 @@ export default function GuidePage() {
             <li>Text can be enlarged, and the layout reflows on narrow screens and at high zoom.</li>
             <li>Search results and section changes are announced to screen readers.</li>
             <li>The microphone turns on only after you press Start voice. Your speech is recognized on this computer by sherpa-onnx, an open-source keyword spotter that listens only for this site’s commands. It is not sent to an online service.</li>
-      <li>3D listening opens the musical map in the same page. The first-visit guide explains the twelve-region keyboard controls. Nothing plays until you press Play remix.</li>
+      <li>3D listening opens the live map in the same page. The guide to the 12 regions is nearby and explains the twelve-region keyboard controls. Nothing plays until you press Play remix.</li>
             <li>An opening animation plays when you arrive. Press Space, Escape, or Skip, or click the animation, and it fades away. It stays off when your device is set to reduce motion.</li>
             <li>Color blind colors, at the top of every page, switches the interface to blue, orange, and patterns.</li>
-            <li>The musical remix stays silent until you press Play remix. What you hear is also written out in words, so the music can be followed without sound.</li>
+            <li>The Live Map stays silent until you press Play remix. What you hear is also written out in words, so the music can be followed without sound.</li>
           </ul>
           <p className="feedback">Found a barrier? <a href="https://github.com/jjlols/NASA-SPACE-APP/issues">Report an accessibility problem</a>.</p>
         </section>

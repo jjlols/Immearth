@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import IntroOverlay from "./IntroOverlay.jsx";
 import Jukebox from "./Jukebox.jsx";
 import GuidePage from "./guide/GuidePage.jsx";
-import PhotoPage from "./guide/PhotoPage.jsx";
 import LayerExplorer from "./layers/LayerExplorer.jsx";
 import { viewFromLocation } from "./navigation.js";
 
@@ -22,7 +21,6 @@ export default function App() {
       {view === "home" && <GuidePage />}
       {view === "music" && <Jukebox />}
       {view === "layers" && <LayerExplorer />}
-      {view === "photo" && <PhotoPage />}
-    </>
+        </>
   );
 }
