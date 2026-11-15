@@ -1,18 +1,155 @@
+import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
-const detail=[];
-const browser=await chromium.launch({headless:true});
-const page=await browser.newPage({viewport:{width:1440,height:1030},deviceScaleFactor:1});
-const issues=[];page.on('pageerror',error=>issues.push(error.message));page.on('console',msg=>{if(msg.type()==='error')issues.push(msg.text());});
-await page.goto('http://127.0.0.1:8000/',{waitUntil:'networkidle'});
-await page.waitForFunction(()=>document.querySelectorAll('[data-source-card]').length===5 || document.querySelectorAll('[data-layer-card]').length===5,{timeout:10000});
-detail.push('Title: '+await page.title());
-detail.push('All marker: '+await page.locator('.spatial-origin').count());
-if(await page.locator('.spatial-origin').count())await page.getByRole('button',{name:'Show future spatial audio origin, Vancouver, BC',exact:true}).click();
-await page.screenshot({path:'/tmp/jukebox-origin.png',fullPage:true});
-const bodyText=await page.locator('body').innerText();
-detail.push('Body head: '+bodyText.slice(0,800));
-if(await page.getByRole('button',{name:'Play',exact:false}).count())detail.push('First sound button labels',await page.getByRole('button',{name:'Play',exact:false}).allTextContents());
-if(await page.getByRole('button',{name:'Play remix',exact:true}).count())page.getByRole('button',{name:'Play remix',exact:true}).click();
-await page.waitForTimeout(2500);await page.screenshot({path:'/tmp/jukebox-invocation.png',fullPage:true});
-console.log(detail,issues);
-await browser.close();
+
+const assert_ok = (actual, expected) => assert.equal(actual, expected);
+
+const origin = process.env.JUKEBOX_URL || 'http://127.0.0.1:8001';
+if (!new URL(origin).hostname.match(/^(127\.0\.0\.1|localhost|\[::1\])$/)) throw new Error('The audio/UI audit may only target a local server.');
+const browser = await chromium.launch({ headless: process.env.HEADED !== '1' });
+const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+const errors = [], requests = [];
+page.on('pageerror', error => errors.push(error.message));
+page.on('console', message => { if (message.type() === 'error' && !message.text().includes('status of 503')) errors.push(message.text()); });
+page.on('response', response => { if (response.url().endsWith('/audio/deliberate-thought.mp3')) requests.push(response.status()); });
+
+await page.addInitScript(() => {
+ window.__AUDIO_AUDIT__ = { contexts: [], calls: [] };
+ const Original = window.AudioContext || window.webkitAudioContext;
+ if (!Original) return;
+ class AuditedContext extends Original {
+  constructor(...args) { super(...args); window.__AUDIO_AUDIT__.contexts.push(this); }
+  decodeAudioData(...args) { window.__AUDIO_AUDIT__.calls.push('decode'); return super.decodeAudioData(...args); }
+  createBufferSource(...args) { window.__AUDIO_AUDIT__.calls.push('source'); return super.createBufferSource(...args); }
+ }
+ window.AudioContext = AuditedContext;
+ window.webkitAudioContext = AuditedContext;
+});
+const region = () => page.locator('[data-exploration-region]').getAttribute('data-exploration-region').then(Number);
+const engine = expression => page.evaluate(expression);
+
+try {
+ await page.goto(origin, { waitUntil: 'networkidle' });
+ await page.waitForSelector('[data-source-card]');
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
+ await page.keyboard.press('d');
+ assert.equal(await region(), 1);
+ await page.keyboard.press('Home');
+ assert.equal(await region(), 0);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
+ const unnamedControls = await page.locator('button,input').evaluateAll(elements => elements.filter(element => {
+  if (element.tagName === 'BUTTON') return !(element.getAttribute('aria-label') || element.textContent.trim());
+  return !(element.getAttribute('aria-label') || element.labels?.length);
+ }).map(element => element.outerHTML));
+ assert.deepEqual(unnamedControls, []);
+ await page.getByRole('button', { name: /Composition/ }).focus();
+ await page.keyboard.press('Enter');
+ assert.equal(await page.getByRole('button', { name: /Composition/ }).getAttribute('aria-pressed'), 'true');
+ await page.getByRole('button', { name: /Solo \/ Explore/ }).focus();
+ await page.keyboard.press('Space');
+ assert.equal(await page.getByRole('button', { name: /Solo \/ Explore/ }).getAttribute('aria-pressed'), 'true');
+ assert_ok(await page.locator('.playback-status').getAttribute('role'), 'status');
+ assert_ok(await page.locator('.current-region').getAttribute('role'), 'status');
+ await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
+ await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
+ await page.route('**/audio/deliberate-thought.mp3', route => route.fulfill({ status: 503, body: 'unavailable' }));
+ await page.getByRole('button', { name: 'Play remix', exact: true }).click();
+ await page.getByRole('alert').waitFor();
+ await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current?.ctx?.state === 'suspended');
+ assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.isRunning), false);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts[0].state), 'suspended');
+ await page.unroute('**/audio/deliberate-thought.mp3');
+ await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+ await page.getByRole('button', { name: 'Retry', exact: true }).dblclick();
+ await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0]?.state === 'running');
+ await page.waitForTimeout(1200);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'source').length), 1);
+ const initial = await engine(() => {
+  const e = window.__JUKEBOX_AUDIO_REF__.current;
+  return { duration: e.buffer.duration, rateTarget: e.original.playbackRate.value,
+   state: e.ctx.state, signals: e.getOutputMetrics(), ids: [...e.models.keys()].filter(id => e.audible(id)) };
+ });
+ assert.ok(initial.duration > 170);
+ assert.equal(initial.state, 'running');
+ assert.deepEqual(requests, [503, 200], 'failed Play must precede one successful source request');
+ assert.ok(initial.signals.peak > 0, 'post-chain waveform must contain nonzero audio');
+ assert.ok(initial.signals.rms > 0, 'post-chain RMS must contain nonzero audio');
+
+ await page.evaluate(() => document.activeElement?.blur());
+ assert.equal(await region(), 0);
+ await page.keyboard.press('d');
+ assert.equal(await region(), 1);
+ await page.keyboard.press('s');
+ assert.equal(await region(), 5);
+ await page.keyboard.press('a');
+ assert.equal(await region(), 4);
+ await page.keyboard.press('w');
+ assert.equal(await region(), 0);
+ await page.keyboard.press('ArrowUp');
+ assert.equal(await region(), 0);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
+ await page.getByRole('button', { name: /Analyze region 6:/ }).click();
+ assert.equal(await region(), 5);
+ await page.evaluate(() => document.activeElement?.blur());
+ await page.waitForTimeout(100);
+ await page.keyboard.press('d');
+ assert.equal(await region(),6);
+ await page.waitForTimeout(100);
+ await page.keyboard.press('Home');
+ assert.equal(await region(), 0);
+ await page.getByLabel('Temperature opacity').focus();
+ await page.keyboard.press('d');
+ assert.equal(await region(), 0);
+ await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
+
+ await page.getByRole('button', { name: /Composition/ }).click();
+ await page.getByRole('button', { name: 'Explore Temperature musical mapping' }).click();
+ const live = await engine(() => {
+  const e = window.__JUKEBOX_AUDIO_REF__.current;
+  return { rateTarget: e.playableParameters.temperatureRate, carbonGainTarget: e.playableParameters.carbonPadGain,
+   noxHzTarget: e.playableParameters.noxFrequency, accents: e.accents.size,
+   ids: [...e.models.keys()].filter(id => e.audible(id)), metrics: e.getOutputMetrics() };
+ });
+ assert.ok(live.rateTarget >= 0.83 && live.rateTarget <= 1.22);
+ assert.ok(live.carbonGainTarget > 0);
+ assert.ok(live.noxHzTarget >= 100 && live.noxHzTarget <= 1500);
+ assert.ok(live.accents <= 8);
+ assert.ok(live.metrics.peak > 0);
+ await page.getByLabel('Show Temperature on map and enable its musical layer').uncheck();
+ assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.playableParameters.temperatureRate), 1);
+ await page.getByLabel('Show Carbon monoxide on map and enable its musical layer').uncheck();
+ assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.audible('carbon_monoxide')), false);
+ await page.getByRole('button', { name: /Solo \/ Explore/ }).click();
+ await page.getByRole('button', { name: 'Explore Nitrogen oxides musical mapping' }).click();
+ assert.deepEqual(await engine(() => [...window.__JUKEBOX_AUDIO_REF__.current.models.keys()].filter(id => window.__JUKEBOX_AUDIO_REF__.current.audible(id))), ['nitrogen_oxides']);
+
+ await page.getByRole('button', { name: 'Pause', exact: true }).click();
+ await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'suspended');
+ assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.timer), null);
+ await page.getByRole('button', { name: 'Reset music playback' }).click();
+ assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.original), null);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts[0].state), 'suspended');
+ const measuredMaster = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value);
+ await page.getByRole('button', { name: 'Play remix', exact: true }).click();
+ await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'running');
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
+ assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value), measuredMaster);
+ await page.getByRole('button', { name: 'Mute', exact: true }).click();
+ await page.getByRole('button', { name: 'Unmute', exact: true }).click();
+
+ await page.setViewportSize({ width: 390, height: 844 });
+ const responsive = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, viewport: innerWidth,
+  transport: [...document.querySelectorAll('.music-console button')].every(button => { const rect = button.getBoundingClientRect(); return rect.width > 0 && rect.left >= 0 && rect.right <= innerWidth; }) }));
+ assert.ok(responsive.scroll <= responsive.viewport);
+ assert.equal(responsive.transport, true);
+ assert.deepEqual(errors, []);
+ console.log(JSON.stringify({ status: 'passed', origin, mp3Requests: requests, initial, live, responsive,
+  contextCount: 1, decodedBuffers: 1, resetReplayUsesOriginalDecode: true,
+  caveat: 'Headless analyser verifies generated post-chain signals, not subjective audibility through physical speakers. Check OS/browser/output volume before changing source gain.' }, null, 2));
+} finally {
+ await browser.close();
+}

@@ -8,3 +8,7 @@ overlay-site/
 node_modules/
 playwright-report/
 test-results/
+
+# Vite production build only
+# output of npm run build; keep sources in src/ and public/
+dist/

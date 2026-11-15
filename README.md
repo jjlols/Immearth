@@ -1,152 +1,217 @@
-# NASA Earth Information Center Image Downloader
+# Earth Information Jukebox
 
-A focused Python downloader for five NASA Scientific Visualization Studio (SVS)
-visualizations. It saves stable PNG files for later computer-vision and
-sonification work; those integrations are intentionally not implemented here.
+An interactive map and restrained music remix built around five NASA Earth
+visualizations. Follow land and coastlines, inspect full source-map fields, then
+press **Play remix** to hear their estimated musical interpretation over a **quiet,
+shared** recording: **“Deliberate Thought” — Kevin MacLeod**, **CC BY 4.0**.
 
-## Selection rules
+The main React/Vite frontend preserves the approved Natural Earth geography while
+adding independent layer controls and reusing stable scientific IDs in voices,
+pixel analysis, UI controllers, and the audio mixer. That makes raw-value adapters
+an eventual path rather than RGB a permanent science architecture.
 
-Every run verifies the NASA page title before extracting an asset and examines
-only the page's main `media_group_*` sections (not related-page thumbnails).
+## Start the working app
 
-1. If a media group describes an image as **most recent**, **most currently
-   available**, or **latest available**, its largest official original download
-   is selected, excluding preview/thumbnail variants.
-2. Otherwise, the first video in the main groups is treated as the primary
-   visualization. `ffmpeg` sends the MP4 URL's **first decoded video frame** to
-   a new PNG. Posters, still-image links, source frames, and last frames are not
-   substituted for that first frame. FFmpeg streams only the data it needs, so
-   there is no temporary MP4 to remove.
-3. If neither succeeds, metadata records an error and existing valid images
-   are retained. An unrelated image is never substituted.
+Prerequisites: Node.js/npm (build currently used Node 22) plus npm packages:
 
-Current verified assets (checked 2026-11-14):
+```bash
+npm install
+npm run dev -- --host 127.0.0.1
+```
 
-| Category | NASA page | Selected asset and reason | Resolution |
+Open **http://localhost:8000**. Existing asset generation is already committed.
+To rebuild data or run the static production web files locally:
+
+```bash
+npm run build
+python3 -m http.server 8000 --bind 127.0.0.1 --directory dist
+```
+
+If an older preview remains on that port, stop it before starting the new one.
+Music files are served by this app; do not open raw `file://` index files.
+
+Vite production targets static paths (`base: "./"`). Needed runtime things in
+`public/` are the local recording, map sources/geometry, `data/markers.json`,
+and `scales/features.json`. Non-runtime scientific pipelines can regenerate
+further needs separately where configured.
+
+## What you see and do
+
+There are **five metric cards**, each has the same visual/map and sound priority:
+click name to focus field then read description and estimated region meaning.
+Each line has **In view** (visual+audible enable), and **opacity** (visual density,
+not musical intensity / data filtering). Independent cards drive each scientific
+field to one shared Natural Earth geographic background.
+
+**Solo / Explore** defaults to a learning view foregrounding one chosen metric;
+**Composition** lets eligible visible fields share the original musical recording.
+Use geographic “Show land & coasts” or “Selected field only” to choose visibility.
+**Reset layers** restores the map’s defaults; **Reset music** stops the playback
+transport/nodes—not hides/reinterprets the dataset.
+
+Buttons use keyboard Space/Enter. Use **up/down arrow keys** (or left/right) on
+field cards to navigate (Home/End for bounds); tab freely among other controls.
+
+### Explore the image-relative 3 × 4 grid
+
+The separate amber **Sample n/12** marker shows the current exploration region;
+the fixed green Vancouver marker remains a geographic reference, not the same pin.
+Use **W/A/S/D** or the **arrow keys** while the page background is focused:
+**W/up = north**, **A/left = west**, **S/down = south**, **D/right = east**.
+The three rows and four columns are image-relative analysis regions, numbered
+`row * 4 + column` (zero-based). Movement clamps at the edges (no wrap); **Home**
+returns to **region 1**, the Vancouver-associated start. The twelve region buttons
+use exactly the same state, so a subsequent keystroke continues from a clicked button.
+
+Keyboard exploration never intercepts typing, sliders, buttons, links, editable
+content or modifier shortcuts and does not create/resume audio. Only **Play remix**
+may do that. During playback, a new region smoothly updates eligible tempo, CO pad
+gain, NOₓ register and bounded precipitation/fire scheduling. A field with no
+confident nearest-palette match can remain silent even when selected. Regions are
+not coordinates, geographic scans, fire counts or a geolocation request.
+
+### The five controls / voices — plain language
+
+| Field | What you see | What you may hear | What its estimate means / can’t mean |
 |---|---|---|---|
-| Precipitation | [4285](https://svs.gsfc.nasa.gov/4285/) — Near Real-Time Global Precipitation | `imergert_composite.now.png`, described as “An image of the most currently available global precipitation data” | 3600×1800 |
-| Active fires | [5113](https://svs.gsfc.nasa.gov/5113/) — VIIRS Active Fires | `VIIRS_fires_latest.png`, described as “Most recent VIIRS active fires” | 4096×2048 |
-| Carbon monoxide (CO) | [5153](https://svs.gsfc.nasa.gov/5153/) — Carbon Monoxide | First decoded frame of primary `MC03_stage4_GMAO_CO_2048x1024_en.mp4` | 2048×1024 |
-| Nitrogen oxides (NOx) | [5154](https://svs.gsfc.nasa.gov/5154/) — Nitrogen Oxides | First decoded frame of primary `MC04_stage4_GMAO_NO2_2048x1024_en.mp4` | 2048×1024 |
-| Near-surface temperature | [5147](https://svs.gsfc.nasa.gov/5147/) — GEOS-FP Near-Surface Temperature | First decoded frame of primary `MC01_stage3_GMAO_near_surface_temperature_2048x1024_en.mp4` | 2048×1024 |
+| **Precipitation (P)** | Original liquid-rain and frozen NASA source colors over the map. | Separate, limited droplet densities for rain and frozen estimated classes. Higher bins make modest clusters, not constant tones. | Separate estimated discrete mm/hour palettes (0.1–50, with ambiguous overflow). No match, gray/no-data or overflow stays unquantified/silent; no combined gradient. |
+| **Active fires (F)** | Original VIIRS fire-source colors. | Infrequent finite soft sine/mallet accents after rests of approximately eight seconds or more; estimated strength changes the accent modestly. | Estimated **0,2,4,6,8 MW FRP**, not fire counts, alarms or incidents per second. Hidden/unclassified fields create no accents. |
+| **Carbon monoxide (CO)** | The full near-surface carbon-monoxide field, **not CO₂**. | Five clearly distinct generic pad-volume tiers on a filtered branch of the same recording: low/sparse to controlled strongest presence. | Estimated nonuniform **40,100,130,200,500 ppbv** anchors; no extra linear/65 ppbv threshold. No official stems were obtained. |
+| **Nitrogen oxides (NOₓ)** | Full original near-surface model colors. | One sustained, gently gliding guide note. Higher estimated NOₓ raises a bounded log₁₀-derived register; navigation changes it only after Play. | Estimated **0.001–10 ppbv** labels. Neither linear concentration nor latitude/longitude becomes pitch. |
+| **Temperature (T)** | Full original GEOS-FP near-surface temperature colors. | Warmer means faster shared music: estimated −40…+40 °C maps to **0.83×–1.22×**. Hidden, absent or inaudible temperature returns speed to 1×. | Playback rate inherently changes pitch too; this is not temperature as altitude. Estimated T2M labels retain NASA’s short-caption **3 m** versus detailed-caption **2 m** discrepancy. |
 
-For precipitation, the full `imergert_composite.now.png` is deliberately used
-rather than the same-sized `imergert_alpha.now.png` or `imergert_dates.now.png`
-overlay layers. This retains NASA's complete map visualization, without crop
-or resampling.
+Values in guide are **estimated from colors against approximate reviewed raster
+labels**, not an authentication of every pixel as absolute measurement. UI region
+buttons sample regional **color evidence**; they never automatically discover
+exact latitude,timestamps nor a scanned location's music semantics. For NOx log10
+happens before musical semantic register, not marker ERR→fire accent maximum loud.
 
-CO, NOx, and temperature have no qualifying dedicated latest-data image;
-non-visualization assets such as colorbars do not qualify. The first-frame images are not claimed to contain current observations.
+See `color_scales/REPORT.md` and `color_scales/schema.json` for caution boundary
+logic, `data/metadata.json` for actual download snapshot fields, `public/…` for
+serving artifacts. `src/audio/musicMappings.js` groups instrument choices;
+`src/audio/RemixEngine.js` uses actual mp3 playback with shared relative clock.
 
-## Requirements
+## Playback and getting sound
 
-- Python 3.10 or later
-- `ffmpeg` on `PATH` (used by SVS's own network protocol support, no browser)
-- FFmpeg HTTPS and H.264 decoding support (standard desktop builds include it)
-- Network access to `svs.gsfc.nasa.gov`
+Always explicitly activate: **Play remix** → browser loads and decodes MP3 → context
+can then resume as allowed. No autoplay on launch, selecting metrics, region guides
+or Vancouver pin. **Pause** stops scheduling/suspends current context; resume via
+the same explicit listener. **Reset** stops track and scheduled source accents.
 
-macOS with Homebrew:
+- **Master volume** is deliberately limited (24% default/max set upstream)
+- **Mute** receives all player pipeline including backing track; unmute restores it.
+- If too quiet, first check Mute and master slider, OS/browser output level/headphones
+  disconnected, app has MP3 source loading resolved, disabled source not active.
+  Adjust local playback volume comfortably while listening before proposing code changes. Some
+  internal image classes can remain silent comfortably, but the licensed backing
+  source always needs explicit user play.
 
-```bash
-brew install ffmpeg
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
-```
+Auditory note “inside head” at Vancouver is expressly a future **modeled spatial
+adapter** not live stereo/gain. Source-patterned original isn't louder in higher
+scientific quantile nor evil spray-relevant sound of the pollutant chemicals.
+**Do not make the song gain high just because a fixture green button on screen.**
 
-Ubuntu/Debian:
+## Spatial origin marker for the future
 
-```bash
-sudo apt install ffmpeg python3-venv
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
-```
+Crosshair labeled **Vancouver, BC** (49.2827°N, 123.1207°W) serves as the user's
+initiating geolocation reference. Lat/long of these data do not currently control
+time, pitch, rhythm, or automatic pan. Original intended future coordinate origin
+is inside listener head at Vancouver local **0,0,0** when traceable model available,
+not browser cross-shaped mystery. Current map displayed x≈15.8%, y≈22.6%; actual
+raster matches may change with calibrated geodata inputs.
 
-## Usage
+See `src/lib/spatialOrigin.js` and `VANCOUVER_ORIGIN.md` for documented structure.
+No user geolocation or actual hidden coordinate trick beyond mention of the prompt.
 
-From the repository root:
+## Implementation paths — use source files
 
-```bash
-# All five; retained valid files skip work if source validators are unchanged
-python download_eic.py --verbose
+- **input images** — `download_eic.py`, `data/images` and `data/metadata.json`.
+- **scientific-scale evidence** — independently processed `color_scales/output/*`.
+- **preprocessing** — `sonification/palette_library.py` finds closest legitimate RGB
+  classes across irregular accepted bins, discards uncertain/neutral/no-data.
+  `sonification/build_sonification_assets.py` produces regional estimates without
+  geographic frequency/timing assumptions.
+- **geography** — `build_geographic_overlays.py` + `overlay` Natural Earth vectors;
+  atmospheric source PNGs remain complete original images, not peak percentages.
+- **app** — `src/` React/Vite. `useSonification.js` can eventually become standard
+  integration hook but must not add side effect on mostly named fields at mount.
+- **deployment** — serve `dist/` as a static app with mp3 defined in `public/audio/`
+  and no citations omission. Plan use of supported DeepSpace deploy docs & account,
+  not an existing silent service launched by network-free local server.
 
-# Just precipitation
-python download_eic.py --category precipitation
+Optional rebuild commands:
 
-# Force complete redownload / video re-extraction for every category
-python download_eic.py --force --verbose
-
-# One file, forced
-python download_eic.py --category active_fires --force
-```
-
-Output paths are stable regardless of which directory invokes the script:
-
-```text
-data/images/precipitation.png
-data/images/active_fires.png
-data/images/carbon_monoxide.png
-data/images/nitrogen_oxides.png
-data/images/near_surface_temperature.png
-data/metadata.json
-```
-
-Requests have bounded timeouts and retries for transient errors/429 responses.
-Pages are read sequentially to be polite to NASA. A category failure does not
-stop other categories, and the exit status indicates whether the selected run
-succeeded. PNG and metadata replacement use temporary-file atomic renames.
-An interrupted or corrupt replacement does not damage an existing valid PNG.
-
-Without `--force`, the script still reads each page to rediscover the correct
-asset. It can skip regeneration only when the page, selection method, source
-URL and valid local image match previous metadata. A suitable `HEAD` request
-checks `ETag` and `Last-Modified` when provided. If a fixed NASA URL offers no
-usable validators (or the check fails), the existing file is retained and a
-warning is recorded; source change detection is then **not guaranteed**.
-
-## Metadata and dates
-
-`data/metadata.json` has an entry for each category with the NASA page URL,
-actual selected MP4/image URL, relative PNG path, original asset type, image
-dimensions, extraction method, extraction time, and errors/warnings. First-frame
-entries explicitly record `video_timestamp_seconds: 0`.
-
-`observation_timestamp` is `null` when no exact timestamp can be verified.
-`scientific_data_recency_verified` is `false`: being labeled “most recent” on
-NASA's page and being downloaded now does not verify an acquisition timestamp.
-Failed attempts are stored under `last_attempt` without erasing a previous
-successful category's provenance.
-
-## Tests
+**Geographic outputs** may refresh live NASA downloadable assets; only do so to
+recalibrate models/along NASA updates, not if just wanting display updates.
 
 ```bash
-python -m pip install -r requirements-dev.txt
-python -m pytest -q
+PYTHONPATH=. .venv/bin/python -m pip install -r requirements-overlay.txt
+PYTHONPATH=. .venv/bin/python build_geographic_overlays.py
+PYTHONPATH=. .venv/bin/python -m sonification.build_sonification_assets
+PYTHONPATH=. .venv/bin/python scripts/prepare_jukebox_assets.py
 ```
 
-Tests use mocked HTML/HTTP fixtures for selection priority, missing assets,
-HTTP errors, corrupt-download rejection, metadata, and preservation of existing
-files. An FFmpeg test encodes red then blue frames and asserts that only red is
-saved. Live acquisition was executed separately with the commands above, and
-all five downloaded PNGs were decoded and dimension-checked with Pillow.
+The latter stages correct map proxies, geography and `scales/features.json`.
+Public committed source in app stats not arbitrarily deleted meaning previous
+accurate mapping results. `generated` local `overlay-site` and `dist` are not
+primary source.
 
-## DeepSpace assistance
+## Music license / legal notice
 
-DeepSpace was checked at implementation time. Neither a `deepspace` executable
-nor an installed Python `deepspace` SDK or DeepSpace MCP tool was configured in
-this environment. Its public web page points to documentation, but no supported
-local integration was available. The implementation therefore used direct NASA
-HTML/API inspection, `curl`, FFmpeg, and actual tests; no DeepSpace APIs or
-contribution are claimed.
+> **Deliberate Thought** — **Kevin MacLeod**, incompetech.com.
+> **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
 
-## Limitations
+Source: <https://incompetech.com/music/royalty-free/mp3-royaltyfree/Deliberate%20Thought.mp3>
+License & attribution: <https://creativecommons.org/licenses/by/4.0/>.
 
-- NASA can change its HTML grouping or descriptions. In that case the program
-  fails explicitly instead of silently choosing a poster or unrelated asset.
-- The precipitation composite preference is specific to its named NASA assets;
-  a renamed full composite requires updating the documented selector.
-- NOAA/NASA observation time is not inferred from page publication/update time,
-  filesystem timestamps, the word “latest”, or download time.
-- Image content was sanity-checked through decoding, dimensions, and matching
-  page/asset descriptions; no formal scientific calibration is performed.
+69 BPM and approximately 2:57 tracks as provided by the user, local `public/audio/…mp3`.
+No official stems were identified. Program applies data-responsive generic filters,
+slow playback gain change and limited computed accents—not a claimed official
+extracted choir, advertised faithful transcribed musical notes, or NASA endorsement.
+See `LICENSES.md` + `public/attribution.json` for local network source hash and terms.
+
+NASA imagery remains NASA data; Natural Earth land/coast data is public domain.
+Estimated raster palette mappings not validated numeric level; do not act on music
+for essential alerts/environmental health/data archiving decisions.
+
+## Verification and review protocol
+
+The unit/module tests live in `tests/`, selected frontend `test-js` fixtures:
+
+```bash
+npm test
+npm run build
+PYTHONPATH=. .venv/bin/python -m pytest -q tests
+PYTHONPATH=. .venv/bin/python -m pytest -q color_scales/tests
+```
+
+Run isolated process for **scientific independent color_scales suite** because one
+of its tests checks download_eic **not imported** in that subprocess. If all-tests
+root import collision occurs, document known module-isolation instead of changing
+required partition.
+
+`npm run test:browser` uses Playwright/Chromium against `JUKEBOX_URL` (default
+`http://127.0.0.1:8001`). Start a local production server, for example
+`python3 -m http.server 8001 --bind 127.0.0.1 --directory dist`, before running it.
+The current production audit passed on **14 November 2026, Node 22.19.0**: it checks
+no context on raw load/navigation, one context/one MP3 decode, buffer duration,
+transport, post-chain signal, Solo/Composition, layer hiding, shared WASD/Home grid
+selection, accessible native controls, Vancouver inertness and 390 px overflow.
+
+Recorded post-chain measurements in that headless audit were approximately
+**RMS 0.0141 / peak 0.0244** initially and **RMS 0.0147 / peak 0.0239** in Composition;
+Browser-decoded duration was **177.391 seconds**. These verify generated output at the
+analyser, **not subjective audibility through physical speakers or headphones**.
+No gain increase was made; background dry gain remains 0.085 and master defaults 0.22.
+
+
+No configured DeepSpace integration or deployment was used or claimed here. The app
+is built with Vite and checked with native Node/Python/Playwright tooling. Deployment
+remains a separate action requiring explicit user authorization.
+
+## Contributor memory
+
+See [`AGENTS.md`](AGENTS.md) for changes-scoped agents: **no force push/no hard reset**
+existing development worktrees; retain attribution; source warnings; honest estimated
+versus verified data boundaries; view-hidden=audible-disabled; explicit start only;
+no brightness/location-as-science attempts; and exact verified test commands.

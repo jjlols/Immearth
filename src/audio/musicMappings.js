@@ -1,49 +1,138 @@
-/** Map estimator regions to one small musical state. This is NOT a raw NASA lookup. */
-export const AUDIO_BPM=69;
-export const TRACK=Object.freeze({title:'Deliberate Thought',artist:'Kevin MacLeod',licenseUrl:'https://creativecommons.org/licenses/by/4.0/'});
-export const SCALE_NOTES=[0,2,3,5,7,9,10];
-export const clamp=(x,min=0,max=1)=>Number.isFinite(x)?Math.min(max,Math.max(min,x)):min;
-export const median=f=>Number.isFinite(f?.median)?f.median:NaN;
-export const logRank=(x,min=.001,max=10)=>Number.isFinite(x)&&x>0?clamp((Math.log10(x)-Math.log10(min))/(Math.log10(max)-Math.log10(min))):0;
-export const frequency=midi=>440*2**((midi-69)/12);
-export function pitchNOx(x){const degree=Math.round(logRank(x)*9);return frequency(62+SCALE_NOTES[degree%7]+ Math.floor(degree/7)*12);}
-export function coTier(x){if(x<100)return 0;if(x<130)return 1; if(x<200)return 2;if(x<500)return 3;return 4;}
-export function temperatureTier(x){return x<0?0:x<20?1:2;}
-export function featureModel(id,f){
- if(!f||f.classified_count<=0||f.status==='silent')return {id, silent:true,classified_count:0};
- if(id==='precipitation'){
-   const rain=f.rain_count||0, snow=f.snow_count||0;
-   if(rain+snow===0)return {id,silent:true,classified_count:f.classified_count};
-   const highest=f.max_value||.05;
-   return {id,kind:'drops',rain,snow,frozen:snow>rain,density:clamp(Math.floor(1+Math.log10(highest+.1)*3),1,5),strength:clamp(highest/50),classified_count:f.classified_count};
- }
- if(id==='active_fires')return {id,kind:'mallets',power:clamp(median(f)/8),classified_count:f.classified_count};
- if(id==='carbon_monoxide'){
-   const v=median(f);return {id,kind:'pad',rank:clamp((v-40)/460),tier:coTier(v),classified_count:f.classified_count};
- }
- if(id==='nitrogen_oxides'){
-   const v=median(f);
-   return {id,kind:'arpeggio',rank:logRank(v),frequency:pitchNOx(v),pitches:Array.from({length:8},(_,i)=>Math.min(1700,i%2?frequency(74)*1.2:pitchNOx(v))),classified_count:f.classified_count};
- }
- if(id==='near_surface_temperature'){
-   const v=median(f);return {id,kind:'texture',rank:clamp((v+40)/80),tier:temperatureTier(v),classified_count:f.classified_count};
- }
- throw new Error('Unrecognized metric');
-}
-export const INSTRUMENT_INFO=Object.freeze({
-  precipitation:{kind:'Water and snowfall drops',explanation:'The rain and frozen palettes separately select what becomes rounded melodic water-droplet voices. Higher-rate bins bring a denser, slightly stronger rhythm, not any visual brightness.',caveat:'Discrete rainfall colors are estimated boundary groups; rain and snow never merge into one quantity. Gray, unassigned swatches and unknown pixels become silence.'},
-  active_fires:{kind:'Wooden and metallic accents',explanation:'Sparse mallet accents reflect estimated FRP strength, not counts of fires or event rate. Stronger estimated labels make accents sound a little brighter rather than a continuously ringing alarm.',caveat:'Estimated 0,2,4,6,8 MW FRP anchor-label interpolation. Unclassified extensions are unmapped.'},
-  carbon_monoxide:{kind:'Warm sustained pad',explanation:'The persistent estimated CO field colors select volume and spectral character for a gentle mix branch shared across the selected recording.',caveat:'CO has nonuniform 40,100,130,200,500 anchors. Global changes glide gradually; no literal chemical sound.'},
-  nitrogen_oxides:{kind:'Log-register glass arpeggio',explanation:'The arpeggio follows log₁₀-scaled estimated NOₓ, raising its register as the estimate rises. There is no mapping from colors/latitude to physical pollution or a perceived latitude of pitch.',caveat:'Estimate labels 0.001–10 ppbv are logarithmic; musical register is a separate concept from physical concentration or location.'},
-  near_surface_temperature:{kind:'Low harmonic texture',explanation:'Near-surface temperature influences the underlying track’s slow harmonic color. Warmer estimated layers support warmer texture; colder fields are low and open without simple heat-to-volume mapping.',caveat:'−40…+40°C labels retain both 2m and 3m legend-caption disagreement noted by the extraction.'},
+/** Musical controls derived only from nearest-palette summaries.
+ * Palette labels are estimated interpretations of reviewed NASA raster ticks,
+ * not official calibrated pixel observations. No brightness or geography is read.
+ */
+export const AUDIO_BPM = 69;
+export const TRACK = Object.freeze({
+  title: 'Deliberate Thought',
+  artist: 'Kevin MacLeod',
+  licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
 });
-export function describeFeature(id,f){
- const format=(v)=>Number.isFinite(v)?Math.abs(v)<.01?Number(v.toFixed(4)):Math.round(v*10)/10:'unavailable';
- if(!f||f.classified_count<=0||f.status==='silent')return 'No confident nearest-palette colors or no data. Staying silent is the correct sonification.';
- if(id==='carbon_monoxide')return `Estimated CO palette range: ${format(f.q20)}–${format(f.q80)} ppbv (nonuniform anchors).`;
- if(id==='nitrogen_oxides')return `Estimated NOₓ spread: ${format(f.q20)}–${format(f.q80)} ppbv (log₁₀ converted for register).`;
- if(id==='near_surface_temperature')return `Estimated near-surface palette range: ${format(f.q20)}–${format(f.q80)} °C (T2M; caption conflict 3m / detailed 2m).`;
- if(id==='active_fires')return `Estimated FRP accent field (0–8 MW; not a number of fire incidents).`;
- if(id==='precipitation')return `Rain classes: ${f.rain_count||0}; frozen classes: ${f.snow_count||0}. Gray/no-data/overflow-boundary semantics stay separate.`;
- return `Estimated colored-region characteristics; raw RGB is never a proxy for physical value.`;
+export const CO_PAD_GAINS = Object.freeze([0.008, 0.025, 0.05, 0.085, 0.13]);
+export const clamp = (value, min = 0, max = 1) =>
+  Number.isFinite(value) ? Math.max(min, Math.min(max, value)) : min;
+export const median = features => Number(features?.median);
+
+export function logRank(value, min = 0.001, max = 10) {
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  return clamp((Math.log10(value) - Math.log10(min)) / (Math.log10(max) - Math.log10(min)));
+}
+export const frequency = midi => 440 * 2 ** ((midi - 69) / 12);
+
+export function temperatureRank(value) {
+  return Number.isFinite(value) ? clamp((value + 40) / 80) : null;
+}
+export function temperaturePlaybackRate(value) {
+  const rank = temperatureRank(value);
+  return rank === null ? 1 : 0.83 + 0.39 * rank;
+}
+
+export function coTier(value) {
+  if (!Number.isFinite(value)) return 0;
+  // The actual reviewed, nonuniform anchors: do not insert a 65 ppbv boundary.
+  if (value < 100) return 0;
+  if (value < 130) return 1;
+  if (value < 200) return 2;
+  if (value < 500) return 3;
+  return 4;
+}
+export function coPadGain(value) {
+  return Number.isFinite(value) ? CO_PAD_GAINS[coTier(value)] : 0;
+}
+
+/** A bounded D-minor pentatonic register; log10 happens before note selection. */
+export function pitchNOx(value) {
+  if (!Number.isFinite(value) || value <= 0) return null;
+  const scale = [0, 3, 5, 7, 10];
+  const step = Math.round(logRank(value) * 9);
+  return frequency(50 + scale[step % scale.length] + 12 * Math.floor(step / scale.length));
+}
+
+/** Return separate droplet densities so rain and frozen scales are never merged. */
+export function precipitationDensities({ rain_count = 0, snow_count = 0, max_value } = {}) {
+  if (!Number.isFinite(max_value) || max_value > 20) return { rain: 0, frozen: 0 };
+  const density = count => count > 0 ? Math.max(1, Math.min(8, Math.round(Math.log2(count + 1)))) : 0;
+  return { rain: density(rain_count), frozen: density(snow_count) };
+}
+
+export function featureModel(id, features) {
+  if (!features || features.status === 'silent' || !(features.classified_count > 0)) {
+    return { id, silent: true, classified_count: features?.classified_count || 0 };
+  }
+  if (id === 'precipitation') {
+    const densities = precipitationDensities(features);
+    if (densities.rain + densities.frozen === 0) {
+      return { id, kind: 'drops', silent: true, classified_count: features.classified_count };
+    }
+    return {
+      id, kind: 'drops', densities,
+      ...densities, // Retain the former numeric names alongside explicit densities.
+      strength: clamp(Number.isFinite(features.max_value) ? features.max_value / 50 : 0),
+      // Compatibility for callers of the earlier feature contract.
+      density: Math.max(densities.rain, densities.frozen),
+      rain: features.rain_count || 0, snow: features.snow_count || 0,
+      frozen: (features.snow_count || 0) > (features.rain_count || 0),
+      classified_count: features.classified_count,
+    };
+  }
+  if (id === 'active_fires') {
+    const value = median(features);
+    return { id, kind: 'mallets', ...(!Number.isFinite(value) ? { silent: true } : { power: clamp(value / 8) }), classified_count: features.classified_count };
+  }
+  if (id === 'carbon_monoxide') {
+    const value = median(features);
+    return { id, kind: 'pad', ...(!Number.isFinite(value) ? { silent: true } : { tier: coTier(value), padGain: coPadGain(value), rank: clamp((value - 40) / 460) }), classified_count: features.classified_count };
+  }
+  if (id === 'nitrogen_oxides') {
+    const value = median(features), hz = pitchNOx(value);
+    return { id, kind: 'guide-note', ...(!Number.isFinite(hz) ? { silent: true } : { rank: logRank(value), frequency: hz }), classified_count: features.classified_count };
+  }
+  if (id === 'near_surface_temperature') {
+    const value = median(features);
+    return { id, kind: 'tempo', ...(!Number.isFinite(value) ? { silent: true } : { rank: temperatureRank(value), playbackRate: temperaturePlaybackRate(value) }), classified_count: features.classified_count };
+  }
+  throw new Error('Unrecognized canonical scientific field.');
+}
+
+export const INSTRUMENT_INFO = Object.freeze({
+  precipitation: {
+    kind: 'Separate rain and frozen droplets',
+    explanation: 'Liquid-rain and frozen-palette matches have separate densities. Higher matched bins create limited clusters of soft droplets; near silence and unmatched colors stay silent.',
+    caveat: 'Estimated discrete mm/hour classes (0.1–50). The overflow and no-data/gray cases never receive an invented upper value.',
+  },
+  active_fires: {
+    kind: 'Infrequent fire-strength accents',
+    explanation: 'A soft finite mallet/sine accent occurs only after long rests (at least about eight seconds). Its strength follows estimated fire radiative power (FRP).',
+    caveat: 'Estimated 0–8 MW anchors. Accents are not fire counts, alarms, detections per second, or a report of current danger.',
+  },
+  carbon_monoxide: {
+    kind: 'Five audible generic pad-volume tiers',
+    explanation: 'Estimated CO values select five distinct gain levels on a generic filtered branch of the same recording. Low tiers are sparse; later tiers become clearly more present without lifting the master.',
+    caveat: 'Nonuniform 40,100,130,200,500 ppbv estimated anchors. This is carbon monoxide, not CO₂; the filter branch is not an official synth or choir stem.',
+  },
+  nitrogen_oxides: {
+    kind: 'One sustained gliding guide note',
+    explanation: 'A single sustained note glides smoothly to a higher bounded musical register as the log₁₀-derived NOₓ estimate rises. Navigation changes its pitch; it does not start audio.',
+    caveat: 'Estimated 0.001–10 ppbv labels are log₁₀ mapped before note selection. Concentration and latitude/longitude are never directly converted to pitch.',
+  },
+  near_surface_temperature: {
+    kind: 'Warmer = faster shared recording',
+    explanation: 'Estimated −40…+40 °C palette strength changes the entire shared recording from 0.83× to 1.22×. If this voice is absent, hidden or not audible, speed returns to 1×.',
+    caveat: 'Playback speed inherently changes pitch too; it is not temperature-as-altitude. Estimated T2M labels retain the NASA short-caption 3 m versus detailed-caption 2 m discrepancy.',
+  },
+});
+
+export function describeFeature(id, features) {
+  const value = number => Number.isFinite(number)
+    ? (Math.abs(number) < 1 ? Number(number.toFixed(4)) : Math.round(number * 10) / 10)
+    : 'unavailable';
+  if (!features || !(features.classified_count > 0) || features.status === 'silent') {
+    return 'No confident nearest-palette matches. The selected voice remains silent rather than inventing an observation.';
+  }
+  if (id === 'carbon_monoxide') return `Estimated CO palette range: ${value(features.q20)}–${value(features.q80)} ppbv → generic pad gain (nonuniform anchors).`;
+  if (id === 'nitrogen_oxides') return `Estimated NOₓ palette range: ${value(features.q20)}–${value(features.q80)} ppbv → log₁₀-derived guide-note register.`;
+  if (id === 'near_surface_temperature') return `Estimated near-surface palette range: ${value(features.q20)}–${value(features.q80)} °C → shared music speed. T2M; captions differ on 3 m versus 2 m.`;
+  if (id === 'active_fires') return `Estimated FRP palette median: ${value(features.median)} MW → sparse accent strength, never an incident count.`;
+  if (id === 'precipitation') return `Liquid classes: ${features.rain_count || 0}; frozen classes: ${features.snow_count || 0} → separate limited droplet densities. Gray, unknown and overflow remain uncertain/silent.`;
+  return 'Estimated nearest-palette characteristics, not calibrated numeric observations.';
 }
