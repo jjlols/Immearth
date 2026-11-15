@@ -4,7 +4,6 @@ import ColorBlindToggle from "./ColorBlindToggle.jsx";
 const LINKS = [
   ["music", "Music"],
   ["guide", "Guide"],
-  ["layers", "Layer explorer"],
   ["photo", "Photo of the day"],
 ];
 

@@ -4,7 +4,6 @@ import Jukebox from "./Jukebox.jsx";
 import GuidePage from "./guide/GuidePage.jsx";
 import DataPage from "./guide/DataPage.jsx";
 import AccessPage from "./guide/AccessPage.jsx";
-import LayerExplorer from "./layers/LayerExplorer.jsx";
 import { VIEW_TITLES, viewFromLocation } from "./navigation.js";
 
 export default function App() {
@@ -26,7 +25,6 @@ export default function App() {
       <IntroOverlay view={firstView} />
       {view === "home" && <GuidePage />}
       {view === "music" && <Jukebox />}
-      {view === "layers" && <LayerExplorer />}
       {view === "data" && <DataPage />}
       {view === "access" && <AccessPage />}
     </>

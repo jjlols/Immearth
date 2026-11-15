@@ -1,9 +1,10 @@
+/* Browser speech recognition for the listen-and-speak controls. */
 function recognitionConstructor() {
   if (typeof window === "undefined") return null;
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
 
-const OFF_HINT = "Voice is off. Start voice, then say next, previous, a map name, or page overview.";
+const OFF_HINT = "Voice is off. Press L to play the overview, or start voice and say next, previous, a map name, or page overview.";
 
 export function createVoiceSession({ onHint, onListening, runCommand }) {
   let listening = false;
@@ -145,7 +146,7 @@ export function createVoiceSession({ onHint, onListening, runCommand }) {
   async function start() {
     if (closed || startingVoice || listening) return false;
     if (!recognitionConstructor()) {
-      onHint("This browser cannot use voice commands. Play overview still reads the page, and every command is also a button or link.");
+      onHint("This browser cannot use voice commands. Play overview still plays the recording, and every command is also a button or link.");
       return false;
     }
     startingVoice = true;

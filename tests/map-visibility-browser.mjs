@@ -60,31 +60,19 @@ try {
  assert.equal(await focusedRain.getAttribute("aria-pressed"), "true", "audio focus stays separate from visual visibility");
  assert.deepEqual(reactErrors.filter((message) => message.includes("read-only field")), []);
  console.log(JSON.stringify({ tested: musicUrl.href, allFiveRemoved: true, keyboardRestore: true, focusKeepsVisibility: true, selectedOnly: true, controlledInputErrors: 0 }));
- const explorer = await browser.newPage({ viewport: { width: 1400, height: 950 }, reducedMotion: "reduce" });
- await explorer.emulateMedia({ reducedMotion: "reduce" });
+ const retired = await browser.newPage({ viewport: { width: 1400, height: 950 }, reducedMotion: "reduce" });
  try {
-  const explorerUrl = new URL(origin);
-  explorerUrl.searchParams.set("view", "layers");
-  await explorer.goto(explorerUrl.href, { waitUntil: "networkidle" });
-  if (await explorer.locator("#intro #intro-skip").count()) {
-   await explorer.locator("#intro-skip").click({ force: true });
-   await explorer.waitForSelector("#intro", { state: "detached", timeout: 5000 });
+  const retiredUrl = new URL(origin);
+  retiredUrl.searchParams.set("view", "layers");
+  await retired.goto(retiredUrl.href, { waitUntil: "networkidle" });
+  if (await retired.locator("#intro #intro-skip").count()) {
+   await retired.locator("#intro-skip").click({ force: true });
+   await retired.waitForSelector("#intro", { state: "detached", timeout: 5000 });
   }
-  await explorer.locator("canvas.map-layer[data-layer-id]").first().waitFor();
-  await explorer.waitForFunction(() => window.eicOverlay, null, { timeout: 10000 });
-  for (const label of ["Precipitation", "Active fires", "Carbon monoxide", "Nitrogen oxides", "Temperature"]) {
-   const toggle = explorer.getByLabel(`Show ${label}`, { exact: true });
-   await toggle.focus();
-   await explorer.keyboard.press("Space");
-   await explorer.waitForFunction(() => document.activeElement?.checked === false);
-  }
-  assert.equal(await explorer.locator("canvas.map-layer").count(), 0);
-  assert.equal(await explorer.getByText("No visualization layers visible", { exact: true }).isVisible(), true);
-  await explorer.locator(".layer-studio .controls-panel").screenshot({ path: "/tmp/layer-explorer-controls.png" });
-  await explorer.getByRole("button", { name: "Reset composition", exact: true }).click();
-  assert.equal(await explorer.locator("canvas.map-layer").count(), 5);
-  console.log(JSON.stringify({ tested: explorerUrl.href, layerExplorerHidesAllFive: true, resetRestoresAll: true }));
- } finally { await explorer.close(); }
+  assert.equal(await retired.locator(".layer-studio").count(), 0);
+  assert.equal(await retired.locator("#overview-title").count(), 1);
+  console.log(JSON.stringify({ tested: retiredUrl.href, layerExplorerRetired: true }));
+ } finally { await retired.close(); }
 } finally {
  await browser.close();
 }

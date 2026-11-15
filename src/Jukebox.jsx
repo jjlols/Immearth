@@ -8,6 +8,7 @@ import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicM
 import {explorerPosition,useExplorer,EXPLORER_SIZE} from './hooks/useExplorer.js';
 import useHeadPreviewTravel from './hooks/useHeadPreviewTravel.js';
 import SiteChrome from './SiteChrome.jsx';
+import ListenSpeak from './guide/ListenSpeak.jsx';
 import './listening.css';
 
 function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex}){
@@ -160,6 +161,7 @@ export default function Jukebox(){
  return <>
  <a className="skip-link" href="#music-player">Skip to the music player</a><a className="skip-link" href="#map-controls">Skip to map layers</a><a className="skip-link" href="#learning">Skip to what you hear</a>
  <SiteChrome current="music" part="header" />
+ <ListenSpeak />
  <div className="jukebox-shell live-page">
  <h1 className="live-title" id="music-title" tabIndex={-1}>Live Map</h1>
  <section className="live-how" aria-labelledby="how-title">
@@ -173,7 +175,7 @@ export default function Jukebox(){
  </section>
  <section className="music-console live-transport" id="music-player" tabIndex={-1} aria-label="Music controls">
   <div className="transport-buttons">
-   <button type="button" className="main-action" onClick={togglePlayback} disabled={loading||playState==='loading'}>{playState==='playing'?'Pause':playState==='paused'?'Resume':playState==='loading'?'Loading…':playState==='unavailable'?'Retry':'Play remix'}<span aria-hidden="true">{playState==='playing'?'Ⅱ':'↗'}</span></button>
+   <button type="button" className="main-action" onClick={togglePlayback} disabled={loading||playState==='loading'}>{playState==='playing'?'Pause':playState==='paused'?'Resume':playState==='loading'?'Loading…':playState==='unavailable'?'Retry':'Play remix'}<span aria-hidden="true">{playState==='playing'?'❚❚':'▶'}</span></button>
    <div className="secondary-peripherals"><button className="secondary-action" type="button" onClick={resetMusic} aria-label="Reset music playback">↻ <span>Reset</span></button>
    <button className={`secondary-action ${muted?'muted-off':''}`} type="button" onClick={()=>{setMuted(!muted);engine.current?.setMute(!muted)}}><span>{muted?'Unmute':'Mute'}</span></button></div>
    <label className="master-volume"><span>Master volume</span><input type="range" min="0" max="50" step="0.01" aria-label="Master volume" value={volume*100} onChange={event=>{const v=Number(event.target.value)/100;setVolume(v);engine.current?.setVolume(v)}}/> <span className="volume-cap">{Math.round(volume*100)}%</span></label>

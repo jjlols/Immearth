@@ -4,8 +4,8 @@
 export const HOME_SECTIONS = [
   ["overview", "Overview"],
   ["live-preview", "Live Map preview"],
-  ["maps", "The five maps"],
   ["explore", "Explore the site"],
+  ["maps", "The five maps"],
   ["everyone", "Built for everyone"],
 ];
 

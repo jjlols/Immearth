@@ -152,7 +152,7 @@
 .jukebox-shell .live-transport .progress-rail{height:6px}
 .jukebox-shell .live-transport .progress-rail{flex:1;max-width:none}
 .jukebox-shell .live-board{display:flex;flex-direction:column;gap:.45rem;align-items:stretch}
-.jukebox-shell .live-board .geographic-canvas{width:100%;height:min(52vh,480px);max-height:none;aspect-ratio:2/1}
+.jukebox-shell .live-board .geographic-canvas{width:100%;height:auto;max-height:none;aspect-ratio:2/1}
 .jukebox-shell .live-board .map-workspace{max-width:none;width:100%}
 .jukebox-shell .live-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .75rem;width:100%}
 .jukebox-shell .live-board .explorer-panel{display:flex;flex-flow:row wrap;align-items:center;gap:.35rem .75rem;width:100%;padding:.35rem .6rem}
@@ -179,7 +179,7 @@ html[data-theme=dark] .jukebox-shell .head-direction .head-start{background:tran
  .live-page .live-how ol{display:none}
  .live-how-short{display:block}
  .jukebox-shell .live-transport .source-license{display:none}
- .jukebox-shell .live-board .geographic-canvas{height:36vh;max-height:none}
+ .jukebox-shell .live-board .geographic-canvas{height:auto;max-height:none;aspect-ratio:2/1}
  .jukebox-shell .music-console.live-transport{margin-bottom:.15rem;padding:.25rem .5rem}
  .jukebox-shell .live-transport .transport-buttons{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem}
  .jukebox-shell .live-transport .main-action,.jukebox-shell .live-transport .master-volume{grid-column:auto;min-width:0}

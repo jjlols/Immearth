@@ -4,6 +4,7 @@ import SpaceWash, { SPACE_PHOTOS } from "../SpaceWash.jsx";
 import { linkTo } from "../navigation.js";
 import { IconArrow } from "../Icons.jsx";
 import { MAPS, filterMaps } from "./maps.js";
+import ListenSpeak from "./ListenSpeak.jsx";
 
 export default function DataPage() {
   const [query, setQuery] = useState("");
@@ -19,6 +20,7 @@ export default function DataPage() {
     <div className="site-page">
       <a className="skip-link" href="#data-title">Skip to content</a>
       <SiteChrome current="data" part="header" />
+      <ListenSpeak />
       <div className="visually-hidden" role="status">{status}</div>
       <main id="main">
         <section className="page-banner" aria-labelledby="data-title">

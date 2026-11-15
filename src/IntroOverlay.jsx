@@ -4,7 +4,6 @@ import "./intro-overlay.css";
 const FOCUS_AFTER = {
   home: "#overview-title",
   music: "#music-title",
-  layers: "#page-title",
   data: "#data-title",
   access: "#access-title",
 };

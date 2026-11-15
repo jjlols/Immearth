@@ -4,7 +4,6 @@ import DarkModeToggle from "./DarkModeToggle.jsx";
 import EarthRecord from "./EarthRecord.jsx";
 import { MAPS } from "./guide/maps.js";
 
-/* The Layer explorer stays reachable from the home page and footer, not the top-level menu. */
 const NAV = [
   { view: "home", label: "Home" },
   { view: "music", label: "Live Map" },
@@ -15,7 +14,6 @@ const NAV = [
 const FOOTER_PAGES = [
   { view: "home", label: "Home" },
   { view: "music", label: "Live Map" },
-  { view: "layers", label: "Layer explorer" },
   { view: "data", label: "Earth data" },
   { view: "access", label: "Accessibility & help" },
   { view: "access", label: "Keyboard and voice commands", hash: "keys" },

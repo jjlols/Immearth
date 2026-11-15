@@ -4,6 +4,7 @@ import { RemixEngine } from "./audio/RemixEngine.js";
 import { featureModel } from "./audio/musicMappings.js";
 import { explorerPosition } from "./hooks/useExplorer.js";
 import { linkTo } from "./navigation.js";
+import { IconSpeaker } from "./Icons.jsx";
 import "./styles-origin.css";
 
 /* The home preview keeps the listener on the first region. It does not follow keys or clicks. */
@@ -71,7 +72,10 @@ export default function HomeLivePreview() {
       setPlayState((current) => (current === "playing" ? current : "loading"));
       try {
         await player.play();
-        if (cancelled) return;
+        if (cancelled || !wantPlay.current) {
+          if (!cancelled) await player.pause();
+          return;
+        }
         if (player.ctx?.state === "running") {
           setPlayState("playing");
           window.removeEventListener("pointerdown", unlock, true);
@@ -112,8 +116,16 @@ export default function HomeLivePreview() {
       observer.observe(document.body, { childList: true, subtree: true });
     }
 
+    function pauseForOverview() {
+      wantPlay.current = false;
+      player.pause().then(() => {
+        if (!cancelled) setPlayState("paused");
+      }).catch(() => {});
+    }
+
     window.addEventListener("pointerdown", unlock, true);
     window.addEventListener("keydown", unlock, true);
+    window.addEventListener("immearth-pause-preview", pauseForOverview);
 
     let ignoreFeatures = false;
     fetch(`${import.meta.env.BASE_URL}scales/features.json`)
@@ -133,6 +145,7 @@ export default function HomeLivePreview() {
       ignoreFeatures = true;
       window.removeEventListener("pointerdown", unlock, true);
       window.removeEventListener("keydown", unlock, true);
+      window.removeEventListener("immearth-pause-preview", pauseForOverview);
       observer?.disconnect();
       player.dispose();
       if (engine.current === player) engine.current = null;
@@ -201,9 +214,9 @@ export default function HomeLivePreview() {
         <p className="home-place">You are here, region 1 of 48. This page does not move your place.</p>
         <div className="home-live-actions">
           <button type="button" className="main-action" aria-pressed={playState === "playing"} onClick={togglePlayback}>
-            {playLabel}<span aria-hidden="true">{playState === "playing" ? "Ⅱ" : "↗"}</span>
+            {playLabel}<span aria-hidden="true">{playState === "playing" ? "❚❚" : "▶"}</span>
           </button>
-          <a className="button button-secondary" {...linkTo("music")}>Open the Live Map</a>
+          <a className="button button-secondary" {...linkTo("music")}><IconSpeaker /> Open the Live Map</a>
         </div>
         <p className="visually-hidden" role="status">{playStatus}</p>
         {audioError && <p role="alert" className="home-audio-error">{audioError}</p>}

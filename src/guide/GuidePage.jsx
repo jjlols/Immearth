@@ -1,19 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import SiteChrome from "../SiteChrome.jsx";
 import { SPACE_PHOTOS } from "../SpaceWash.jsx";
-import { goToView, linkTo } from "../navigation.js";
-import { IconArrow, IconEye, IconGlobe, IconKeyboard, IconLayers, IconMic, IconNext, IconPlay, IconPrev, IconSpeaker, IconStop } from "../Icons.jsx";
+import { linkTo } from "../navigation.js";
+import { IconArrow, IconEye, IconGlobe, IconKeyboard, IconMic, IconPlay, IconSpeaker } from "../Icons.jsx";
 import { MAPS, asset } from "./maps.js";
-import { HOME_SECTIONS, SECTION_COMMAND, STOP_COMMANDS, hasPhrase, matchCommand, normalizeHeard } from "./voiceCommands.js";
-import { createVoiceSession } from "./voice.js";
 import HomeLivePreview from "../HomeLivePreview.jsx";
-
-const OVERVIEW = [
-  "Immearth. A NASA Space Apps project, not the official NASA website.",
-  "This site turns five NASA Earth maps into one shared piece of music: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
-  "The home page introduces the maps, plays a Live Map preview, and links to every other page. The preview keeps your place fixed and starts the music on its own. The full Live Map is where you choose a map, move between 48 regions, and use every sound setting. That page stays silent until you press Play remix. The Layer explorer stacks the five maps on one silent world map. Earth data describes each map in detail. Accessibility and help lists every key and voice command.",
-  "On this page you can say next or previous to move between sections, say a map name, or say page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
-];
+import ListenSpeak from "./ListenSpeak.jsx";
 
 const DESTINATIONS = [
   {
@@ -23,14 +15,6 @@ const DESTINATIONS = [
     note: "Silent until you press Play remix.",
     photo: SPACE_PHOTOS.night,
     Icon: IconPlay,
-  },
-  {
-    view: "layers",
-    title: "Layer explorer",
-    text: "Stack the five NASA maps on one world map. Show, hide, or focus on any layer.",
-    note: "No sound on this page.",
-    photo: SPACE_PHOTOS.marble,
-    Icon: IconLayers,
   },
   {
     view: "data",
@@ -51,133 +35,7 @@ const DESTINATIONS = [
 ];
 
 export default function GuidePage() {
-  const [status, setStatus] = useState("");
-  const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, a map name, or page overview.");
-  const [listening, setListening] = useState(false);
-  const [overviewOpen, setOverviewOpen] = useState(false);
-  const [lastSection, setLastSection] = useState("overview");
-  const dialogRef = useRef(null);
-  const dialogTitleRef = useRef(null);
   const openOverviewRef = useRef(null);
-  const voiceRef = useRef(null);
-  const runRef = useRef(() => false);
-
-  function announce(message) {
-    setStatus("");
-    window.setTimeout(() => setStatus(message), 30);
-  }
-
-  function focusHeading(id) {
-    const section = document.getElementById(id);
-    const heading = section?.querySelector("h1, h2, h3");
-    heading?.focus();
-    return section;
-  }
-
-  function goTo(id, quiet) {
-    const map = MAPS.find((item) => item.command === id || item.id === id);
-    const commandToId = Object.fromEntries(Object.entries(SECTION_COMMAND).map(([sectionId, command]) => [command, sectionId]));
-    const sectionId = map ? "maps" : commandToId[id] || id;
-    const section = focusHeading(sectionId);
-    if (section) setLastSection(section.id);
-    if (map) document.getElementById(map.id)?.querySelector("h3")?.focus();
-    const label = map?.label || HOME_SECTIONS.find(([sectionName]) => sectionName === sectionId)?.[1] || id;
-    let message = `${label}.`;
-    if (map) message = `${map.label}. In the musical remix: ${map.planned}`;
-    if (!quiet) announce(message);
-    return message;
-  }
-
-  function step(direction) {
-    const index = Math.max(0, HOME_SECTIONS.findIndex(([id]) => id === lastSection));
-    const next = index + direction;
-    if (next < 0) {
-      goTo(HOME_SECTIONS[0][0], true);
-      announce("Already at the start of the page.");
-      return "Already at the start of the page.";
-    }
-    if (next >= HOME_SECTIONS.length) {
-      goTo(HOME_SECTIONS[HOME_SECTIONS.length - 1][0], true);
-      announce("Already at the end of the page.");
-      return "Already at the end of the page.";
-    }
-    return goTo(HOME_SECTIONS[next][0]);
-  }
-
-  function openOverview() {
-    setOverviewOpen(true);
-    window.setTimeout(() => dialogTitleRef.current?.focus(), 0);
-  }
-
-  function stopSpeaking() {
-    window.speechSynthesis?.cancel();
-    setVoiceHint("Stopped speaking.");
-    announce("Stopped speaking.");
-  }
-
-  function speak(text) {
-    if (!text || !window.speechSynthesis) {
-      setVoiceHint("This browser cannot speak. The written overview is still on the page.");
-      announce("This browser cannot speak. The written overview is still on the page.");
-      return false;
-    }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    window.speechSynthesis.speak(utterance);
-    return true;
-  }
-
-  runRef.current = (phrase) => {
-    const heard = normalizeHeard(phrase);
-    if (hasPhrase(heard, "stop test tones") || hasPhrase(heard, "stop the test tones") || hasPhrase(heard, "stop tones")) {
-      const message = window.earthAudio ? window.earthAudio.stopTestTones() : "Test tones are not available.";
-      setVoiceHint(message);
-      announce(message);
-      return true;
-    }
-    if (hasPhrase(heard, "stop listening") || hasPhrase(heard, "voice off")) {
-      voiceRef.current?.stop();
-      setListening(false);
-      return true;
-    }
-    if (hasPhrase(heard, "stop speaking") || hasPhrase(heard, "be quiet") || heard === "stop") {
-      stopSpeaking();
-      return true;
-    }
-    const name = matchCommand(heard);
-    if (!name) return false;
-    const actions = {
-      next: () => step(1),
-      previous: () => step(-1),
-      "page overview": () => {
-        openOverview();
-        return OVERVIEW.join("\n");
-      },
-      "immersive listening": () => goToView("music"),
-      move: () => goToView("access", "keys"),
-      "turn left": () => goToView("music", "map-navigation"),
-      "turn right": () => goToView("music", "map-navigation"),
-      recenter: () => goToView("music", "map-navigation"),
-      "test tones": () => goToView("music", "map-navigation"),
-    };
-    const result = actions[name] ? actions[name]() : goTo(name);
-    if (typeof result === "string") speak(result);
-    return true;
-  };
-
-  useEffect(() => {
-    const session = createVoiceSession({
-      onHint: (message) => {
-        setVoiceHint(message);
-        announce(message);
-      },
-      onListening: (value) => setListening(value),
-      runCommand: (phrase) => runRef.current(phrase),
-    });
-    voiceRef.current = session;
-    return () => session.dispose();
-  }, []);
 
   useEffect(() => {
     let stopAudio = () => {};
@@ -192,28 +50,15 @@ export default function GuidePage() {
     };
   }, []);
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return undefined;
-    if (overviewOpen && !dialog.open) dialog.showModal();
-    if (!overviewOpen && dialog.open) dialog.close();
-    return undefined;
-  }, [overviewOpen]);
-
-  function toggleVoice() {
-    if (listening) {
-      voiceRef.current?.stop();
-      setListening(false);
-    } else {
-      voiceRef.current?.start().then((started) => setListening(Boolean(started)));
-    }
+  function openOverview() {
+    window.dispatchEvent(new Event("immearth-open-overview"));
   }
 
   return (
     <div className="site-page">
       <a className="skip-link" href="#overview-title">Skip to content</a>
       <SiteChrome current="home" part="header" />
-      <div id="status" className="visually-hidden" role="status">{status}</div>
+      <ListenSpeak />
       <main id="main">
         <section className="home-hero" id="overview" aria-labelledby="overview-title">
           <div className="hero-copy">
@@ -222,7 +67,6 @@ export default function GuidePage() {
             <p className="lede">Five NASA views of our planet, each described in words and turned into one shared piece of music. Explore by mouse, keyboard, screen reader, or voice.</p>
             <div className="actions">
               <a className="button button-light" {...linkTo("music")}>Open the Live Map</a>
-              <a className="button button-outline-light" {...linkTo("layers")}>Explore the layers</a>
               <button type="button" className="button button-outline-light" ref={openOverviewRef} aria-haspopup="dialog" aria-controls="overview-dialog" onClick={openOverview}>Read page overview</button>
             </div>
             <ul className="hero-assist" aria-label="Ways to use this site">
@@ -234,34 +78,33 @@ export default function GuidePage() {
           </div>
           <figure className="hero-globe">
             <img src={SPACE_PHOTOS.marble} width="640" height="640" alt="" />
-            <figcaption>NASA photograph of Earth, for atmosphere only. Not a data map.</figcaption>
           </figure>
-        </section>
-
-        <section className="assist-strip" aria-labelledby="assist-title">
-          <div className="assist-inner">
-            <div className="assist-label">
-              <IconSpeaker />
-              <div>
-                <h2 id="assist-title">Listen and speak</h2>
-                <p>Hear this page read aloud, or turn on voice and say where you want to go.</p>
-              </div>
-            </div>
-            <div className="assist-actions" role="group" aria-label="Listening and voice controls">
-              <button type="button" className="button button-secondary" onClick={() => { openOverview(); speak(OVERVIEW.join(" ")); }}><IconPlay /> Play overview</button>
-              <button type="button" className="button button-quiet" onClick={stopSpeaking}><IconStop /> Stop speaking</button>
-              <button type="button" className="button button-secondary" aria-pressed={listening} aria-describedby="voice-hint" onClick={toggleVoice}><IconMic /> {listening ? "Stop voice" : "Start voice"}</button>
-              <span className="button-group" role="group" aria-label="Move between sections">
-                <button type="button" className="button button-quiet" onClick={() => step(-1)}><IconPrev /> Previous section</button>
-                <button type="button" className="button button-quiet" onClick={() => step(1)}>Next section <IconNext /></button>
-              </span>
-            </div>
-          </div>
-          <p id="voice-hint" className="assist-hint">{voiceHint}</p>
         </section>
 
         <section className="band" id="live-preview" aria-labelledby="live-preview-title">
           <HomeLivePreview />
+        </section>
+
+        <section className="band band-tint" id="explore" aria-labelledby="explore-title">
+          <div className="section-head">
+            <p className="eyebrow">Explore</p>
+            <h2 id="explore-title" tabIndex={-1}>Where to go next</h2>
+            <p>The music and all of its settings live on the Live Map. The other pages are silent reading and viewing.</p>
+          </div>
+          <ul className="tile-grid four">
+            {DESTINATIONS.map(({ view, title, text, note, photo: picture, Icon }) => (
+              <li key={view}>
+                <a className="dest" {...linkTo(view)}>
+                  <span className="dest-photo" aria-hidden="true"><img src={picture} alt="" loading="lazy" /><span className="dest-icon"><Icon /></span></span>
+                  <span className="dest-body">
+                    <strong>{title}</strong>
+                    <span>{text}</span>
+                    <span className="dest-note">{note}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="band" id="maps" aria-labelledby="maps-title">
@@ -293,28 +136,6 @@ export default function GuidePage() {
           </div>
         </section>
 
-        <section className="band band-tint" id="explore" aria-labelledby="explore-title">
-          <div className="section-head">
-            <p className="eyebrow">Explore</p>
-            <h2 id="explore-title" tabIndex={-1}>Where to go next</h2>
-            <p>The music and all of its settings live on the Live Map. The other pages are silent reading and viewing.</p>
-          </div>
-          <ul className="tile-grid four">
-            {DESTINATIONS.map(({ view, title, text, note, photo: picture, Icon }) => (
-              <li key={view}>
-                <a className="dest" {...linkTo(view)}>
-                  <span className="dest-photo" aria-hidden="true"><img src={picture} alt="" loading="lazy" /><span className="dest-icon"><Icon /></span></span>
-                  <span className="dest-body">
-                    <strong>{title}</strong>
-                    <span>{text}</span>
-                    <span className="dest-note">{note}</span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-
         <section className="band band-dark" id="everyone" aria-labelledby="everyone-title">
           <div className="section-head-row">
             <div className="section-head">
@@ -333,11 +154,6 @@ export default function GuidePage() {
         </section>
       </main>
       <SiteChrome current="home" part="footer" />
-      <dialog id="overview-dialog" ref={dialogRef} aria-labelledby="overview-dialog-title" onClose={() => { setOverviewOpen(false); openOverviewRef.current?.focus(); }}>
-        <h2 id="overview-dialog-title" ref={dialogTitleRef} tabIndex={-1}>Page overview</h2>
-        <div id="page-overview">{OVERVIEW.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-        <button type="button" className="button button-primary" onClick={() => setOverviewOpen(false)}>Close</button>
-      </dialog>
     </div>
   );
 }

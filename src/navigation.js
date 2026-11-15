@@ -1,12 +1,11 @@
-export const VIEWS = ["home", "music", "layers", "data", "access"];
+export const VIEWS = ["home", "music", "data", "access"];
 
-/* Older links keep working: ?view=guide and ?view=photo were sections of the home page. */
-const LEGACY = { guide: "home", photo: "home" };
+/* Older links keep working: ?view=guide, ?view=photo, and ?view=layers open the home page. */
+const LEGACY = { guide: "home", photo: "home", layers: "home" };
 
 export const VIEW_TITLES = {
   home: "Immearth",
   music: "Live Map · Immearth",
-  layers: "Layer explorer · Immearth",
   data: "Earth data · Immearth",
   access: "Accessibility & help · Immearth",
 };
