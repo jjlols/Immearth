@@ -46,7 +46,7 @@ export default function AccessPage() {
                 <li><kbd>D →</kbd> <span>Move one region east.</span></li>
                 <li><kbd>Home</kbd> <span>Go back to region 1.</span></li>
               </ul>
-              <p>The 12 regions are a grid of 3 rows and 4 columns. These keys do nothing while you are on a button, link, slider, or search box. Each move is described in words. Moving changes the music only while it is already playing.</p>
+              <p>The 48 regions are a grid of 6 rows and 8 columns. These keys do nothing while you are on a button, link, slider, or search box. Each move is described in words. Moving changes the music only while it is already playing.</p>
             </div>
             <div className="tile">
               <h3><IconLayers /> Layer explorer</h3>

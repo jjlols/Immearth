@@ -311,7 +311,7 @@ implement a small `src/audio/` spatial module and thin `RemixEngine` integration
 only: one existing recording/context/clock, not a new soundtrack binding. Model
 + right = +x, forward/north = +y, up = +z in listener-local metres; listener
 origin `(0,0,0)` allowed as artistic user choice linked to Vancouver reference.
-No automatic raw lat/lon/3x4 grid -> hard pan, pitch/time, no GPS request.
+No automatic raw lat/lon/8x6 grid -> hard pan, pitch/time, no GPS request.
 
 Audio agent and frontend agent coordinates to preserve: audio graph starts from
 existing Recording→color/dry+branch filter gates→master→limiter/analyser/destination.
@@ -437,3 +437,14 @@ all-four-direction tests and asserted real browser source/model changes, plus
 a synthetic-camera right -> left panning regression with no forward event.
 No changes to raw detector threshold/hysteresis, source engine, or scientific
 scale mappings. No push/deploy or human-headphone validation claim.
+
+## Six-by-eight exploration cells — local implementation
+
+The explorer now uses 8 columns and 6 rows (48 smaller regions). Navigation still
+clamps at edges and uses `row*8+column`; head preview/commit semantics are
+unchanged. `overlay-site/scales/features.json` and its staged public counterpart
+are regenerated from the original NASA rasters using all original source pixels without downsampling or byte/image mutation,
+not by repeating old region summaries. Existing nearest-color rules are preserved.
+NumPy-backed bounded summaries replace millions of per-pixel JSON dictionaries;
+feature totals, nearest-palette matches and no-data states remain estimates. The
+five maps, audio synthesis approach and geographic-origin caveats are unchanged.

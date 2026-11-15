@@ -81,9 +81,9 @@ try {
   assert.equal((await measure()).position.y, 2);
   await hold('forward');
   assert.equal((await measure()).committed, '2', 'up at the top edge is blocked, not north travel');
-  await page.locator('.regional-grid button').nth(6).click();
+  await page.locator('.regional-grid button').nth(10).click();
   await hold('up');
-  assert.equal((await measure()).committed, '6');
+  assert.equal((await measure()).committed, '10');
   await hold('forward');
   assert.equal((await measure()).committed, '2');
 
@@ -99,15 +99,15 @@ try {
   await headTravel.check();
   await page.locator('.regional-grid button').nth(3).click();
   await hold('left');
-  await page.locator('.regional-grid button').nth(11).click();
-  assert.equal((await measure()).committed, '11');
+  await page.locator('.regional-grid button').nth(47).click();
+  assert.equal((await measure()).committed, '47');
   assert.deepEqual((await measure()).position, { x: 0, y: 0, z: 0 });
   await hold('forward');
-  assert.equal((await measure()).committed, '11');
+  assert.equal((await measure()).committed, '47');
   await hold('down');
   await page.waitForTimeout(1600);
   await hold('forward');
-  assert.equal((await measure()).committed, '11');
+  assert.equal((await measure()).committed, '47');
   assert.deepEqual((await measure()).audio, { contexts: 1, sources: 1, oscillators: 0 });
   console.log(JSON.stringify({ status: 'passed', origin, synthetic: true, start, right, direct, audio: (await measure()).audio }, null, 2));
 } finally {

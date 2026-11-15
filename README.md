@@ -60,15 +60,15 @@ transport/nodes—not hides/reinterprets the dataset.
 Buttons use keyboard Space/Enter. Use **up/down arrow keys** (or left/right) on
 field cards to navigate (Home/End for bounds); tab freely among other controls.
 
-### Explore the image-relative 3 × 4 grid
+### Explore the image-relative 8 × 6 grid
 
-The separate amber **Sample n/12** marker shows the current exploration region;
+The separate amber **Sample n/48** marker shows the current exploration region;
 the fixed green Vancouver marker remains a geographic reference, not the same pin.
 Use **W/A/S/D** or the **arrow keys** while the page background is focused:
 **W/up = north**, **A/left = west**, **S/down = south**, **D/right = east**.
-The three rows and four columns are image-relative analysis regions, numbered
-`row * 4 + column` (zero-based). Movement clamps at the edges (no wrap); **Home**
-returns to **region 1**, the Vancouver-associated start. The twelve region buttons
+The six rows and eight columns are image-relative analysis regions, numbered
+`row * 8 + column` (zero-based). Movement clamps at the edges (no wrap); **Home**
+returns to **region 1**, the Vancouver-associated start. The 48 region buttons
 use exactly the same state, so a subsequent keystroke continues from a clicked button.
 
 Keyboard exploration never intercepts typing, sliders, buttons, links, editable
@@ -303,7 +303,7 @@ normalized, orthogonalized, and used to transform the source into the canonical
 native head frame; orientation angles do not claim measured compass heading.
 
 Only explicit Cartesian metre data belongs in this API. Do not pass unlabelled
-latitude/longitude, RGB pixels, 3×4 sample indexes, display aspect ratios or
+latitude/longitude, RGB pixels, 8×6 sample indexes, display aspect ratios or
 Vancouver's marker percentages as positions. This does not move sources when
 WASD moves the palette explorer, start audio on mount/map navigation, or alter
 pitch/timing from coordinates. There are no microphone/camera/geolocation calls

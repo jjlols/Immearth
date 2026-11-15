@@ -5,7 +5,7 @@ import SpatialOriginMarker from './components/SpatialOriginMarker.jsx';
 import HeadDirectionControl from './components/HeadDirectionControl.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
-import {explorerPosition,useExplorer} from './hooks/useExplorer.js';
+import {explorerPosition,useExplorer,EXPLORER_SIZE,EXPLORER_COLUMNS} from './hooks/useExplorer.js';
 import useHeadPreviewTravel from './hooks/useHeadPreviewTravel.js';
 import SiteChrome from './SiteChrome.jsx';
 import './listening.css';
@@ -14,7 +14,7 @@ function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,load
  return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration">
  {showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
  {layers.filter(layer=>settings[layer.id]?.visible!==false).map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
- <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span>↗</span><small>Sample {explorerIndex+1}/12</small></div>
+ <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span>↗</span><small>Sample {explorerIndex+1}/{EXPLORER_SIZE}</small></div>
  <SpatialOriginMarker />
  {loading&&<div className="loading-scrim" role="status">Loading geography and palette features…</div>}
  <span className="map-longitude west">180° W</span><span className="map-longitude east">180° E</span>
@@ -54,7 +54,7 @@ function SourceControl({layer,visible,opacity,focus,onSelect,onVisible,onOpacity
 function RegionStudy({regions,layerLabel,selected,onSelect,announcement}){
  return <div className="region-study compact"><h3 id="region-title" className="sr-only">Select region for {layerLabel}</h3>
  <div className="regional-grid" role="group" aria-label={`Select regional sample for ${layerLabel}`}>
- {Array.from({length:12},(_,i)=>{
+ {Array.from({length:EXPLORER_SIZE},(_,i)=>{
  const feat=regions?.[i];const selectedState=selected===i;
  return <button key={i} type="button" aria-pressed={selectedState} aria-label={regionButtonLabel(i,feat)} onClick={()=>onSelect(i)}>
  <span>{String(i+1).padStart(2,'0')}</span><i className={feat?.classified_count?'filled-region':''}/>
@@ -107,6 +107,7 @@ export default function Jukebox(){
    return Promise.all([mapResponse.json(),paletteResponse.json()]);
   }).then(([mapRecord,scales])=>{
    if(!mapRecord.layers?.length)throw new Error('Source map manifest has zero layers.');
+  if(Object.values(scales.categories).some(regions=>regions.length!==EXPLORER_SIZE))throw new Error('Expected 48 estimated analysis regions for the six-by-eight grid; regenerate palette features.');
    if(divergedScientificSources(mapRecord))throw new Error('Manifest contains an invalid metric vocabulary.');
    setManifest(mapRecord);setFeatures(scales.categories);
   }).catch(err=>{if(alive)setLoadError(err.message);});
@@ -193,7 +194,7 @@ export default function Jukebox(){
    <p className="tiny-attribution">{popularCreativeVoice(playState)}</p>
   </div>
   <div className="track-copy">
-   <p className="track-detail">A restrained recording modified by a living map. Music begins only when you press play. W, A, S, D or the arrow keys move between 12 regions, and only while the music is already playing. Those keys do nothing while you are on a button, link, or slider.</p>
+   <p className="track-detail">A restrained recording modified by a living map. Music begins only when you press play. W, A, S, D or the arrow keys move between 48 regions, and only while the music is already playing. Those keys do nothing while you are on a button, link, or slider.</p>
    <p role="status" aria-live="polite" className={`playback-status state-${playState}`}><span aria-hidden="true">{ws_icon(playState)}</span> {audioDescription(playState,muted)}</p>
    <p className="hearing-caption">{playbackCaption(playState, muted)}</p>
    <SoundMeter playState={playState} engineRef={engine}/>
@@ -258,9 +259,9 @@ function regionButtonLabel(index,features){
  return `Analyze region ${index+1}: ${count} usable palette matches of ${total} samples, ${plain}`;
 }
 function regionStatus(selected,layerLabel,featureSentence){
- const row=Math.floor(selected/4)+1;
- const column=(selected%4)+1;
- return `Region ${selected+1} of 12, row ${row}, column ${column}. ${layerLabel}. ${featureSentence}`;
+ const row=Math.floor(selected/EXPLORER_COLUMNS)+1;
+ const column=(selected%EXPLORER_COLUMNS)+1;
+ return `Region ${selected+1} of ${EXPLORER_SIZE}, row ${row}, column ${column}. ${layerLabel}. ${featureSentence}`;
 }
 
 function playbackCaption(playState, muted) {

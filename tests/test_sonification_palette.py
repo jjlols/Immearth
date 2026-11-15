@@ -72,6 +72,26 @@ class Tests(ScaleTests):
                 self.assertEqual(len(feature),1)
                 self.assertIn('region',feature[0])
 
+    def test_vectorized_pixel_equivalence(self):
+        from sonification.palette_library import pixel_records
+        for category in ('precipitation','active_fires','carbon_monoxide','nitrogen_oxides','near_surface_temperature'):
+            with self.subTest(category=category):
+                library=build_library(category)
+                rgba=[[[17,170,34,255],[128,128,128,255],[255,255,255,0],[250,249,248,255],[5,30,110,255]]]
+                for pixel,actual in zip(rgba[0],pixel_records(category,rgba)):
+                    expected=nearest_palette(category,pixel[:3],pixel[3],tolerance=62,library=library)
+                    self.assertEqual(actual['status'],expected['status'])
+                    if expected['status']=='matched':
+                        self.assertEqual(actual['value'],expected['value'])
+                        self.assertAlmostEqual(actual['color_distance'],expected['color_distance'])
+
+    def test_current_assets_six_rows_eight_columns(self):
+        import json
+        for path in (ROOT/'overlay-site/scales/features.json',ROOT/'public/scales/features.json'):
+            record=json.loads(path.read_text())
+            self.assertEqual(record['grid'],{'rows':6,'columns':8})
+            self.assertTrue(all(len(cells)==48 for cells in record['categories'].values()))
+
 
 if __name__=='__main__':
     unittest.main()

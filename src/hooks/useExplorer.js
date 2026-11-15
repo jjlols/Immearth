@@ -1,12 +1,12 @@
 import { useEffect, useReducer } from 'react';
 
-export const EXPLORER_COLUMNS = 4;
-export const EXPLORER_ROWS = 3;
+export const EXPLORER_COLUMNS = 8;
+export const EXPLORER_ROWS = 6;
 export const EXPLORER_SIZE = EXPLORER_COLUMNS * EXPLORER_ROWS;
 
 export function regionCell(index) {
   if (!Number.isInteger(index) || index < 0 || index >= EXPLORER_SIZE) {
-    throw new RangeError('Palette exploration supports regions 0 through 11.');
+    throw new RangeError('Palette exploration supports regions 0 through 47.');
   }
   return Object.freeze({ index, row: Math.floor(index / EXPLORER_COLUMNS), column: index % EXPLORER_COLUMNS });
 }
