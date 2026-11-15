@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+const detail=[];
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage({viewport:{width:1440,height:1030},deviceScaleFactor:1});
+const issues=[];page.on('pageerror',error=>issues.push(error.message));page.on('console',msg=>{if(msg.type()==='error')issues.push(msg.text());});
+await page.goto('http://127.0.0.1:8000/',{waitUntil:'networkidle'});
+await page.waitForFunction(()=>document.querySelectorAll('[data-source-card]').length===5 || document.querySelectorAll('[data-layer-card]').length===5,{timeout:10000});
+detail.push('Title: '+await page.title());
+detail.push('All marker: '+await page.locator('.spatial-origin').count());
+if(await page.locator('.spatial-origin').count())await page.getByRole('button',{name:'Show future spatial audio origin, Vancouver, BC',exact:true}).click();
+await page.screenshot({path:'/tmp/jukebox-origin.png',fullPage:true});
+const bodyText=await page.locator('body').innerText();
+detail.push('Body head: '+bodyText.slice(0,800));
+if(await page.getByRole('button',{name:'Play',exact:false}).count())detail.push('First sound button labels',await page.getByRole('button',{name:'Play',exact:false}).allTextContents());
+if(await page.getByRole('button',{name:'Play remix',exact:true}).count())page.getByRole('button',{name:'Play remix',exact:true}).click();
+await page.waitForTimeout(2500);await page.screenshot({path:'/tmp/jukebox-invocation.png',fullPage:true});
+console.log(detail,issues);
+await browser.close();

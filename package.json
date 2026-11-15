@@ -1,0 +1,19 @@
+{
+  "name":"earth-information-jukebox-musical-map",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "scripts":{
+    "dev":"vite --host 127.0.0.1",
+    "build":"vite build",
+    "test":"node --test test-js/*.test.js",
+    "test:browser":"node scripts/test_jukebox_browser.cjs",
+    "features":"python3 -m sonification.build_sonification_assets"
+  },
+  "dependencies":{
+    "react":"^19.2.0","react-dom":"^19.2.0","vite":"^7.1.9"
+  },
+  "devDependencies":{
+    "@vitejs/plugin-react":"^5.0.2","@testing-library/react":"^16.3.0","@testing-library/user-event":"^14.6.1","jsdom":"^27.0.1","playwright":"^1.58.2"
+  }
+}

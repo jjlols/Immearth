@@ -1,0 +1,1718 @@
+{
+  "version": 1,
+  "generated_by": "local palette feature adapter",
+  "categories": {
+    "precipitation": [
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 75,
+        "unclassified_count": 245,
+        "no_data_count": 0,
+        "rain_count": 62,
+        "snow_count": 13,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.1 and 0.2 mm/hour",
+          "between 0.3 and 0.5 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-0-0",
+          "row": 0,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.0,
+            0.25,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 66,
+        "unclassified_count": 254,
+        "no_data_count": 0,
+        "rain_count": 54,
+        "snow_count": 12,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.1 and 0.2 mm/hour",
+          "between 3.0 and 5.0 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-0-1",
+          "row": 0,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.0,
+            0.5,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 124,
+        "unclassified_count": 196,
+        "no_data_count": 0,
+        "rain_count": 87,
+        "snow_count": 37,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.1 and 0.2 mm/hour",
+          "between 0.3 and 0.5 mm/hour",
+          "between 3.0 and 5.0 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-0-2",
+          "row": 0,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.0,
+            0.75,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 98,
+        "unclassified_count": 222,
+        "no_data_count": 0,
+        "rain_count": 64,
+        "snow_count": 34,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.1 and 0.2 mm/hour",
+          "between 0.3 and 0.5 mm/hour",
+          "between 0.5 and 1.0 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-0-3",
+          "row": 0,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.0,
+            1.0,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 26,
+        "unclassified_count": 294,
+        "no_data_count": 0,
+        "rain_count": 24,
+        "snow_count": 2,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary"
+        ],
+        "region": {
+          "id": "precipitation-region-1-0",
+          "row": 1,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 58,
+        "unclassified_count": 262,
+        "no_data_count": 0,
+        "rain_count": 49,
+        "snow_count": 9,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 3.0 and 5.0 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-1-1",
+          "row": 1,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 131,
+        "unclassified_count": 189,
+        "no_data_count": 0,
+        "rain_count": 109,
+        "snow_count": 22,
+        "max_value": 50.0,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.3 and 0.5 mm/hour",
+          "between 2.0 and 3.0 mm/hour",
+          "between 3.0 and 5.0 mm/hour",
+          "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)"
+        ],
+        "region": {
+          "id": "precipitation-region-1-2",
+          "row": 1,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.3333333333333333,
+            0.75,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 63,
+        "unclassified_count": 257,
+        "no_data_count": 0,
+        "rain_count": 52,
+        "snow_count": 11,
+        "max_value": 50.0,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.3 and 0.5 mm/hour",
+          "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)"
+        ],
+        "region": {
+          "id": "precipitation-region-1-3",
+          "row": 1,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.3333333333333333,
+            1.0,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 36,
+        "unclassified_count": 284,
+        "no_data_count": 0,
+        "rain_count": 24,
+        "snow_count": 12,
+        "max_value": 4.0,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.1 and 0.2 mm/hour",
+          "between 0.3 and 0.5 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-2-0",
+          "row": 2,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.6666666666666666,
+            0.25,
+            1.0
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 44,
+        "unclassified_count": 276,
+        "no_data_count": 0,
+        "rain_count": 25,
+        "snow_count": 19,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.3 and 0.5 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-2-1",
+          "row": 2,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.6666666666666666,
+            0.5,
+            1.0
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 38,
+        "unclassified_count": 282,
+        "no_data_count": 0,
+        "rain_count": 10,
+        "snow_count": 28,
+        "max_value": 7.5,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.1 and 0.2 mm/hour",
+          "between 0.3 and 0.5 mm/hour"
+        ],
+        "region": {
+          "id": "precipitation-region-2-2",
+          "row": 2,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.6666666666666666,
+            0.75,
+            1.0
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 54,
+        "unclassified_count": 266,
+        "no_data_count": 0,
+        "rain_count": 32,
+        "snow_count": 22,
+        "max_value": 50.0,
+        "bins": [
+          "below the first displayed 0.1 mm/hour boundary",
+          "between 0.3 and 0.5 mm/hour",
+          "between 0.5 and 1.0 mm/hour",
+          "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)"
+        ],
+        "region": {
+          "id": "precipitation-region-2-3",
+          "row": 2,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.6666666666666666,
+            1.0,
+            1.0
+          ],
+          "relative_size": {
+            "width": 3600,
+            "height": 1800
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/4285/",
+          "asset_url": [
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
+            "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
+          ],
+          "scale_extraction_date": "2026-11-14T19:51:09Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      }
+    ],
+    "active_fires": [
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 24,
+        "unclassified_count": 296,
+        "no_data_count": 0,
+        "median": 0.06364557127454495,
+        "q20": 0.06364557127454495,
+        "q80": 0.31822785637272527,
+        "max_value": 1.4638481393145362,
+        "region": {
+          "id": "active_fires-region-2-0",
+          "row": 2,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.6666666666666666,
+            0.25,
+            1.0
+          ],
+          "relative_size": {
+            "width": 4096,
+            "height": 2048
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5113/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted_from_official_video"
+        }
+      }
+    ],
+    "carbon_monoxide": [
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 291,
+        "unclassified_count": 29,
+        "no_data_count": 0,
+        "median": 85.28712153658617,
+        "q20": 79.04062201429842,
+        "q80": 93.09524593944586,
+        "max_value": 164.2610539067232,
+        "region": {
+          "id": "carbon_monoxide-region-0-0",
+          "row": 0,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.0,
+            0.25,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 79.04062201429842,
+        "q20": 77.47899713372648,
+        "q80": 85.28712153658617,
+        "max_value": 183.40096910963055,
+        "region": {
+          "id": "carbon_monoxide-region-0-1",
+          "row": 0,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.0,
+            0.5,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 86.8487464171581,
+        "q20": 80.60224689487036,
+        "q80": 99.34174546173361,
+        "max_value": 176.22350090854025,
+        "region": {
+          "id": "carbon_monoxide-region-0-2",
+          "row": 0,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.0,
+            0.75,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 80.60224689487036,
+        "q20": 77.47899713372648,
+        "q80": 88.41037129773005,
+        "max_value": 360.2888542675481,
+        "region": {
+          "id": "carbon_monoxide-region-0-3",
+          "row": 0,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.0,
+            1.0,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 60.30112344743518,
+        "q20": 58.73949856686324,
+        "q80": 71.23249761143875,
+        "max_value": 118.02414121311759,
+        "region": {
+          "id": "carbon_monoxide-region-1-0",
+          "row": 1,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 79.04062201429842,
+        "q20": 66.54762296972294,
+        "q80": 104.69455741109284,
+        "max_value": 260.4951787443681,
+        "region": {
+          "id": "carbon_monoxide-region-1-1",
+          "row": 1,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 80.60224689487036,
+        "q20": 63.42437320857905,
+        "q80": 128.2776672146751,
+        "max_value": 290.43328140132223,
+        "region": {
+          "id": "carbon_monoxide-region-1-2",
+          "row": 1,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.3333333333333333,
+            0.75,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 71.23249761143875,
+        "q20": 61.862748328007115,
+        "q80": 102.64385221078135,
+        "max_value": 390.226956924502,
+        "region": {
+          "id": "carbon_monoxide-region-1-3",
+          "row": 1,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.3333333333333333,
+            1.0,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 258,
+        "unclassified_count": 62,
+        "no_data_count": 0,
+        "median": 57.177873686291306,
+        "q20": 55.61624880571937,
+        "q80": 60.30112344743518,
+        "max_value": 88.41037129773005,
+        "region": {
+          "id": "carbon_monoxide-region-2-0",
+          "row": 2,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.6666666666666666,
+            0.25,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 57.177873686291306,
+        "q20": 55.61624880571937,
+        "q80": 58.73949856686324,
+        "max_value": 80.60224689487036,
+        "region": {
+          "id": "carbon_monoxide-region-2-1",
+          "row": 2,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.6666666666666666,
+            0.5,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 57.177873686291306,
+        "q20": 55.61624880571937,
+        "q80": 57.177873686291306,
+        "max_value": 77.47899713372648,
+        "region": {
+          "id": "carbon_monoxide-region-2-2",
+          "row": 2,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.6666666666666666,
+            0.75,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 55.61624880571937,
+        "q20": 55.61624880571937,
+        "q80": 57.177873686291306,
+        "max_value": 80.60224689487036,
+        "region": {
+          "id": "carbon_monoxide-region-2-3",
+          "row": 2,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.6666666666666666,
+            1.0,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5115/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:10Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      }
+    ],
+    "nitrogen_oxides": [
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 291,
+        "unclassified_count": 29,
+        "no_data_count": 0,
+        "median": 0.08091856130957563,
+        "q20": 0.027189161897108325,
+        "q80": 0.9814622770543479,
+        "max_value": 4.365610590980564,
+        "region": {
+          "id": "nitrogen_oxides-region-0-0",
+          "row": 0,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.0,
+            0.25,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 316,
+        "unclassified_count": 4,
+        "no_data_count": 0,
+        "median": 0.039954640924425584,
+        "q20": 0.008586889557629334,
+        "q80": 0.21046891726725422,
+        "max_value": 4.365610590980564,
+        "region": {
+          "id": "nitrogen_oxides-region-0-1",
+          "row": 0,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.0,
+            0.5,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 0.4172358210216272,
+        "q20": 0.028990634633502523,
+        "q80": 1.259251526341234,
+        "max_value": 6.081728053582201,
+        "region": {
+          "id": "nitrogen_oxides-region-0-2",
+          "row": 0,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.0,
+            0.75,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 314,
+        "unclassified_count": 6,
+        "no_data_count": 0,
+        "median": 0.021035275928094687,
+        "q20": 0.00486008681777397,
+        "q80": 0.19321407689122216,
+        "max_value": 6.607276739308385,
+        "region": {
+          "id": "nitrogen_oxides-region-0-3",
+          "row": 0,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.0,
+            1.0,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 0.008586889557629334,
+        "q20": 0.0040201915281454104,
+        "q80": 0.0239150898547196,
+        "max_value": 2.655045640218211,
+        "region": {
+          "id": "nitrogen_oxides-region-1-0",
+          "row": 1,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 0.10616817373730283,
+        "q20": 0.014314520404303567,
+        "q80": 0.5874601298299592,
+        "max_value": 4.742862070867233,
+        "region": {
+          "id": "nitrogen_oxides-region-1-1",
+          "row": 1,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 0.06675171789432945,
+        "q20": 0.013425018723194774,
+        "q80": 0.32280033696840377,
+        "max_value": 2.655045640218211,
+        "region": {
+          "id": "nitrogen_oxides-region-1-2",
+          "row": 1,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.3333333333333333,
+            0.75,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 0.04542459205607589,
+        "q20": 0.009147483572733574,
+        "q80": 0.16283222578754367,
+        "max_value": 2.655045640218211,
+        "region": {
+          "id": "nitrogen_oxides-region-1-3",
+          "row": 1,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.3333333333333333,
+            1.0,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 119,
+        "unclassified_count": 201,
+        "no_data_count": 0,
+        "median": 0.007102947323174179,
+        "q20": 0.0035425437452252014,
+        "q80": 0.028990634633502523,
+        "max_value": 3.6987416117728804,
+        "region": {
+          "id": "nitrogen_oxides-region-2-0",
+          "row": 2,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.6666666666666666,
+            0.25,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 190,
+        "unclassified_count": 130,
+        "no_data_count": 0,
+        "median": 0.014314520404303567,
+        "q20": 0.004562241452841883,
+        "q80": 0.12597743219849245,
+        "max_value": 5.152713498942287,
+        "region": {
+          "id": "nitrogen_oxides-region-2-1",
+          "row": 2,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.6666666666666666,
+            0.5,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 189,
+        "unclassified_count": 131,
+        "no_data_count": 0,
+        "median": 0.007566662354356147,
+        "q20": 0.002275385018025116,
+        "q80": 0.0374718668414259,
+        "max_value": 3.1337402238589056,
+        "region": {
+          "id": "nitrogen_oxides-region-2-2",
+          "row": 2,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.6666666666666666,
+            0.75,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 171,
+        "unclassified_count": 149,
+        "no_data_count": 0,
+        "median": 0.0097446758982809,
+        "q20": 0.0035425437452252014,
+        "q80": 0.10616817373730283,
+        "max_value": 5.152713498942287,
+        "region": {
+          "id": "nitrogen_oxides-region-2-3",
+          "row": 2,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.6666666666666666,
+            1.0,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5154/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      }
+    ],
+    "near_surface_temperature": [
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 7.6921259842519705,
+        "q20": -4.18963254593176,
+        "q80": 23.57705286839145,
+        "max_value": 39.68544110557609,
+        "region": {
+          "id": "near_surface_temperature-region-0-0",
+          "row": 0,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.0,
+            0.25,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 11.44931102362205,
+        "q20": -2.9051837270341228,
+        "q80": 24.835288446087098,
+        "max_value": 32.450586533826126,
+        "region": {
+          "id": "near_surface_temperature-region-0-1",
+          "row": 0,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.0,
+            0.5,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 15.302657480314963,
+        "q20": 7.075590551181103,
+        "q80": 24.20617065723927,
+        "max_value": 34.02338100594569,
+        "region": {
+          "id": "near_surface_temperature-region-0-2",
+          "row": 0,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.0,
+            0.75,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 3.9929133858267734,
+        "q20": -6.758530183727037,
+        "q80": 19.156003937007874,
+        "max_value": 32.450586533826126,
+        "region": {
+          "id": "near_surface_temperature-region-0-3",
+          "row": 0,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.0,
+            1.0,
+            0.3333333333333333
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 33.079704322673955,
+        "q20": 31.192350956130486,
+        "q80": 34.3379399003696,
+        "max_value": 34.96705768921742,
+        "region": {
+          "id": "near_surface_temperature-region-1-0",
+          "row": 1,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.3333333333333333,
+            0.25,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 319,
+        "unclassified_count": 1,
+        "no_data_count": 0,
+        "median": 32.13602763940222,
+        "q20": 30.56323316728266,
+        "q80": 33.70882211152177,
+        "max_value": 34.96705768921742,
+        "region": {
+          "id": "near_surface_temperature-region-1-1",
+          "row": 1,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.3333333333333333,
+            0.5,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 33.70882211152177,
+        "q20": 31.821468744978304,
+        "q80": 34.65249879479351,
+        "max_value": 38.112646633456535,
+        "region": {
+          "id": "near_surface_temperature-region-1-2",
+          "row": 1,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.3333333333333333,
+            0.75,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 34.02338100594569,
+        "q20": 32.450586533826126,
+        "q80": 34.3379399003696,
+        "max_value": 39.05632331672827,
+        "region": {
+          "id": "near_surface_temperature-region-1-3",
+          "row": 1,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.3333333333333333,
+            1.0,
+            0.6666666666666666
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 308,
+        "unclassified_count": 12,
+        "no_data_count": 0,
+        "median": 19.156003937007874,
+        "q20": 8.925196850393695,
+        "q80": 38.112646633456535,
+        "max_value": 39.68544110557609,
+        "region": {
+          "id": "near_surface_temperature-region-2-0",
+          "row": 2,
+          "column": 0,
+          "bounds_relative": [
+            0.0,
+            0.6666666666666666,
+            0.25,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 8.308661417322833,
+        "q20": -11.857624939739676,
+        "q80": 19.79822834645669,
+        "max_value": 27.980877390326206,
+        "region": {
+          "id": "near_surface_temperature-region-2-1",
+          "row": 2,
+          "column": 1,
+          "bounds_relative": [
+            0.25,
+            0.6666666666666666,
+            0.5,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 8.308661417322833,
+        "q20": -32.52684323550465,
+        "q80": 22.94793507954363,
+        "max_value": 34.3379399003696,
+        "region": {
+          "id": "near_surface_temperature-region-2-2",
+          "row": 2,
+          "column": 2,
+          "bounds_relative": [
+            0.5,
+            0.6666666666666666,
+            0.75,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      },
+      {
+        "estimated": true,
+        "sample_count": 320,
+        "classified_count": 320,
+        "unclassified_count": 0,
+        "no_data_count": 0,
+        "median": 8.925196850393695,
+        "q20": -28.79026485325698,
+        "q80": 20.431463924152332,
+        "max_value": 33.394263217097865,
+        "region": {
+          "id": "near_surface_temperature-region-2-3",
+          "row": 2,
+          "column": 3,
+          "bounds_relative": [
+            0.75,
+            0.6666666666666666,
+            1.0,
+            1.0
+          ],
+          "relative_size": {
+            "width": 2048,
+            "height": 1024
+          }
+        },
+        "source": {
+          "url": "https://svs.gsfc.nasa.gov/5147/",
+          "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "scale_extraction_date": "2026-11-14T19:51:12Z",
+          "scale_verification": "estimated",
+          "palette_status": "extracted"
+        }
+      }
+    ]
+  }
+}
