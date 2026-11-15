@@ -151,7 +151,7 @@ const ALIASES = {
 };
 
 const OVERVIEW = [
-  "Earth Information Jukebox. A NASA Space Apps project, not the official NASA website.",
+  "Immearth. A NASA Space Apps project, not the official NASA website.",
   "This page presents five NASA Earth maps: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. It also has a space photo of the day. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
   "Three pages make up the site: this home page, the Live Map, and the layer explorer. The space photo of the day is a section on this page. Open the other pages from the menu at the top or from Open a page. The Live Map stays silent until you press Play remix.",
   "You can search the maps, read what each one shows, and move with Previous and Next. From the top, the page continues through the maps, the photo, Open a page, 3D listening, keyboard help, and accessibility. Start voice, then say next, previous, photo, open a page, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
@@ -509,6 +509,7 @@ export default function GuidePage() {
               </ul>
               <p>The menu at the top of every page has Home, Live Map, Layer explorer, How to use the map, and Help.</p>
               <p>Color blind colors, at the top right, switches the interface to blue, orange, and patterns. NASA map pictures keep their published colors. Your choice is remembered.</p>
+              <p>Dark mode, next to it, darkens the page chrome. The NASA map pictures stay the same. The page opens in light mode until you choose otherwise.</p>
             </div>
             <div className="tile">
               <h3>Live Map keys</h3>
@@ -566,6 +567,7 @@ export default function GuidePage() {
       <li>3D listening opens the live map in the same page. The guide to the 12 regions is nearby and explains the twelve-region keyboard controls. Nothing plays until you press Play remix.</li>
             <li>An opening animation plays when you arrive. Press Space, Escape, or Skip, or click the animation, and it fades away. It stays off when your device is set to reduce motion.</li>
             <li>Color blind colors, at the top of every page, switches the interface to blue, orange, and patterns.</li>
+            <li>Dark mode darkens the page chrome and is remembered on this browser. NASA map pictures stay the same.</li>
             <li>The Live Map stays silent until you press Play remix. What you hear is also written out in words, so the music can be followed without sound.</li>
           </ul>
           <p className="feedback">Found a barrier? <a href="https://github.com/jjlols/NASA-SPACE-APP/issues">Report an accessibility problem</a>.</p>

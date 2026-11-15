@@ -1237,3 +1237,53 @@ html.reduce-motion .intro-overlay {
 @media(prefers-reduced-motion:no-preference){.hero-water .water-rings i{animation:quiet-water-ring 4.2s cubic-bezier(.2,.6,.3,1) infinite}}
 @keyframes quiet-water-ring{from{transform:scale(.5);opacity:0}18%{opacity:.8}to{transform:scale(3.8);opacity:0}}
 @media(max-width:600px){.hero-water .space-wash{width:20rem;max-width:90%;right:-9%;top:27%;opacity:.45}.hero-copy{padding-block:2rem}}
+
+html[data-theme="dark"] {
+  --ink: #f4f8fc;
+  --muted: #c5d4e8;
+  --paper: #071422;
+  --sky: #0c2340;
+  --band: #0a1c34;
+  --blue: #9ecbff;
+  --blue-deep: #b9d7ff;
+  --navy: #e7f1fb;
+  --line: #9eb6d4;
+  --rule: #2c4d73;
+  --focus: #ffd34d;
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .tile,
+html[data-theme="dark"] .destination,
+html[data-theme="dark"] .button-secondary,
+html[data-theme="dark"] .search input,
+html[data-theme="dark"] dialog,
+html[data-theme="dark"] .photo-frame,
+html[data-theme="dark"] .placeholder,
+html[data-theme="dark"] .empty {
+  background: #10283f;
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .band-plain {
+  background: #071422;
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .site-footer,
+html[data-theme="dark"] .head-camera {
+  background: #04101f;
+  color: #fff;
+}
+
+html[data-theme="dark"] a:hover {
+  color: #d6e8ff;
+}
+
+html[data-theme="dark"] .skip-link {
+  background: #f4f8fc;
+  color: #071422;
+}

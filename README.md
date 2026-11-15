@@ -1,4 +1,4 @@
-# Earth Information Jukebox
+# Immearth
 
 An interactive map and restrained music remix built around five NASA Earth
 visualizations. Follow land and coastlines, inspect full source-map fields, then

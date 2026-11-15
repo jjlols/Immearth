@@ -464,7 +464,9 @@ html[data-cvd="safe"] .regional-grid button i.filled-region {
 
 .site-tools {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 0.5rem;
   padding: 0.25rem 0;
 }
 
@@ -704,5 +706,156 @@ html[data-cvd="safe"] .regional-grid button i.filled-region {
   .site-header {
     position: static;
   }
+}
+
+html[data-theme="dark"] {
+  background: #071422;
+  color: #f4f8fc;
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .skip-link {
+  background: #f4f8fc;
+  color: #071422;
+}
+
+html[data-theme="dark"] .destinations-group {
+  color: #c5d4e8;
+}
+
+html[data-theme="dark"] .site-header.has-spectrum {
+  background: #071422;
+  border-bottom-color: #2c4d73;
+}
+
+html[data-theme="dark"] .site-header.has-spectrum .wordmark,
+html[data-theme="dark"] .site-header.has-spectrum .wordmark-text {
+  color: #9ecbff;
+}
+
+html[data-theme="dark"] .site-header.has-spectrum .primary-nav a {
+  color: #f4f8fc;
+}
+
+html[data-theme="dark"] .site-header.has-spectrum .primary-nav a[aria-current="page"] {
+  color: #9ecbff;
+  border-bottom-color: #9ecbff;
+}
+
+html[data-theme="dark"] .site-footer {
+  background: #04101f;
+}
+
+html[data-theme="dark"] .jukebox-shell,
+html[data-theme="dark"] .jukebox-shell h1,
+html[data-theme="dark"] .jukebox-shell h2,
+html[data-theme="dark"] .jukebox-shell h3,
+html[data-theme="dark"] .jukebox-shell .workspace-title h2,
+html[data-theme="dark"] .jukebox-shell .hearing-caption,
+html[data-theme="dark"] .jukebox-shell .current-region,
+html[data-theme="dark"] .jukebox-shell .playback-status,
+html[data-theme="dark"] .jukebox-shell .region-study p,
+html[data-theme="dark"] .jukebox-shell .mode-explainer,
+html[data-theme="dark"] .jukebox-shell .voice-description,
+html[data-theme="dark"] .jukebox-shell .map-explainer,
+html[data-theme="dark"] .jukebox-shell .function-explainer p,
+html[data-theme="dark"] .jukebox-shell .sound-meter-label,
+html[data-theme="dark"] .jukebox-shell .track-detail,
+html[data-theme="dark"] .jukebox-shell .value-provision strong,
+html[data-theme="dark"] .jukebox-shell .progress-percent,
+html[data-theme="dark"] .jukebox-shell .interaction-modes button,
+html[data-theme="dark"] .jukebox-shell .regional-grid button,
+html[data-theme="dark"] .jukebox-shell .source-select {
+  color: #f4f8fc;
+}
+
+html[data-theme="dark"] .jukebox-shell .metric-text small,
+html[data-theme="dark"] .jukebox-shell .interaction-modes button small,
+html[data-theme="dark"] .jukebox-shell .source-license,
+html[data-theme="dark"] .jukebox-shell .region-counts,
+html[data-theme="dark"] .jukebox-shell .region-counts small,
+html[data-theme="dark"] .jukebox-shell .mapping-section p,
+html[data-theme="dark"] .jukebox-shell .provenance p,
+html[data-theme="dark"] .jukebox-shell .license-paper p,
+html[data-theme="dark"] .jukebox-shell .notes-footer,
+html[data-theme="dark"] .jukebox-shell .small-caps,
+html[data-theme="dark"] .jukebox-shell .intro-aside,
+html[data-theme="dark"] .jukebox-shell .photo-credit {
+  color: #c5d7ea;
+}
+
+html[data-theme="dark"] .jukebox-shell .intro-block h1 em,
+html[data-theme="dark"] .jukebox-shell a:not(.main-action) {
+  color: #9ecbff;
+}
+
+html[data-theme="dark"] .jukebox-shell .music-console,
+html[data-theme="dark"] .jukebox-shell .explorer-panel,
+html[data-theme="dark"] .jukebox-shell .instrument-guide,
+html[data-theme="dark"] .jukebox-shell .region-study,
+html[data-theme="dark"] .jukebox-shell .license-paper,
+html[data-theme="dark"] .jukebox-shell .source-card,
+html[data-theme="dark"] .jukebox-shell .regional-grid button,
+html[data-theme="dark"] .jukebox-shell .interaction-modes button {
+  background: #10283f;
+  border-color: #3d6288;
+}
+
+html[data-theme="dark"] .jukebox-shell .interaction-modes button.selected-mode,
+html[data-theme="dark"] .jukebox-shell .source-card.is-focused,
+html[data-theme="dark"] .jukebox-shell .regional-grid button[aria-pressed="true"] {
+  background: #17375a;
+  border-color: #9ecbff;
+}
+
+html[data-theme="dark"] .jukebox-shell .secondary-action {
+  color: #d6e8ff;
+  border-color: #9ecbff;
+  background: transparent;
+}
+
+html[data-theme="dark"] .jukebox-shell .map-frame,
+html[data-theme="dark"] .jukebox-shell canvas {
+  background-color: #102535;
+}
+
+html[data-theme="dark"] .jukebox-shell .intro-block {
+  background: #10283f;
+  color: #f4f8fc;
+}
+
+html[data-theme="dark"] .jukebox-shell .intro-block *,
+html[data-theme="dark"] .jukebox-shell .music-console *,
+html[data-theme="dark"] .jukebox-shell .explorer-panel *,
+html[data-theme="dark"] .jukebox-shell .instrument-guide *,
+html[data-theme="dark"] .jukebox-shell .region-study *,
+html[data-theme="dark"] .jukebox-shell .license-paper *,
+html[data-theme="dark"] .jukebox-shell .notes-footer,
+html[data-theme="dark"] .jukebox-shell .masthead * {
+  color: #e7f1fb;
+}
+
+html[data-theme="dark"] .jukebox-shell .intro-block h1 em {
+  color: #9ecbff;
+}
+
+html[data-theme="dark"] .jukebox-shell .main-action,
+html[data-theme="dark"] .jukebox-shell .main-action * {
+  color: #fff;
+}
+
+html[data-theme="dark"] .jukebox-shell .dataset-label,
+html[data-theme="dark"] .jukebox-shell .score-badge,
+html[data-theme="dark"] .jukebox-shell .reset-composition,
+html[data-theme="dark"] .jukebox-shell .estimate-label,
+html[data-theme="dark"] .jukebox-shell .value-provision,
+html[data-theme="dark"] .jukebox-shell .value-provision * {
+  color: #e7f1fb;
+}
+
+html[data-theme="dark"] .jukebox-shell .reset-composition,
+html[data-theme="dark"] .jukebox-shell .value-provision {
+  background: #17375a;
+  border-color: #3d6288;
 }
 
