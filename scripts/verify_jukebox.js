@@ -71,9 +71,8 @@ try {
  assert.equal(await page.getByRole('button', { name: /Solo \/ Explore/ }).getAttribute('aria-pressed'), 'true');
  assert_ok(await page.locator('.playback-status').getAttribute('role'), 'status');
  assert_ok(await page.locator('.current-region').getAttribute('role'), 'status');
- await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
+ assert.equal(await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).count(), 0);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
- await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
  await page.getByRole('button', { name: 'Play remix', exact: true }).click();
  await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0]?.state === 'running' && window.__JUKEBOX_AUDIO_REF__.current?.original && window.__JUKEBOX_AUDIO_REF__.current?.isRunning, { timeout: 45000 });
  await page.waitForTimeout(1200);
@@ -146,7 +145,7 @@ try {
  await page.getByLabel('Show Temperature on map and enable its musical layer').focus();
  await page.keyboard.press('d');
  assert.equal(await region(), 0);
- await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
+ assert.equal(await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).count(), 0);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
 
  await page.getByRole('button', { name: /Ensemble/ }).click();

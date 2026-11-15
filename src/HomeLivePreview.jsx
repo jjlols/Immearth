@@ -5,6 +5,7 @@ import { featureModel } from "./audio/musicMappings.js";
 import { explorerPosition } from "./hooks/useExplorer.js";
 import { linkTo } from "./navigation.js";
 import { IconSpeaker } from "./Icons.jsx";
+import SpatialOriginMarker from "./components/SpatialOriginMarker.jsx";
 import "./styles-origin.css";
 
 /* The home preview keeps the listener on the first region. It does not follow keys or clicks. */
@@ -207,6 +208,7 @@ export default function HomeLivePreview() {
               <span className="home-place-line" />
               <span className="home-place-label">You are here</span>
             </div>
+            <SpatialOriginMarker />
             <span className="map-longitude west">180° W</span>
             <span className="map-longitude east">180° E</span>
           </div>

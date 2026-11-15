@@ -8,7 +8,7 @@ export default function SpatialOriginMarker(){
  const space=headspaceListeningFrame();
  return <div className="spatial-origin" data-spatial-origin="vancouver_bc_canada" style={coordinates}>
  <button className="origin-target" aria-label="Show future spatial audio origin, Vancouver, BC" aria-expanded={expanded} aria-controls={id} type="button" onClick={()=>setExpanded(!expanded)}>
- <span className="range-ring" aria-hidden="true"/><span className="crosshair" aria-hidden="true">⌖</span><span className="origin-name" aria-hidden="true">Vancouver, BC</span>
+ <span className="origin-mark" aria-hidden="true"><span className="range-ring"/><span className="crosshair"/></span><span className="origin-name" aria-hidden="true">Vancouver, BC</span>
  </button>
  {expanded&&<div className="origin-description" id={id} role="note">
  <div className="beacon-label">FUTURE LISTENING REFERENCE</div>

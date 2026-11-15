@@ -1,13 +1,20 @@
 .spatial-origin{position:absolute;z-index:130;transform:translate(-50%,-50%);pointer-events:auto}
 .origin-target{display:flex;align-items:center;gap:9px;background:rgba(9,28,35,.82);border:1px solid #86b5ae55;border-radius:4px;padding:7px 11px;color:#cff0d9;cursor:pointer;transform:translate(-50%,-50%);white-space:nowrap;min-height:44px;font-size:10px;line-height:1.3;text-shadow:0 1px 5px #031521;position:relative}
-.crosshair{font-size:27px;color:#caeacf;text-shadow:0 0 9px rgba(125,226,193,.6);line-height:1}
-.range-ring{position:absolute;left:8px;top:9px;width:21px;height:21px;border:1px solid #a0c8a98a;border-radius:50%}
+.origin-mark{position:relative;width:28px;height:28px;flex:none}
+.crosshair,.range-ring{position:absolute;inset:0}
+.range-ring{border:1.5px solid #caeacf;border-radius:50%}
+.crosshair::before,.crosshair::after{content:"";position:absolute;background:#caeacf}
+.crosshair::before{left:50%;top:3px;bottom:3px;width:1.5px;transform:translateX(-50%)}
+.crosshair::after{top:50%;left:3px;right:3px;height:1.5px;transform:translateY(-50%)}
 .origin-name{line-height:1.2;letter-spacing:.2px}.origin-description{position:absolute;top:49px;left:10px;width:314px;background:#183336f7;border:1px solid #a4cdbb96;padding:19px;border-radius:4px;color:#d6ebe0;box-shadow:0 6px 24px #041b3299;z-index:145;letter-spacing:.01em;max-height:min(71vh,600px);overflow:auto}
 .origin-description h3{font:23px Georgia,serif;display:inline-block;margin:9px 0 16px;font-weight:400;letter-spacing:-.3px}
 .origin-description p{font:10px/1.75 system-ui,sans-serif;color:#bccfd1}.origin-description strong{color:#e8efce;font-size:11px;font-weight:500}.origin-description .beacon-label{font:9px monospace;letter-spacing:1.15px;color:#b1d1c2}
 .origin-coordinates{font-size:10px;margin-bottom:12px!important;color:#aacdc4}.head-reserved{border-top:1px solid #587167aa;border-bottom:1px solid #587167aa;padding:13px 0;font-size:11px;color:#d7dfc6!important}.origin-caveat{font-size:9px!important;line-height:1.65!important;color:#9dbbab!important;margin:10px 0 0}.origin-description code{color:#d9dda9;font-size:11px}
-@media(max-width:650px){.origin-target{padding:2px;min-width:32px;min-height:34px;background:rgba(9,28,35,.69);border-color:transparent}.crosshair{font-size:25px}.range-ring{left:4px;top:5px}.origin-name{display:none}.origin-description{left:0;top:36px;width:min(290px,82vw);padding:13px}.origin-description h3{font-size:20px}.origin-description p{font-size:10px}.origin-description .beacon-label{font-size:8px}}
-.exploration-marker{position:absolute;z-index:132;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;gap:6px;color:#ffe9a3;background:#38290fe6;border:1px solid #eac675;padding:5px 8px;border-radius:4px;box-shadow:0 0 0 4px #28312455;white-space:nowrap;transition:left .35s ease,top .35s ease}
-.exploration-marker>span{font-size:22px;line-height:1}.exploration-marker small{font-size:9px;font-weight:600}
+@media(max-width:650px){.origin-target{padding:2px;min-width:32px;min-height:34px;background:rgba(9,28,35,.69);border-color:transparent}.origin-name{display:none}.origin-description{left:0;top:36px;width:min(290px,82vw);padding:13px}.origin-description h3{font-size:20px}.origin-description p{font-size:10px}.origin-description .beacon-label{font-size:8px}}
+.exploration-marker{position:absolute;z-index:132;width:28px;height:28px;transform:translate(-50%,-50%);pointer-events:none;background:none;border:0;padding:0;box-shadow:none;transition:left .35s ease,top .35s ease}
+.exploration-marker .target-ring,.exploration-marker .target-cross{position:absolute;inset:0}
+.exploration-marker .target-ring{border:2px solid #000;border-radius:50%;box-shadow:0 0 0 1px #fff}
+.exploration-marker .target-cross::before,.exploration-marker .target-cross::after{content:"";position:absolute;background:#000;box-shadow:0 0 0 1px #fff}
+.exploration-marker .target-cross::before{left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%)}
+.exploration-marker .target-cross::after{top:50%;left:0;right:0;height:2px;transform:translateY(-50%)}
 .current-region{line-height:1.6;margin-top:13px}
-@media(max-width:650px){.exploration-marker{padding:4px 6px;gap:3px}.exploration-marker>span{font-size:16px}.exploration-marker small{font-size:7px}}

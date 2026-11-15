@@ -1,7 +1,6 @@
 import React,{useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {LAYER_OPTIONS,OPACITY_DEFAULTS} from './layerOptions.js';
 import {RemixEngine} from './audio/RemixEngine.js';
-import SpatialOriginMarker from './components/SpatialOriginMarker.jsx';
 import HeadDirectionControl from './components/HeadDirectionControl.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
@@ -15,8 +14,7 @@ function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,load
  return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration">
  {showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
  {layers.filter(layer=>settings[layer.id]?.visible!==false).map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
- <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span>↗</span><small>{explorerIndex+1}/{EXPLORER_SIZE}</small></div>
- <SpatialOriginMarker />
+ <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span className="target-ring"/><span className="target-cross"/></div>
  {loading&&<div className="loading-scrim" role="status">Loading geography and palette features…</div>}
  <span className="map-longitude west">180° W</span><span className="map-longitude east">180° E</span>
  <span className="map-hemisphere">Equatorial viewing plane <span>•</span> source projections remain provisional</span>
@@ -193,7 +191,7 @@ export default function Jukebox(){
  <div className="workspace-shared live-board">
   <main className="map-workspace">
    <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
-   <p className="current-region" role="status" aria-live="polite">Region {currentIndex + 1} of {EXPLORER_SIZE}. {currentLayer.label}. Use W, A, S, and D to move.</p>
+   <p className="current-region" role="status" aria-live="polite">{currentLayer.label}. Use W, A, S, and D to move.</p>
   </main>
   <div className="live-toolbar">
    <aside className="explorer-panel" id="map-controls" aria-label="Map layers">
