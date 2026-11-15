@@ -260,7 +260,7 @@
         <li>Each map has a written description of what the picture shows, plus its source.</li>
         <li>Text can be enlarged, and the layout reflows on narrow screens and at high zoom.</li>
         <li>Search results and section changes are announced to screen readers.</li>
-        <li>The microphone turns on only after you press Start voice. Your speech is recognized on this computer by the speech engine built into Windows. It is not sent to an online service.</li>
+        <li>The microphone turns on only after you press Start voice. Your speech is recognized on this computer by sherpa-onnx, an open-source keyword spotter that listens only for this site’s commands. It is not sent to an online service.</li>
         <li>Immersive listening stays quiet until you press Play test tones or another sound is started. A text line shows which way you are facing. Headphones are recommended. The camera stays off until you ask, and the picture is processed on this computer.</li>
         <li>An opening animation plays when you arrive. Press Space, Escape, or Skip, or click the animation, and it fades away. It stays off when your device is set to reduce motion.</li>
       </ul>
@@ -294,8 +294,12 @@
     <button type="button" class="button button-primary" id="close-overview">Close</button>
   </dialog>
 
-  <script src="intro.js"></script>
-  <script src="spatial-audio.js"></script>
+  <script type="module">
+    import { startIntro } from "./intro.js";
+    import { installSpatialAudio } from "./spatial-audio.js";
+    startIntro();
+    installSpatialAudio();
+  </script>
   <script src="site.js"></script>
 </body>
 </html>

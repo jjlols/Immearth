@@ -2,7 +2,10 @@
    One AudioContext, HRTF sources on a sphere around the listener.
    Longitude 0 starts straight ahead, east is to the right, north is up.
    This file does not turn Earth data into pitch or loudness. */
-(function () {
+let installedSpatialAudio = null;
+
+export function installSpatialAudio() {
+  installedSpatialAudio?.();
   const RADIUS = 1.25;
   const VISION_MODULE = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.17";
   const VISION_WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.17/wasm";
@@ -809,6 +812,12 @@
     if (message) announceNow(message);
   }
 
+  const ui = new AbortController();
+  function listen(target, type, listener, options) {
+    if (!target) return;
+    target.addEventListener(type, listener, { ...options, signal: ui.signal });
+  }
+
   function bindUi() {
     slider = document.querySelector("#heading-slider");
     readout = document.querySelector("#heading-readout");
@@ -827,14 +836,14 @@
     if (volumeSlider) volumeSlider.setAttribute("aria-valuetext", "70 percent");
 
     if (slider) {
-      slider.addEventListener("focus", () => { sliderActive = true; });
-      slider.addEventListener("blur", () => {
+      listen(slider, "focus", () => { sliderActive = true; });
+      listen(slider, "blur", () => {
         sliderActive = false;
         if (lastRawYaw != null) cameraZero = wrap(lastRawYaw - heading);
         showHeading();
       });
-      slider.addEventListener("pointerdown", () => { sliderActive = true; });
-      slider.addEventListener("keydown", (event) => {
+      listen(slider, "pointerdown", () => { sliderActive = true; });
+      listen(slider, "keydown", (event) => {
         const keys = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 };
         const direction = keys[event.key];
         if (!direction) return;
@@ -845,7 +854,7 @@
         slider.dispatchEvent(new Event("input", { bubbles: true }));
         slider.dispatchEvent(new Event("change", { bubbles: true }));
       });
-      slider.addEventListener("input", () => {
+      listen(slider, "input", () => {
         sliderDriving = true;
         try {
           if (lastRawYaw != null) cameraZero = wrap(lastRawYaw - Number(slider.value));
@@ -854,51 +863,39 @@
           sliderDriving = false;
         }
       });
-      slider.addEventListener("change", () => {
+      listen(slider, "change", () => {
         announceNow(headingSentence());
       });
     }
 
-    if (turnLeft) {
-      turnLeft.addEventListener("click", () => nudgeHeading(-15, { announce: "now" }));
-    }
-    if (turnRight) {
-      turnRight.addEventListener("click", () => nudgeHeading(15, { announce: "now" }));
-    }
-    if (recenterButton) {
-      recenterButton.addEventListener("click", () => recenter({ announce: "now" }));
-    }
-    if (volumeSlider) {
-      volumeSlider.addEventListener("input", () => {
-        setMasterVolume(Number(volumeSlider.value) / 100);
-        announceSoon("Overall volume " + volumeSlider.value + " percent.");
-      });
-    }
-    if (cameraButton) {
-      cameraButton.addEventListener("click", () => {
-        if (cameraOn || cameraStarting) stopCamera({ announce: true });
-        else startCamera();
-      });
-    }
-    if (playButton) {
-      playButton.addEventListener("click", () => announceNow(startTestTones()));
-    }
-    if (stopButton) {
-      stopButton.addEventListener("click", () => announceNow(stopTestTones()));
-    }
+    listen(turnLeft, "click", () => nudgeHeading(-15, { announce: "now" }));
+    listen(turnRight, "click", () => nudgeHeading(15, { announce: "now" }));
+    listen(recenterButton, "click", () => recenter({ announce: "now" }));
+    listen(volumeSlider, "input", () => {
+      setMasterVolume(Number(volumeSlider.value) / 100);
+      announceSoon("Overall volume " + volumeSlider.value + " percent.");
+    });
+    listen(cameraButton, "click", () => {
+      if (cameraOn || cameraStarting) stopCamera({ announce: true });
+      else startCamera();
+    });
+    listen(playButton, "click", () => announceNow(startTestTones()));
+    listen(stopButton, "click", () => announceNow(stopTestTones()));
   }
 
-  document.addEventListener("pointerdown", armAudio, true);
-  document.addEventListener("keydown", armAudio, true);
-  document.addEventListener("keydown", onEscape);
-  window.addEventListener("pagehide", () => {
+  function onPageHide() {
     if (cameraOn || cameraStarting) stopCamera({ announce: false });
     stopTestTones({ quietIfIdle: true, immediate: true });
-  });
+  }
+
+  listen(document, "pointerdown", armAudio, { capture: true });
+  listen(document, "keydown", armAudio, { capture: true });
+  listen(document, "keydown", onEscape);
+  listen(window, "pagehide", onPageHide);
 
   bindUi();
 
-  window.earthAudio = Object.freeze({
+  const api = Object.freeze({
     get context() { return ensureContext(); },
     get output() {
       ensureContext();
@@ -921,4 +918,15 @@
     testTonesPlaying,
     getSource,
   });
-})();
+  window.earthAudio = api;
+
+  function dispose() {
+    ui.abort();
+    if (cameraOn || cameraStarting) stopCamera({ announce: false });
+    stopTestTones({ quietIfIdle: true, immediate: true });
+    if (window.earthAudio === api) delete window.earthAudio;
+    if (installedSpatialAudio === dispose) installedSpatialAudio = null;
+  }
+  installedSpatialAudio = dispose;
+  return dispose;
+}

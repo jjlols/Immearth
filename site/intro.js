@@ -1,4 +1,4 @@
-(function () {
+export function startIntro() {
   const intro = document.querySelector("#intro");
   if (!intro) return;
 
@@ -271,14 +271,29 @@
     frame = requestAnimationFrame(draw);
   }
 
+  function onPointer(event) {
+    if (event.target === skip) return;
+    finish(true);
+  }
+  function onSkip() {
+    finish(true);
+  }
+
   resize();
   unlock();
   window.addEventListener("resize", resize);
-  intro.addEventListener("pointerdown", (event) => {
-    if (event.target === skip) return;
-    finish(true);
-  });
+  intro.addEventListener("pointerdown", onPointer);
   window.addEventListener("keydown", onKey);
-  skip.addEventListener("click", () => finish(true));
+  skip.addEventListener("click", onSkip);
   frame = requestAnimationFrame(draw);
-})();
+  return function stopIntro() {
+    if (leaving) return;
+    leaving = true;
+    cancelAnimationFrame(frame);
+    window.removeEventListener("keydown", onKey);
+    window.removeEventListener("resize", resize);
+    intro.removeEventListener("pointerdown", onPointer);
+    skip.removeEventListener("click", onSkip);
+    releasePage();
+  };
+}
