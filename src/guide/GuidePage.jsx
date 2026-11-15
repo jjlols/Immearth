@@ -153,7 +153,7 @@ const ALIASES = {
 const OVERVIEW = [
   "Earth Information Jukebox. A NASA Space Apps project, not the official NASA website.",
   "This page presents five NASA Earth maps: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. It also has a space photo of the day. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
-  "Four pages make up the site: this home page, the Live Map, the layer explorer, and the photo of the day. Open them from the menu at the top or from Open a page. The Live Map stays silent until you press Play remix.",
+  "Three pages make up the site: this home page, the Live Map, and the layer explorer. The space photo of the day is a section on this page. Open the other pages from the menu at the top or from Open a page. The Live Map stays silent until you press Play remix.",
   "You can search the maps, read what each one shows, and move with Previous and Next. From the top, the page continues through the maps, the photo, Open a page, 3D listening, keyboard help, and accessibility. Start voice, then say next, previous, photo, open a page, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
   "3D listening opens the live map. Explore its regions with W, A, S, D or arrow keys, choose one field or all of them, and select Play remix when you are ready. Headphones are recommended. Nothing plays until you press Play remix.",
 ];
@@ -193,7 +193,7 @@ export default function GuidePage() {
   const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, or page overview.");
   const [listening, setListening] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
-  const [setPhoto] = useState(null);
+  const [photo, setPhoto] = useState(null);
   const [lastSection, setLastSection] = useState("overview");
   const dialogRef = useRef(null);
   const dialogTitleRef = useRef(null);
@@ -310,6 +310,31 @@ export default function GuidePage() {
     if (typeof result === "string") speak(result);
     return true;
   };
+
+  useEffect(() => {
+    let cancel = false;
+    const folder = `${import.meta.env.BASE_URL}photo-of-the-day/`;
+    const files = ["photo.jpg", "photo.jpeg", "photo.png", "photo.webp", "photo.gif"];
+    (async () => {
+      let text = "";
+      try {
+        const response = await fetch(`${folder}caption.txt`);
+        if (response.ok) text = (await response.text()).trim();
+      } catch {
+        text = "";
+      }
+      for (const file of files) {
+        const url = `${folder}${file}`;
+        if (await probePhoto(url)) {
+          if (!cancel) setPhoto({ url, text });
+          return;
+        }
+      }
+    })();
+    return () => {
+      cancel = true;
+    };
+  }, []);
 
   useEffect(() => {
     const session = createVoiceSession({
@@ -437,7 +462,7 @@ export default function GuidePage() {
           </figure>
           <div className="placeholder" hidden={Boolean(photo)}>
             <p>Today’s photo has not been posted yet. Please check back soon.</p>
-            <p className="placeholder-note"><a href={hrefFor("photo")} onClick={(event) => { event.preventDefault(); goToView("photo"); }}>How the photo is added</a></p>
+            <p className="placeholder-note">Save the picture as photo.jpg in the photo-of-the-day folder, and describe it in caption.txt.</p>
           </div>
         </section>
 
@@ -445,13 +470,12 @@ export default function GuidePage() {
           <div className="section-head">
             <p className="eyebrow">Explore</p>
             <h2 id="destinations-title" tabIndex={-1}>Open a page</h2>
-            <p>The first three open their own page. The rest move through this page, in the same order as Previous section, Next section, and the voice commands.</p>
+            <p>Live Map and Layer explorer open their own pages. The rest move through this page, in the same order as Previous section, Next section, and the voice commands.</p>
           </div>
           <h3 className="destinations-group">Other pages</h3>
           <ul className="destinations" role="list">
             <li><a className="destination" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}><strong>Live Map</strong><span>Choose a metric and hear its estimated palette guide the music. What you hear is also written out.</span><span className="destination-keys">Nothing plays until you press Play remix. W A S D or arrow keys move between 12 regions.</span></a></li>
             <li><a className="destination" href={hrefFor("layers")} onClick={(event) => { event.preventDefault(); goToView("layers"); }}><strong>Layer explorer</strong><span>Stack the five maps on one world map. Show, hide, or focus on any layer.</span><span className="destination-keys">No sound on this page.</span></a></li>
-            <li><a className="destination" href={hrefFor("photo")} onClick={(event) => { event.preventDefault(); goToView("photo"); }}><strong>Photo of the day</strong><span>How to add today’s space picture and its written description.</span><span className="destination-keys">For the team that updates the site.</span></a></li>
           </ul>
           <h3 className="destinations-group">On this page</h3>
           <ul className="destinations" role="list">
