@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import guideCss from "../../site/styles.css?inline";
 import SiteChrome from "../SiteChrome.jsx";
+import SpaceWash, { SPACE_PHOTOS } from "../SpaceWash.jsx";
 import { goToView, hrefFor } from "../navigation.js";
 import { createVoiceSession } from "./voice.js";
 
@@ -360,6 +361,7 @@ export default function GuidePage() {
       <div id="status" className="visually-hidden" role="status">{status}</div>
       <main id="main">
         <section className="hero" id="overview" aria-labelledby="overview-title">
+          <div className="hero-water" aria-hidden="true"><SpaceWash photo={SPACE_PHOTOS.marble} /><div className="water-rings"><i /><i /><i /></div></div>
           <div className="hero-copy">
             <p className="eyebrow">Earth Information Center</p>
             <h1 id="overview-title" tabIndex={-1}><span className="highlight">Hear Earth,</span> not only see it</h1>
