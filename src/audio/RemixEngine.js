@@ -34,7 +34,7 @@ export class RemixEngine {
     this.lastSourceRate = 1;
     this.isRunning = false;
     this.muted = false;
-    this.volume = 0.48;
+    this.volume = 0.32;
     this.onChange = null;
     this.playRequest = 0;
     this.startedAt = 0;

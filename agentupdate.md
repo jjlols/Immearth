@@ -484,3 +484,18 @@ release `rel_01M7G9WKFT7QVJ8B2QD47FZV4V` (#9) after the stated local tests.
 Live check at http://immearth.app.space south preview y=-2 then committed
 Region 9 of 48 (index 8) with direct bypass at origin. All previous 'not pushed
 or deployed' fragments in this file describe older checkpoints, not this record.
+
+## Quieter music, louder overview — 2026-11-15
+
+User asked for a louder recorded overview and quieter music. Dry gain stays 0.085.
+Master default moves from 0.48 to 0.32. The cap stays 0.50, so the Live Map slider
+can still be raised. These are file measurements, not a speaker listening test.
+
+Overview `public/audio/page-overview.m4a` before the +12 dB file gain: mean −35.8 dB,
+peak −15.1 dB. After: mean −23.8 dB, peak −3.1 dB, duration 92.01 s. The peak stays
+below full scale.
+
+Music dry path is the source times 0.085 times the master. At master 0.48 that path
+measured mean −47.2 dB and peak −29.9 dB. At master 0.32 it measured mean −50.8 dB
+and peak −33.5 dB, about 3.6 dB lower. The earlier browser-analyser windows at 0.48
+are not repeated here; scaling those windows by 0.32/0.48 is an estimate only.

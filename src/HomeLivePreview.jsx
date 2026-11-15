@@ -60,7 +60,7 @@ export default function HomeLivePreview() {
     let cancelled = false;
     const player = new RemixEngine();
     engine.current = player;
-    player.setVolume(0.48);
+    player.setVolume(0.32);
     player.setModel(modelsFor(null), {
       visibility: Object.fromEntries(LAYER_OPTIONS.map((layer) => [layer.id, true])),
       selection: "nitrogen_oxides",

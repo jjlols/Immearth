@@ -33,7 +33,8 @@ export default function AccessPage() {
               <ul className="key-list">
                 <li><kbd>Tab</kbd> <span>Move to the next link, button, slider, or search box. The first stop is the Skip link.</span></li>
                 <li><kbd>Enter</kbd> <span>Follow a link or press a button.</span></li>
-                <li><kbd>L</kbd> <span>Play the recorded overview, or stop it if it is already playing. This key does nothing while you are on a button, link, or text field.</span></li>
+                <li><kbd>L</kbd> <span>On the home page, play the recorded overview, or stop it if it is already playing. This key does nothing while you are on a button, link, or text field.</span></li>
+                <li><kbd>N</kbd> <span>Open the next page. The order is Home, Live Map, Earth data, then Accessibility and help. A recorded voice names the page. This key does nothing on the last page, or while you are on a button, link, or text field.</span></li>
                 <li><kbd>Esc</kbd> <span>Close the page overview.</span></li>
               </ul>
               <p>The menu at the top of every page has Home, Live Map, Earth data, and Accessibility &amp; help.</p>
@@ -53,7 +54,7 @@ export default function AccessPage() {
             </div>
             <div className="tile">
               <h3><IconSpeaker /> Listen and speak</h3>
-              <p>Play overview, Stop speaking, and Start voice are at the top of Home, the Live Map, Earth data, and this page. Play overview plays a recorded reading. Press L, when you are not on a button or text field, to play or stop that recording.</p>
+              <p>On the home page, Listen and speak sits under the title. Play overview plays a recorded reading, and L plays or stops it when you are not on a button or text field. N opens the next page and a recorded voice names it. On the Live Map, Earth data, and this page, Listen and speak keeps Stop speaking and Start voice.</p>
               <p>Read page overview on the home page opens the same summary as text. Press Escape or Close to return to where you were. Saying next or previous still moves through the home page sections.</p>
             </div>
           </div>
@@ -146,11 +147,19 @@ export default function AccessPage() {
 
         <section className="band band-tint" id="spoken-lines" aria-labelledby="spoken-title">
           <div className="section-head">
-            <p className="eyebrow">Computer voice</p>
-            <h2 id="spoken-title" tabIndex={-1}>What the computer voice says</h2>
-            <p>The overview is a recorded human voice. The browser’s generated voice is used only when a voice command moves you, and only for these short lines.</p>
+            <p className="eyebrow">Recorded voice</p>
+            <h2 id="spoken-title" tabIndex={-1}>What the recorded voice says</h2>
+            <p>Changing page and the overview play a recorded human voice. The generated computer voice stays silent. The other lines are written on the page for a screen reader.</p>
           </div>
           <div className="tile">
+            <h3>Recorded voice</h3>
+            <ul className="command-list">
+              <li>Switching to home.</li>
+              <li>Switching to live map.</li>
+              <li>Switching to Earth data.</li>
+              <li>Switching to accessibility and help.</li>
+            </ul>
+            <h3>Written, not spoken</h3>
             <ul className="command-list">
               <li>Overview.</li>
               <li>Live Map preview.</li>
@@ -164,7 +173,6 @@ export default function AccessPage() {
               <li>Carbon monoxide. In the musical remix: Higher estimated carbon monoxide, on steps of 40, 100, 130, 200, and 500 parts per billion, raises a low-frequency layer of the recording.</li>
               <li>Nitrogen oxides. In the musical remix: Higher estimated nitrogen oxides, ranked on a logarithmic scale from 0.001 to 10 parts per billion, open a filter so the recording sounds brighter.</li>
               <li>Temperature. In the musical remix: Estimated temperature, from −40 to +40 °C, sets the playback speed. Colder air plays the recording slower and lower. Warmer air plays it faster and higher.</li>
-              <li>This browser cannot speak. The written overview is still on the page.</li>
             </ul>
           </div>
         </section>

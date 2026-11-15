@@ -92,7 +92,7 @@ try {
  assert.ok(initial.signals.peak > 0, 'post-chain waveform must contain nonzero audio');
  assert.ok(initial.signals.rms > 0, 'post-chain RMS must contain nonzero audio');
  assert.ok(Math.abs(initial.dryGain - 0.085) < 1e-6, 'source envelope stays at the conservative last-known good value');
- assert.equal(initial.volume, 0.48, 'current user-requested baseline: 0.48 default and 0.5 cap, with comparison signal evidence');
+ assert.equal(initial.volume, 0.32, 'current user-requested baseline: 0.32 default and 0.5 cap, with comparison signal evidence');
  const spatialBefore = await engine(() => {
   const e = window.__JUKEBOX_AUDIO_REF__.current;
   const fetches = window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length;

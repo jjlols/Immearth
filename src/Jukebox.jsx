@@ -69,7 +69,7 @@ export default function Jukebox(){
  const engine=useRef(null),modelsRef=useRef({}),visibilityRef=useRef({});
  const headSyncRef=useRef(()=>{});
  const [spatialEnabled,setSpatialEnabled]=useState(true),[headInfluence,setHeadInfluence]=useState(false);
- const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.48),[progress,setProgress]=useState(0);
+ const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.32),[progress,setProgress]=useState(0);
  const layers=useMemo(()=>dataLayers(manifest?.layers),[manifest]);
  const featureById=features?.[focus];
 

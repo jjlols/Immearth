@@ -106,7 +106,7 @@ can then resume as allowed. No autoplay on launch, selecting metrics, region gui
 or Vancouver pin. **Pause** stops scheduling/suspends current context; resume via
 the same explicit listener. **Reset** stops track and scheduled source accents.
 
-- **Master volume** defaults to 0.48 at the user's request, capped at 0.50. The original waveform and dry-gain 0.085 remain unchanged. Before/after measurements and their limits are in `agentupdate.md`; analyser readings do not establish comfortable physical listening volume.
+- **Master volume** defaults to 0.32 at the user's request, capped at 0.50. The original waveform and dry-gain 0.085 remain unchanged. Before/after measurements and their limits are in `agentupdate.md`; analyser readings do not establish comfortable physical listening volume.
 - **Mute** receives all player pipeline including backing track; unmute restores it.
 - If too quiet, first check Mute and master slider, OS/browser output level/headphones
   disconnected, app has MP3 source loading resolved, disabled source not active.
@@ -257,7 +257,7 @@ zero oscillators; panning created no extra recording events.
 The production recording window measured analyser **RMS 0.00311576 / peak
 0.00913688** (per-ear RMS **0.00556700 / 0.00319546**, peak **0.01331956 /
 0.00673370**). Short analysis windows naturally vary with music and envelopes.
-Historical audits used master **0.38**; the user-requested current default is **0.48**, cap **0.50**,
+Historical audits used master **0.38**, then **0.48**. The user-requested current default is **0.32**, cap **0.50**,
 **dryGain 0.085**, as tested in this audit; that later volume baseline is not
 attributed to the spatial renderer. Prior measurements from .22 are historical,
 not simultaneously matched gain comparisons. No further automatic boost should

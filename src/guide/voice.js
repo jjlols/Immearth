@@ -4,7 +4,7 @@ function recognitionConstructor() {
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
 
-const OFF_HINT = "Voice is off. Press L to play the overview, or start voice and say next, previous, a map name, or page overview.";
+const OFF_HINT = "Voice is off. Press L to play the overview, press N for the next page, or start voice and say next, previous, a map name, or page overview.";
 
 export function createVoiceSession({ onHint, onListening, runCommand }) {
   let listening = false;

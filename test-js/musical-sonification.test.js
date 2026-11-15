@@ -98,7 +98,7 @@ test('NOₓ log rank filters the existing music, with no oscillators or repeated
 test('default ensemble activates each visible eligible field; Solo remains selectable', async () => {
  const engine = await playingEngine({ carbon_monoxide: featureModel('carbon_monoxide', model(500)), nitrogen_oxides: featureModel('nitrogen_oxides', model(10)) });
  assert.equal(engine.mode, 'composition');
- assert.equal(engine.volume, 0.48);
+ assert.equal(engine.volume, 0.32);
  assert.equal(engine.audible('carbon_monoxide'), true);
  assert.equal(engine.audible('nitrogen_oxides'), true);
  engine.setMode('solo');

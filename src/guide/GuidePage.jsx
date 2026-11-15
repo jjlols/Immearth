@@ -58,7 +58,6 @@ export default function GuidePage() {
     <div className="site-page">
       <a className="skip-link" href="#overview-title">Skip to content</a>
       <SiteChrome current="home" part="header" />
-      <ListenSpeak />
       <main id="main">
         <section className="home-hero" id="overview" aria-labelledby="overview-title">
           <div className="hero-copy">
@@ -80,6 +79,8 @@ export default function GuidePage() {
             <img src={SPACE_PHOTOS.marble} width="640" height="640" alt="" />
           </figure>
         </section>
+
+        <ListenSpeak home />
 
         <section className="band" id="live-preview" aria-labelledby="live-preview-title">
           <HomeLivePreview />
