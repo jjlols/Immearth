@@ -132,7 +132,7 @@ export function createVoiceSession({ onHint, runCommand }) {
     audioStream = null;
     audioContext?.close();
     audioContext = null;
-    onHint("Voice is off. Start voice, then say next, previous, photo, or page overview.");
+    onHint("Voice is off. Start voice, then say next, previous, a map name, photo, or page overview.");
   }
 
   async function start() {

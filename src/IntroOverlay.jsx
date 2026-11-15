@@ -5,7 +5,8 @@ const FOCUS_AFTER = {
   home: "#overview-title",
   music: "#music-title",
   layers: "#page-title",
-  photo: "#photo-folder-title",
+  data: "#data-title",
+  access: "#access-title",
 };
 
 // The music page must stay silent until Play remix, so only Home keeps the drop sound.

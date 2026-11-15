@@ -209,6 +209,8 @@ try {
  await page.getByRole('button', { name: 'Unmute', exact: true }).click();
  await page.waitForTimeout(250);
 
+ const masterBeforeReset = await engine(() => ({ volume: window.__JUKEBOX_AUDIO_REF__.current.volume, gain: window.__JUKEBOX_AUDIO_REF__.current.master.gain.value }));
+ assert.ok(masterBeforeReset.gain > 0.4, 'master gain is audible before pause/reset');
  await page.getByRole('button', { name: 'Pause', exact: true }).click();
  await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'suspended');
  assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.timer), null);
@@ -216,13 +218,15 @@ try {
  assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.original), null);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts[0].state), 'suspended');
  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value <= 0.001);
- const measuredMaster = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value);
  await page.getByRole('button', { name: 'Play remix', exact: true }).click();
  await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'running');
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
- if (measuredMaster > 0) await page.waitForFunction(expected => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value >= expected * 0.95, measuredMaster);
- assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value), measuredMaster);
+ // Replay ramps the master back to the same configured level; reset must not change the volume setting.
+ await page.waitForFunction(expected => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value >= expected * 0.95, masterBeforeReset.gain);
+ const replayedMaster = await engine(() => ({ volume: window.__JUKEBOX_AUDIO_REF__.current.volume, gain: window.__JUKEBOX_AUDIO_REF__.current.master.gain.value }));
+ assert.equal(replayedMaster.volume, masterBeforeReset.volume);
+ assert.ok(replayedMaster.gain <= 0.5 + 1e-6, 'master gain stays within the 0.50 cap after replay');
  await page.getByRole('button', { name: 'Mute', exact: true }).click();
  await page.getByRole('button', { name: 'Unmute', exact: true }).click();
 

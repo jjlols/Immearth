@@ -6,6 +6,8 @@ import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
 import {explorerPosition,useExplorer} from './hooks/useExplorer.js';
 import SiteChrome from './SiteChrome.jsx';
+import {linkTo} from './navigation.js';
+import SpaceWash, { SPACE_PHOTOS } from './SpaceWash.jsx';
 import './listening.css';
 
 function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex}){
@@ -160,7 +162,7 @@ export default function Jukebox(){
  <SiteChrome current="music" part="header" />
  <div className="jukebox-shell">
  <header className="masthead"><h1 className="brand-main" id="music-title" tabIndex={-1}>Listening map. Music begins only when you press Play remix.</h1></header>
- <section className="intro-block"><div><p className="eyebrow">Earth Information Center / 3D listening</p><h1>Hear your place.<br/><em>Feel the world.</em></h1></div><p className="intro-aside">Choose one map or combine eligible layers in the shared recording. Explore its regions with your keyboard.</p></section>
+ <section className="intro-block has-space nasa-banner" aria-labelledby="listen-banner-title"><SpaceWash photo={SPACE_PHOTOS.night} /><div className="nasa-banner-copy"><p className="eyebrow">Live Map · Earth Information Center</p><h1 id="listen-banner-title">Hear your place.<br/><em>Feel the world.</em></h1><p className="intro-aside">Choose one map or combine layers, tune what is shown and heard, and explore twelve regions with your keyboard. Every sound setting lives on this page.</p><p className="photo-credit">NASA Earth photograph, for atmosphere only. Not a data map.</p></div></section>
  <section className="music-console" id="music-player" tabIndex={-1} aria-label="Music controls">
   <div className="score-badge" aria-hidden="true"><span>∿</span></div>
   <div className="track-heading"><p className="small-caps">SOUNDS LIKE A THOUGHT, UNFOLDING</p><h2>Deliberate Thought<span>Kevin MacLeod · 69 BPM</span></h2></div>
@@ -205,7 +207,7 @@ export default function Jukebox(){
  </div>
  <section className="map-navigation" id="map-navigation" aria-labelledby="map-navigation-title">
   <h2 id="map-navigation-title" className="sr-only">Map navigation</h2>
-  <p><a href="/?view=guide#move-title">How this Live Map works <span aria-hidden="true">↗</span></a></p>
+  <p><a {...linkTo('access','keys')}>How this Live Map works: keys and voice commands <span aria-hidden="true">↗</span></a></p>
  </section>
  <section className="compact-region-panel" aria-labelledby="region-title">
   <RegionStudy layerLabel={currentLayer.label} regions={featureById||[]} selected={currentIndex} onSelect={chooseExplorerRegion} announcement={regionStatus(currentIndex,currentLayer.label,describeFeature(focus,currentFeature))}/>
