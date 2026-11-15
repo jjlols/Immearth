@@ -21,7 +21,7 @@ export class RemixEngine {
     this.models = new Map();
     this.hidden = new Set();
     this.selection = null;
-    this.mode = 'solo';
+    this.mode = 'composition'
     this.gates = new Map();
     this.accents = new Set();
     this.targets = new Map();
@@ -35,7 +35,7 @@ export class RemixEngine {
     this.lastSourceRate = 1;
     this.isRunning = false;
     this.muted = false;
-    this.volume = 0.38;
+    this.volume = 0.48;
     this.onChange = null;
     this.playRequest = 0;
     this.startedAt = 0;

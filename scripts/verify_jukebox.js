@@ -61,9 +61,9 @@ try {
   return !(element.getAttribute('aria-label') || element.labels?.length);
  }).map(element => element.outerHTML));
  assert.deepEqual(unnamedControls, []);
- await page.getByRole('button', { name: /Composition/ }).focus();
+ await page.getByRole('button', { name: /Ensemble/ }).focus();
  await page.keyboard.press('Enter');
- assert.equal(await page.getByRole('button', { name: /Composition/ }).getAttribute('aria-pressed'), 'true');
+ assert.equal(await page.getByRole('button', { name: /Ensemble/ }).getAttribute('aria-pressed'), 'true');
  await page.getByRole('button', { name: /Solo \/ Explore/ }).focus();
  await page.keyboard.press('Space');
  assert.equal(await page.getByRole('button', { name: /Solo \/ Explore/ }).getAttribute('aria-pressed'), 'true');
@@ -90,7 +90,7 @@ try {
  assert.ok(initial.signals.peak > 0, 'post-chain waveform must contain nonzero audio');
  assert.ok(initial.signals.rms > 0, 'post-chain RMS must contain nonzero audio');
  assert.ok(Math.abs(initial.dryGain - 0.085) < 1e-6, 'source envelope stays at the conservative last-known good value');
- assert.equal(initial.volume, 0.38, 'current coordinated baseline: 0.38 default and 0.5 cap, with comparison signal evidence');
+ assert.equal(initial.volume, 0.48, 'current coordinated baseline: 0.48 default and 0.5 cap, with comparison signal evidence');
  const spatialBefore = await engine(() => {
   const e = window.__JUKEBOX_AUDIO_REF__.current;
   const fetches = window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length;
@@ -146,7 +146,7 @@ try {
  await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
 
- await page.getByRole('button', { name: /Composition/ }).click();
+ await page.getByRole('button', { name: /Ensemble/ }).click();
  await page.getByRole('button', { name: 'Explore Temperature musical mapping' }).click();
  const live = await engine(() => {
   const e = window.__JUKEBOX_AUDIO_REF__.current;

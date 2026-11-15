@@ -374,3 +374,18 @@ main working tree and remote are unchanged and clean. CLI confirmed release #6
 serving; `dataPlane: unconfirmed` remains explicitly unconfirmed, as this static
 site has no backend/data-plane verification. Do not redeploy silently: use the
 separate deployment package and read its production notes.
+
+## Ensemble-first and master default — 2026-11-15
+
+User explicitly requested Ensemble default and another music increase. UI label is
+**Ensemble**; underlying `composition` ID remains compatible. Both UI and standalone
+RemixEngine default composition, with Solo still selectable. Defaults master .48,
+cap .50, dryGain .085, unchanged single recording/source and no oscillators.
+No other head-direction work belongs to this scoped transfer.
+
+Pre .48 at .38: conservative sample RMS/peak .00258690/.00538170 (channel peak
+.01010620); later peak .00989247, max-channel peak .01476791. At .48: early RMS/peak
+.00359318/.00790281 (max channel .01475384); later overall RMS/peak
+.00439745/.01194114, max channel .01510510. Full audit measured independently.
+These are different short windows at analyser not subjective speaker audibility,
+and no universal loudness-safety claim. No further automatic gain rise inferred.

@@ -80,10 +80,10 @@ function SoundMeter({playState,engineRef}){
 export default function Jukebox(){
  const [manifest,setManifest]=useState(null),[features,setFeatures]=useState(null),[loadError,setLoadError]=useState(null);
  const [settings,setSettings]=useState(Object.fromEntries(LAYER_OPTIONS.map(layer=>[layer.id,{visible:true,opacity:OPACITY_DEFAULTS[layer.id]}])));
- const [focus,setFocus]=useState('nitrogen_oxides'),[mode,setMode]=useState('solo'),[onlySelected,setOnlySelected]=useState(false),[showGeography,setShowGeography]=useState(true);
+ const [focus,setFocus]=useState('nitrogen_oxides'),[mode,setMode]=useState('composition'),[onlySelected,setOnlySelected]=useState(false),[showGeography,setShowGeography]=useState(true);
  const {index:explorerIndex,choose:chooseExplorerRegion}=useExplorer();
  const engine=useRef(null),modelsRef=useRef({}),visibilityRef=useRef({});
- const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.38),[progress,setProgress]=useState(0);
+ const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.48),[progress,setProgress]=useState(0);
  const layers=useMemo(()=>dataLayers(manifest?.layers),[manifest]);
  const featureById=features?.[focus];
  const currentLayer=layers.find(l=>l.id===focus)||layers[0]||LAYER_OPTIONS[0];
@@ -194,7 +194,7 @@ export default function Jukebox(){
   </main>
   <aside className="explorer-panel" id="map-controls" aria-label="Science field controls">
    <div className="panel-heading"><div><p className="small-caps">THE ENSEMBLE</p><h2>Pick your perspective.</h2></div><span className="metric-number">05</span></div>
-   <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong><small>One map at a time.</small></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Composition</strong><small>All maps together.</small></button></div>
+   <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong><small>One map at a time.</small></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Ensemble</strong><small>All maps together.</small></button></div>
    <p className="mode-explainer">{mode==='solo'?'Learn what a single metric contributes. The selected field stays the audible focus when it meets palette rules.': 'Each enabled field adds its character to the original recording—independently controlled.'}</p>
    <div className="source-controllers" aria-label="Geographic layers and their visibility">
    {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} opacity={settings[layer.id]?.opacity ?? OPACITY_DEFAULTS[layer.id]} onSelect={selectMetric} onVisible={(id,visible)=>{setSettings(current=>({...current,[id]:{...current[id],visible}}));engine.current?.setVisibility(id,visible);}} onOpacity={(id,opacity)=>setSettings(current=>({...current,[id]:{...current[id],opacity}}))} onNavigate={navigateCards}/>)}
