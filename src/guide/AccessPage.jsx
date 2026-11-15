@@ -60,7 +60,7 @@ export default function AccessPage() {
             </div>
             <div className="tile">
               <h3><IconSpeaker /> Home page</h3>
-              <p>Play overview reads a spoken summary of the site. Previous section and Next section move through the page from top to bottom: the five maps, where to go next, the photo of the day, then Built for everyone.</p>
+              <p>Play overview reads a spoken summary of the site. Previous section and Next section move through the home page from top to bottom: the Live Map preview, the five maps, where to go next, then Built for everyone.</p>
               <p>Read page overview opens the same summary as text in a dialog. Press Escape or Close to return to where you were.</p>
             </div>
           </div>

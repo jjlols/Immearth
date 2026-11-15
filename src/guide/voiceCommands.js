@@ -3,17 +3,17 @@
 
 export const HOME_SECTIONS = [
   ["overview", "Overview"],
+  ["live-preview", "Live Map preview"],
   ["maps", "The five maps"],
   ["explore", "Explore the site"],
-  ["photo", "Space photo of the day"],
   ["everyone", "Built for everyone"],
 ];
 
 export const SECTION_COMMAND = {
   overview: "overview",
+  "live-preview": "live preview",
   maps: "maps",
   explore: "open a page",
-  photo: "photo",
   everyone: "accessibility",
 };
 
@@ -54,13 +54,6 @@ export const ALIASES = {
   pages: "open a page",
   "open page": "open a page",
   explore: "open a page",
-  "photo of the day": "photo",
-  "space photo": "photo",
-  "image of the day": "photo",
-  "go to the photo": "photo",
-  photos: "photo",
-  picture: "photo",
-  pictures: "photo",
   rain: "precipitation",
   "active fires": "fires",
   fire: "fires",

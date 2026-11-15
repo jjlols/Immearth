@@ -648,6 +648,79 @@ img { max-width: 100%; height: auto; display: block; }
 .placeholder p:first-child { font-weight: 600; }
 .placeholder-note { margin: 0; font-size: 0.95rem; color: var(--muted); }
 
+/* Fixed Live Map preview on the home page */
+.home-live { min-width: 0; }
+
+.home-live-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border-radius: var(--radius);
+  background: #102535;
+  color: #e7f1fb;
+  box-shadow: var(--shadow);
+}
+
+.home-live-card .home-place,
+.home-live-card .field-note,
+.home-live-card .voice-hint {
+  margin: 0;
+  color: #d5e4f2;
+}
+
+.home-live-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.home-live-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.home-live-actions .main-action { flex: 1 1 10rem; }
+.home-live-actions .button { flex: 1 1 10rem; }
+
+.home-camera {
+  padding-top: 0.35rem;
+  border-top: 1px solid #4a5f60;
+}
+
+.home-camera .camera-preview { width: min(100%, 16rem); margin-top: 0.75rem; }
+.home-camera .head-camera {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #4a5f60;
+  border-radius: 4px;
+  background: #071422;
+  transform: scaleX(-1);
+}
+.home-camera .camera-preview[hidden] { display: none; }
+
+.home-audio-error { margin: 0; color: #ffd34d; }
+
+.home-live-card :focus-visible {
+  outline: 3px solid #ffd34d;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-camera .camera-preview:not([hidden]) {
+    position: absolute;
+    width: 320px;
+    height: 240px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+    clip-path: inset(50%);
+  }
+}
+
 /* ---------- "Built for everyone" strip ---------- */
 
 .everyone-grid {

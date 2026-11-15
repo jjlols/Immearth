@@ -6,12 +6,13 @@ import { IconArrow, IconEye, IconGlobe, IconKeyboard, IconLayers, IconMic, IconN
 import { MAPS, asset } from "./maps.js";
 import { HOME_SECTIONS, SECTION_COMMAND, STOP_COMMANDS, hasPhrase, matchCommand, normalizeHeard } from "./voiceCommands.js";
 import { createVoiceSession } from "./voice.js";
+import HomeLivePreview from "../HomeLivePreview.jsx";
 
 const OVERVIEW = [
   "Immearth. A NASA Space Apps project, not the official NASA website.",
   "This site turns five NASA Earth maps into one shared piece of music: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
-  "The home page introduces the maps and links to every other page. The Live Map is where the music is made: choose a map, move between twelve regions, and press Play remix. Nothing plays until you do. The Layer explorer stacks the five maps on one silent world map. Earth data describes each map in detail. Accessibility and help lists every key and voice command.",
-  "On this page you can say next or previous to move between sections, say a map name, say photo, or say page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
+  "The home page introduces the maps, plays a Live Map preview, and links to every other page. The preview keeps your place fixed and starts the music on its own. The full Live Map is where you choose a map, move between twelve regions, and use every sound setting. That page stays silent until you press Play remix. The Layer explorer stacks the five maps on one silent world map. Earth data describes each map in detail. Accessibility and help lists every key and voice command.",
+  "On this page you can say next or previous to move between sections, say a map name, or say page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
 ];
 
 const DESTINATIONS = [
@@ -49,21 +50,11 @@ const DESTINATIONS = [
   },
 ];
 
-function probePhoto(url) {
-  return new Promise((resolve) => {
-    const image = new Image();
-    image.onload = () => resolve(true);
-    image.onerror = () => resolve(false);
-    image.src = url;
-  });
-}
-
 export default function GuidePage() {
   const [status, setStatus] = useState("");
-  const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, a map name, photo, or page overview.");
+  const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, a map name, or page overview.");
   const [listening, setListening] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
-  const [photo, setPhoto] = useState(null);
   const [lastSection, setLastSection] = useState("overview");
   const dialogRef = useRef(null);
   const dialogTitleRef = useRef(null);
@@ -93,7 +84,6 @@ export default function GuidePage() {
     const label = map?.label || HOME_SECTIONS.find(([sectionName]) => sectionName === sectionId)?.[1] || id;
     let message = `${label}.`;
     if (map) message = `${map.label}. In the musical remix: ${map.planned}`;
-    if (sectionId === "photo" && !photo) message = `${message} Today’s photo has not been posted yet. Please check back soon.`;
     if (!quiet) announce(message);
     return message;
   }
@@ -175,31 +165,6 @@ export default function GuidePage() {
     if (typeof result === "string") speak(result);
     return true;
   };
-
-  useEffect(() => {
-    let cancel = false;
-    const folder = `${import.meta.env.BASE_URL}photo-of-the-day/`;
-    const files = ["photo.jpg", "photo.jpeg", "photo.png", "photo.webp", "photo.gif"];
-    (async () => {
-      let text = "";
-      try {
-        const response = await fetch(`${folder}caption.txt`);
-        if (response.ok) text = (await response.text()).trim();
-      } catch {
-        text = "";
-      }
-      for (const file of files) {
-        const url = `${folder}${file}`;
-        if (await probePhoto(url)) {
-          if (!cancel) setPhoto({ url, text });
-          return;
-        }
-      }
-    })();
-    return () => {
-      cancel = true;
-    };
-  }, []);
 
   useEffect(() => {
     const session = createVoiceSession({
@@ -294,6 +259,10 @@ export default function GuidePage() {
           <p id="voice-hint" className="assist-hint">{voiceHint}</p>
         </section>
 
+        <section className="band" id="live-preview" aria-labelledby="live-preview-title">
+          <HomeLivePreview />
+        </section>
+
         <section className="band" id="maps" aria-labelledby="maps-title">
           <div className="section-head-row">
             <div className="section-head">
@@ -345,25 +314,6 @@ export default function GuidePage() {
           </ul>
         </section>
 
-        <section className="band" id="photo" aria-labelledby="photo-title">
-          <div className="section-head">
-            <p className="eyebrow">Today</p>
-            <h2 id="photo-title" tabIndex={-1}>Space photo of the day</h2>
-            <p>A new view of Earth or space, with a written description of what it shows.</p>
-          </div>
-          {photo ? (
-            <figure className="photo-feature">
-              <img src={photo.url} alt={photo.text || "Space photo of the day. Add caption.txt in the photo folder so this picture can be described."} />
-              <figcaption>{photo.text || "Add caption.txt next to the photo so people who cannot see it know what it shows."}</figcaption>
-            </figure>
-          ) : (
-            <div className="placeholder">
-              <p>Today’s photo has not been posted yet. Please check back soon.</p>
-              <p className="placeholder-note">Save the picture as photo.jpg in the photo-of-the-day folder, and describe it in caption.txt.</p>
-            </div>
-          )}
-        </section>
-
         <section className="band band-dark" id="everyone" aria-labelledby="everyone-title">
           <div className="section-head-row">
             <div className="section-head">
@@ -377,7 +327,7 @@ export default function GuidePage() {
             <li><IconKeyboard /><div><strong>Keyboard and screen reader</strong><p>Every control works from the keyboard, with a visible focus outline. Changes are announced.</p></div></li>
             <li><IconMic /><div><strong>Voice control</strong><p>Press Start voice, then say where to go. Speech is recognized on this computer and never sent online.</p></div></li>
             <li><IconEye /><div><strong>Color-blind colors and dark mode</strong><p>At the top of every page. NASA map pictures keep their published colors.</p></div></li>
-            <li><IconSpeaker /><div><strong>Silent until you press Play</strong><p>The Live Map makes no sound until you choose Play remix. What you hear is also written out.</p></div></li>
+            <li><IconSpeaker /><div><strong>Sound you can turn off</strong><p>The home page preview plays the Live Map music when you arrive. Pause stops it. The full Live Map stays silent until you press Play remix, and what you hear is also written out.</p></div></li>
           </ul>
         </section>
       </main>
