@@ -90,7 +90,7 @@ export default function useHeadDirection({
   const start = React.useCallback(async () => {
     if (session.current) return;
     if (!navigator.mediaDevices?.getUserMedia) {
-      setState({ ...IDLE, status: 'unsupported', error: 'Camera access requires HTTPS or localhost in a supported browser. Manual directions remain available.' });
+      setState({ ...IDLE, status: 'unsupported', error: 'Camera access requires HTTPS or localhost in a supported browser.' });
       return;
     }
     const current = {
@@ -102,11 +102,11 @@ export default function useHeadDirection({
     const fail = error => {
       if (current.closed) return;
       const messages = {
-        NotAllowedError: 'Camera permission denied. Use a manual direction or allow camera access for this site.',
-        SecurityError: 'Camera permission denied. Use a manual direction or allow camera access for this site.',
-        NotFoundError: 'No usable camera found. Manual directions remain available.',
-        OverconstrainedError: 'No usable camera found. Manual directions remain available.',
-        NotReadableError: 'The camera is unavailable or in use. Close other camera apps, retry or use manual directions.',
+        NotAllowedError: 'Camera permission denied. Allow camera access for this site to turn on head travel.',
+        SecurityError: 'Camera permission denied. Allow camera access for this site to turn on head travel.',
+        NotFoundError: 'No usable camera found.',
+        OverconstrainedError: 'No usable camera found.',
+        NotReadableError: 'The camera is unavailable or in use. Close other camera apps and press Enable camera again.',
         AbortError: 'Camera attempt stopped.',
       };
       stop({ ...IDLE, status: 'error', error: messages[error?.name] || error?.message || 'Head tracking could not start.' });

@@ -1,198 +1,166 @@
-function downsample(samples, fromRate, toRate) {
-  if (fromRate === toRate) return samples;
-  const ratio = fromRate / toRate;
-  const length = Math.floor(samples.length / ratio);
-  const output = new Float32Array(length);
-  for (let index = 0; index < length; index += 1) {
-    const start = Math.floor(index * ratio);
-    const end = Math.min(samples.length, Math.floor((index + 1) * ratio));
-    let sum = 0;
-    for (let sample = start; sample < end; sample += 1) sum += samples[sample];
-    output[index] = sum / Math.max(1, end - start);
-  }
-  return output;
+function recognitionConstructor() {
+  if (typeof window === "undefined") return null;
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
 
-function encodeWav(samples, sampleRate) {
-  const buffer = new ArrayBuffer(44 + samples.length * 2);
-  const view = new DataView(buffer);
-  const write = (offset, text) => {
-    for (let i = 0; i < text.length; i += 1) view.setUint8(offset + i, text.charCodeAt(i));
-  };
-  write(0, "RIFF");
-  view.setUint32(4, 36 + samples.length * 2, true);
-  write(8, "WAVE");
-  write(12, "fmt ");
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, 1, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * 2, true);
-  view.setUint16(32, 2, true);
-  view.setUint16(34, 16, true);
-  write(36, "data");
-  view.setUint32(40, samples.length * 2, true);
-  samples.forEach((sample, index) => {
-    const clamped = Math.max(-1, Math.min(1, sample));
-    view.setInt16(44 + index * 2, clamped < 0 ? clamped * 0x8000 : clamped * 0x7fff, true);
-  });
-  return buffer;
-}
+const OFF_HINT = "Voice is off. Start voice, then say next, previous, a map name, or page overview.";
 
-const SERVER_HINT = "Voice needs the project server. Run py voice_server.py, then open this React app with npm run dev.";
-
-export function createVoiceSession({ onHint, runCommand }) {
+export function createVoiceSession({ onHint, onListening, runCommand }) {
   let listening = false;
   let startingVoice = false;
-  let audioContext = null;
-  let audioStream = null;
-  let meter = null;
-  let speechChunks = [];
-  let heardSpeech = false;
-  let quietFrames = 0;
-  let sendingVoice = false;
   let closed = false;
+  let recognizer = null;
+  let local = false;
+  let preferLocal = false;
+  let restartTimer = 0;
+  let generation = 0;
 
-  async function waitForSpeechEngine() {
-    for (let attempt = 0; attempt < 40; attempt += 1) {
-      let response;
-      try {
-        response = await fetch("/api/health");
-      } catch {
-        onHint(SERVER_HINT);
-        return false;
-      }
-      if (response.status === 404) {
-        onHint(SERVER_HINT);
-        return false;
-      }
-      if (response.ok) {
-        const info = await response.json();
-        if (info.ready) return true;
-        if (info.error) {
-          onHint(info.error);
-          return false;
-        }
-      }
-      onHint("Starting keyword spotting on the server. This happens once.");
-      await new Promise((resolve) => window.setTimeout(resolve, 1000));
-    }
-    onHint("The keyword spotter did not start. Run py voice_server.py and keep npm run dev open.");
-    return false;
+  const Ctor = recognitionConstructor();
+  if (Ctor?.available) {
+    Ctor.available({ langs: ["en-US"], processLocally: true }).then((status) => {
+      preferLocal = status === "available";
+    }).catch(() => {
+      preferLocal = false;
+    });
   }
 
-  async function sendUtterance(chunks, sampleRate) {
-    if (sendingVoice || !listening || closed) return;
-    const merged = new Float32Array(chunks.reduce((total, chunk) => total + chunk.length, 0));
-    let offset = 0;
-    chunks.forEach((chunk) => {
-      merged.set(chunk, offset);
-      offset += chunk.length;
-    });
-    const samples = downsample(merged, sampleRate, 16000);
-    if (samples.length < 16000 * 0.35) return;
-    sendingVoice = true;
-    onHint("Heard you. Checking the command.");
-    try {
-      const response = await fetch("/api/transcribe", {
-        method: "POST",
-        headers: { "Content-Type": "audio/wav" },
-        body: encodeWav(samples, 16000),
-      });
-      const payload = await response.json();
-      if (!response.ok) {
-        onHint(payload.error || "The server could not hear that.");
-        return;
-      }
-      if (!payload.text) {
-        onHint("Listening. Say next, previous, a map name, or page overview.");
-        return;
-      }
-      if (!runCommand(payload.text)) {
-        onHint(`Heard “${payload.text}”. Try next, previous, a map name, or page overview.`);
-      } else if (listening) {
-        onHint("Listening. Say next, previous, a map name, or page overview.");
-      }
-    } catch {
-      stop();
-      onHint(SERVER_HINT);
-    } finally {
-      sendingVoice = false;
-    }
+  function listeningHint() {
+    return local
+      ? "Listening on this computer. Say next, previous, a map name, or page overview."
+      : "Listening with this browser’s speech service. Say next, previous, a map name, or page overview.";
+  }
+
+  function clearRestart() {
+    window.clearTimeout(restartTimer);
+    restartTimer = 0;
+  }
+
+  function detach(current) {
+    if (!current) return;
+    current.onresult = null;
+    current.onerror = null;
+    current.onend = null;
+    try { current.abort(); } catch { /* already stopped */ }
   }
 
   function stop() {
     listening = false;
-    speechChunks = [];
-    heardSpeech = false;
-    quietFrames = 0;
-    if (meter) meter.disconnect();
-    meter = null;
-    audioStream?.getTracks().forEach((track) => track.stop());
-    audioStream = null;
-    audioContext?.close();
-    audioContext = null;
-    onHint("Voice is off. Start voice, then say next, previous, a map name, or page overview.");
+    generation += 1;
+    clearRestart();
+    detach(recognizer);
+    recognizer = null;
+    if (!closed) onListening?.(false);
+    onHint(OFF_HINT);
+  }
+
+  function fail(message) {
+    listening = false;
+    generation += 1;
+    clearRestart();
+    detach(recognizer);
+    recognizer = null;
+    if (!closed) onListening?.(false);
+    onHint(message);
+  }
+
+  function handleTranscript(text) {
+    const heard = text.trim();
+    if (!heard || !listening) return;
+    if (!runCommand(heard)) {
+      onHint(`Heard “${heard}”. Try next, previous, a map name, or page overview.`);
+    } else if (listening) {
+      onHint(listeningHint());
+    }
+  }
+
+  function openRecognizer(useLocal) {
+    const Ctor = recognitionConstructor();
+    const recognition = new Ctor();
+    const mine = generation;
+    local = false;
+    recognition.lang = "en-US";
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    if (useLocal && "processLocally" in recognition) {
+      try {
+        recognition.processLocally = true;
+        local = true;
+      } catch {
+        local = false;
+      }
+    }
+    recognition.onresult = (event) => {
+      if (!listening || mine !== generation) return;
+      for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        const result = event.results[index];
+        if (!result.isFinal || !result[0]) continue;
+        handleTranscript(result[0].transcript || "");
+      }
+    };
+    recognition.onerror = (event) => {
+      if (!listening || mine !== generation) return;
+      const code = event.error;
+      if (code === "no-speech" || code === "aborted") return;
+      if (local && (code === "language-not-supported" || code === "network" || code === "service-not-allowed")) {
+        onHint("This browser cannot recognize speech on the computer, so it is using its speech service. Say next, previous, a map name, or page overview.");
+        detach(recognition);
+        if (recognizer === recognition) recognizer = null;
+        try {
+          openRecognizer(false);
+        } catch {
+          fail("This browser’s speech service could not be started. Start voice to try again.");
+        }
+        return;
+      }
+      if (code === "not-allowed" || code === "service-not-allowed") {
+        fail("Microphone permission was blocked. Allow the microphone for this site, then start voice again.");
+        return;
+      }
+      if (code === "audio-capture") {
+        fail("The microphone could not be opened. Check that a microphone is connected, allowed for this browser, and not in use by another app.");
+        return;
+      }
+      if (code === "network") {
+        fail("This browser’s speech service could not be reached. Check the connection, then start voice again.");
+        return;
+      }
+      fail("Voice stopped. Start voice to try again.");
+    };
+    recognition.onend = () => {
+      if (!listening || closed || mine !== generation || recognizer !== recognition) return;
+      restartTimer = window.setTimeout(() => {
+        if (!listening || closed || recognizer !== recognition) return;
+        try {
+          recognition.start();
+        } catch {
+          fail("Voice stopped. Start voice to try again.");
+        }
+      }, 300);
+    };
+    recognizer = recognition;
+    recognition.start();
   }
 
   async function start() {
-    if (closed || startingVoice || listening) return;
-    if (!navigator.mediaDevices?.getUserMedia) {
-      onHint("This browser cannot use the microphone. Play overview still speaks the written text.");
-      return;
+    if (closed || startingVoice || listening) return false;
+    if (!recognitionConstructor()) {
+      onHint("This browser cannot use voice commands. Play overview still reads the page, and every command is also a button or link.");
+      return false;
     }
     startingVoice = true;
+    generation += 1;
     try {
-      const ready = await waitForSpeechEngine();
-      if (!ready || closed) return;
-      audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioContext = new AudioContext();
-      await audioContext.resume();
-      const source = audioContext.createMediaStreamSource(audioStream);
-      const mute = audioContext.createGain();
-      mute.gain.value = 0;
-      meter = audioContext.createScriptProcessor(4096, 1, 1);
-      meter.onaudioprocess = (event) => {
-        if (!listening) return;
-        if (window.speechSynthesis?.speaking) {
-          speechChunks = [];
-          heardSpeech = false;
-          quietFrames = 0;
-          return;
-        }
-        const channel = event.inputBuffer.getChannelData(0);
-        let energy = 0;
-        for (let index = 0; index < channel.length; index += 1) energy += channel[index] * channel[index];
-        const loud = Math.sqrt(energy / channel.length) > 0.02;
-        if (sendingVoice) return;
-        if (loud) {
-          heardSpeech = true;
-          quietFrames = 0;
-          speechChunks.push(new Float32Array(channel));
-        } else if (heardSpeech) {
-          speechChunks.push(new Float32Array(channel));
-          quietFrames += 1;
-          if (quietFrames > 10) {
-            const utterance = speechChunks;
-            speechChunks = [];
-            heardSpeech = false;
-            quietFrames = 0;
-            sendUtterance(utterance, audioContext.sampleRate);
-          }
-        }
-      };
-      source.connect(meter);
-      meter.connect(mute);
-      mute.connect(audioContext.destination);
       listening = true;
-      onHint("Listening. Say next, previous, a map name, or page overview.");
+      openRecognizer(preferLocal);
+      onListening?.(true);
+      onHint(listeningHint());
       return true;
     } catch (error) {
-      const blocked = error && error.name === "NotAllowedError";
-      stop();
-      onHint(blocked
-        ? "Microphone permission was blocked. Allow the microphone, then start voice again."
-        : "The microphone could not be opened.");
+      const name = error && error.name;
+      fail(name === "NotAllowedError" || name === "SecurityError"
+        ? "Microphone permission was blocked. Allow the microphone for this site, then start voice again."
+        : "The microphone could not be opened. Check that a microphone is connected, allowed for this browser, and not in use by another app.");
       return false;
     } finally {
       startingVoice = false;

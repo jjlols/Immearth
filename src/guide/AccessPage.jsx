@@ -82,8 +82,8 @@ export default function AccessPage() {
             </div>
             <div className="tile">
               <h3>How recognition works</h3>
-              <p>Your speech is recognized on this computer by sherpa-onnx, an open-source keyword spotter that listens only for this site’s commands. It is not sent to an online service.</p>
-              <p>Voice needs the project server running alongside the site. If it is not running, the page says so and every command remains available as a button or link.</p>
+              <p>Start voice uses the speech recognition built into this browser, and it asks for the microphone in that same click. When the browser can recognize speech on this computer, the audio stays here. If it cannot, the page says it is using the browser’s speech service instead.</p>
+              <p>Every command is also a button or a link, so the site still works if the microphone is unavailable.</p>
             </div>
           </div>
         </section>
@@ -119,7 +119,7 @@ export default function AccessPage() {
             <li>Each map has a written description of what the picture shows, plus its source.</li>
             <li>Text can be enlarged, and the layout reflows on narrow screens and at high zoom.</li>
             <li>Search results, section changes, and music changes are announced to screen readers.</li>
-            <li>The microphone turns on only after you press Start voice. Speech is recognized on this computer.</li>
+            <li>The microphone turns on only after you press Start voice. Speech stays on this computer when the browser can recognize it there.</li>
             <li>The Live Map stays silent until you press Play remix. What you hear is also written out.</li>
             <li>Color blind colors and Dark mode are at the top of every page and are remembered.</li>
             <li>No location, camera, or microphone permission is requested for exploring the maps.</li>

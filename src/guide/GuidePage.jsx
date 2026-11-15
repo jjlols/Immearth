@@ -172,6 +172,7 @@ export default function GuidePage() {
         setVoiceHint(message);
         announce(message);
       },
+      onListening: (value) => setListening(value),
       runCommand: (phrase) => runRef.current(phrase),
     });
     voiceRef.current = session;
@@ -325,7 +326,7 @@ export default function GuidePage() {
           </div>
           <ul className="everyone-grid">
             <li><IconKeyboard /><div><strong>Keyboard and screen reader</strong><p>Every control works from the keyboard, with a visible focus outline. Changes are announced.</p></div></li>
-            <li><IconMic /><div><strong>Voice control</strong><p>Press Start voice, then say where to go. Speech is recognized on this computer and never sent online.</p></div></li>
+            <li><IconMic /><div><strong>Voice control</strong><p>Press Start voice, then say where to go. The microphone stays off until you do. Speech stays on this computer when the browser can recognize it there.</p></div></li>
             <li><IconEye /><div><strong>Color-blind colors and dark mode</strong><p>At the top of every page. NASA map pictures keep their published colors.</p></div></li>
             <li><IconSpeaker /><div><strong>Sound you can turn off</strong><p>The home page preview plays the Live Map music when you arrive. Pause stops it. The full Live Map stays silent until you press Play remix, and what you hear is also written out.</p></div></li>
           </ul>

@@ -136,20 +136,6 @@ img { max-width: 100%; height: auto; display: block; }
   background: var(--spectrum);
 }
 
-.nasa-notice {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.25rem 1rem;
-  padding: 0.25rem var(--gutter);
-  background: var(--blue-deep);
-  color: #fff;
-  font-size: 0.95rem;
-}
-
-.nasa-notice p { margin: 0; padding: 0.3rem 0; }
-
 .site-tools {
   display: flex;
   flex-wrap: wrap;
@@ -179,8 +165,16 @@ img { max-width: 100%; height: auto; display: block; }
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem 2rem;
-  padding: 0.85rem var(--gutter);
+  gap: 0.5rem 1.25rem;
+  padding: 0.55rem var(--gutter);
+}
+
+.nasa-bar-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1.25rem;
+  margin-left: auto;
 }
 
 .wordmark {
@@ -656,23 +650,59 @@ img { max-width: 100%; height: auto; display: block; }
   flex-direction: column;
   gap: 0.85rem;
   padding: 0.85rem;
+  border: 1px solid var(--rule);
   border-radius: var(--radius);
-  background: #102535;
-  color: #e7f1fb;
+  background: var(--sky);
+  color: var(--ink);
   box-shadow: var(--shadow);
 }
 
-.home-live-card .home-place,
-.home-live-card .field-note,
-.home-live-card .voice-hint {
-  margin: 0;
-  color: #d5e4f2;
+.home-live .map-frame {
+  border-color: #c5d4e4;
+  background: #d7e4f0;
 }
 
-.home-live-card h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.05rem;
-  color: #fff;
+.home-live-card .home-place {
+  margin: 0;
+  color: var(--navy);
+}
+
+.home-place-pin {
+  position: absolute;
+  z-index: 132;
+  display: flex;
+  align-items: center;
+  transform: translate(-7px, -50%);
+  pointer-events: none;
+}
+
+.home-place-dot {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #0b3d91;
+  box-shadow: 0 0 0 2px #0b3d91;
+  flex: none;
+}
+
+.home-place-line {
+  width: 22px;
+  height: 2px;
+  background: #0b3d91;
+  flex: none;
+}
+
+.home-place-label {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #0b3d91;
+  border-radius: 6px;
+  background: #fff;
+  color: #0a2447;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .home-live-actions {
@@ -685,40 +715,11 @@ img { max-width: 100%; height: auto; display: block; }
 .home-live-actions .main-action { flex: 1 1 10rem; }
 .home-live-actions .button { flex: 1 1 10rem; }
 
-.home-camera {
-  padding-top: 0.35rem;
-  border-top: 1px solid #4a5f60;
-}
-
-.home-camera .camera-preview { width: min(100%, 16rem); margin-top: 0.75rem; }
-.home-camera .head-camera {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid #4a5f60;
-  border-radius: 4px;
-  background: #071422;
-  transform: scaleX(-1);
-}
-.home-camera .camera-preview[hidden] { display: none; }
-
-.home-audio-error { margin: 0; color: #ffd34d; }
+.home-audio-error { margin: 0; color: #8f1d14; }
 
 .home-live-card :focus-visible {
-  outline: 3px solid #ffd34d;
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home-camera .camera-preview:not([hidden]) {
-    position: absolute;
-    width: 320px;
-    height: 240px;
-    margin: 0;
-    opacity: 0;
-    pointer-events: none;
-    clip-path: inset(50%);
-  }
 }
 
 /* ---------- "Built for everyone" strip ---------- */
@@ -953,7 +954,6 @@ html[data-theme="dark"] .primary-nav a,
 html[data-theme="dark"] .nasa-footer a,
 html[data-theme="dark"] .hero-assist a { color: #fff; }
 /* Chrome and hero controls keep fixed NASA blue/white pairs in dark mode; --blue-deep is pale there. */
-html[data-theme="dark"] .nasa-notice { background: #0b3d91; color: #fff; }
 html[data-theme="dark"] .site-tools .cvd-toggle[aria-pressed="true"] { background: #fff; color: #0b3d91; }
 html[data-theme="dark"] .button-light { background: #fff; border-color: #fff; color: #0b3d91; }
 html[data-theme="dark"] .button-light:hover { background: #e3eefa; border-color: #e3eefa; color: #061f4a; }

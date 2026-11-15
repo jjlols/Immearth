@@ -48,15 +48,10 @@ function modelsFor(features) {
   }));
 }
 
-function listenerForward(degrees) {
-  const radians = (Number(degrees) || 0) * Math.PI / 180;
-  return { x: Math.sin(radians), y: Math.cos(radians), z: 0 };
-}
-
 export default function HomeLivePreview() {
   const engine = useRef(null);
   const wantPlay = useRef(true);
-  const [playState, setPlayState] = useState("loading");
+  const [playState, setPlayState] = useState("waiting");
   const [audioError, setAudioError] = useState(null);
   const place = explorerPosition(FIXED_REGION);
 
@@ -79,8 +74,8 @@ export default function HomeLivePreview() {
         if (cancelled) return;
         if (player.ctx?.state === "running") {
           setPlayState("playing");
-          window.removeEventListener("pointerdown", unlock);
-          window.removeEventListener("keydown", unlock);
+          window.removeEventListener("pointerdown", unlock, true);
+          window.removeEventListener("keydown", unlock, true);
         } else {
           setPlayState("paused");
         }
@@ -93,13 +88,32 @@ export default function HomeLivePreview() {
     }
 
     function unlock(event) {
+      if (!introFinished) {
+        player.prime().catch(() => {});
+        return;
+      }
       if (event.target?.closest?.(".home-live-actions .main-action")) return;
       if (wantPlay.current && player.ctx?.state !== "running") start();
     }
 
-    start();
-    window.addEventListener("pointerdown", unlock);
-    window.addEventListener("keydown", unlock);
+    let introFinished = !document.getElementById("intro");
+    let observer;
+    function beginAfterIntro() {
+      if (introFinished || cancelled) return;
+      introFinished = true;
+      observer?.disconnect();
+      start();
+    }
+    if (introFinished) start();
+    else {
+      observer = new MutationObserver(() => {
+        if (!document.getElementById("intro")) beginAfterIntro();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    window.addEventListener("pointerdown", unlock, true);
+    window.addEventListener("keydown", unlock, true);
 
     let ignoreFeatures = false;
     fetch(`${import.meta.env.BASE_URL}scales/features.json`)
@@ -117,53 +131,11 @@ export default function HomeLivePreview() {
     return () => {
       cancelled = true;
       ignoreFeatures = true;
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("keydown", unlock);
+      window.removeEventListener("pointerdown", unlock, true);
+      window.removeEventListener("keydown", unlock, true);
+      observer?.disconnect();
       player.dispose();
       if (engine.current === player) engine.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    let stopHeading = () => {};
-    let button = null;
-    let onCameraClick = null;
-
-    function aim(degrees) {
-      const current = engine.current;
-      if (!current) return;
-      current.setSpatialListenerOrientation(listenerForward(degrees), { x: 0, y: 0, z: 1 });
-    }
-
-    function attach() {
-      const audio = window.earthAudio;
-      button = document.querySelector("#head-tracking-toggle");
-      if (!audio || !button) return false;
-      stopHeading = audio.on("headingchange", (detail) => aim(detail.heading));
-      onCameraClick = () => {
-        const turningOn = button.getAttribute("aria-pressed") !== "true";
-        const current = engine.current;
-        if (!current) return;
-        current.setSpatialEnabled(turningOn);
-        if (turningOn) aim(audio.getHeading());
-      };
-      button.addEventListener("click", onCameraClick);
-      return true;
-    }
-
-    let timer = 0;
-    if (!attach()) {
-      timer = window.setInterval(() => {
-        if (cancelled || attach()) window.clearInterval(timer);
-      }, 200);
-    }
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-      stopHeading();
-      if (button && onCameraClick) button.removeEventListener("click", onCameraClick);
     };
   }, []);
 
@@ -194,47 +166,44 @@ export default function HomeLivePreview() {
     }
   }
 
-  const playLabel = playState === "playing" ? "Pause" : playState === "loading" ? "Loading…" : playState === "unavailable" ? "Retry" : "Play";
+  const playLabel = playState === "playing" ? "Pause music" : playState === "loading" ? "Loading music…" : playState === "unavailable" ? "Retry music" : "Play music";
   const playStatus = playState === "playing"
     ? "Live Map music is playing."
     : playState === "paused"
       ? "Live Map music is paused."
       : playState === "unavailable"
         ? "Live Map music is unavailable."
-        : "Live Map music is starting.";
+        : playState === "waiting"
+          ? "Music starts after the opening animation."
+          : "Live Map music is starting.";
 
   return (
     <div className="home-live">
       <div className="section-head">
         <p className="eyebrow">Live Map</p>
         <h2 id="live-preview-title" tabIndex={-1}>Hear where you are</h2>
-        <p>The same map and music as the Live Map, already playing. Your place stays fixed on this page.</p>
+        <p>The same map and music as the Live Map. The music starts when the opening animation finishes. Your place stays fixed on this page.</p>
       </div>
       <div className="home-live-card">
         <div className="map-frame">
-          <div className="geographic-canvas" role="img" aria-label="World map with your place fixed on region 1 of 12. Location cannot be changed here.">
+          <div className="geographic-canvas" role="img" aria-label="World map with your place fixed on region 1 of 48. Location cannot be changed here.">
             <img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="" />
             {LAYER_OPTIONS.map((layer, order) => <MapField key={layer.id} layer={{ ...layer, order }} />)}
-            <div className="exploration-marker" style={place} aria-hidden="true"><span>↗</span><small>You are here</small></div>
+            <div className="home-place-pin" style={place} aria-hidden="true">
+              <span className="home-place-dot" />
+              <span className="home-place-line" />
+              <span className="home-place-label">You are here</span>
+            </div>
             <span className="map-longitude west">180° W</span>
             <span className="map-longitude east">180° E</span>
           </div>
         </div>
-        <p className="home-place">You are here, region 1 of 12. This page does not move your place.</p>
+        <p className="home-place">You are here, region 1 of 48. This page does not move your place.</p>
         <div className="home-live-actions">
           <button type="button" className="main-action" aria-pressed={playState === "playing"} onClick={togglePlayback}>
             {playLabel}<span aria-hidden="true">{playState === "playing" ? "Ⅱ" : "↗"}</span>
           </button>
-          <a className="button button-outline-light" {...linkTo("music")}>Open the Live Map</a>
-        </div>
-        <div className="home-camera">
-          <h3>Spatial sound</h3>
-          <button type="button" className="button button-secondary" id="head-tracking-toggle" aria-pressed="false" aria-describedby="camera-privacy">Use camera to turn with your head</button>
-          <p id="camera-privacy" className="field-note">Optional, and off until you turn it on. The camera picture is used only to see which way your head is turned. It stays on this computer. It is not recorded, stored, or sent anywhere.</p>
-          <p id="camera-status" className="voice-hint">Camera is off. Turn it on to aim the sound with your head. Your place on the map stays fixed.</p>
-          <div className="camera-preview" id="camera-preview" hidden>
-            <video id="head-camera" className="head-camera" width="320" height="240" autoPlay muted playsInline aria-hidden="true" />
-          </div>
+          <a className="button button-secondary" {...linkTo("music")}>Open the Live Map</a>
         </div>
         <p className="visually-hidden" role="status">{playStatus}</p>
         {audioError && <p role="alert" className="home-audio-error">{audioError}</p>}

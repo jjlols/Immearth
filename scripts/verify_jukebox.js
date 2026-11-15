@@ -133,7 +133,8 @@ try {
  await page.keyboard.press('ArrowUp');
  assert.equal(await region(), 0);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
- await page.getByRole('button', { name: /Analyze region 10:/ }).click();
+ await page.keyboard.press('s');
+ await page.keyboard.press('d');
  assert.equal(await region(), 9);
  await page.evaluate(() => document.activeElement?.blur());
  await page.waitForTimeout(100);
@@ -142,7 +143,7 @@ try {
  await page.waitForTimeout(100);
  await page.keyboard.press('Home');
  assert.equal(await region(), 0);
- await page.getByLabel('Temperature opacity').focus();
+ await page.getByLabel('Show Temperature on map and enable its musical layer').focus();
  await page.keyboard.press('d');
  assert.equal(await region(), 0);
  await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();

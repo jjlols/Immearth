@@ -1,5 +1,5 @@
 /* Shared vocabulary for the home page voice session and the Accessibility & help page.
-   Recognition happens on the local keyword spotter; this file only names the commands. */
+   The browser speech recognizer hears the words; this file only names the commands. */
 
 export const HOME_SECTIONS = [
   ["overview", "Overview"],

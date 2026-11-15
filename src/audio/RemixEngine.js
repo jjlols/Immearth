@@ -84,6 +84,15 @@ export class RemixEngine {
     }
   }
 
+  async prime() {
+    if (!this.ctx) {
+      if (!this.available) return false;
+      this.createContext();
+    }
+    if (this.ctx.state === "suspended") await this.ctx.resume();
+    return this.ctx.state === "running";
+  }
+
   async play() {
     const request = ++this.playRequest;
     if (!this.ctx) {

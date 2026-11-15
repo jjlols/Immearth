@@ -28,13 +28,6 @@ export default function SiteChrome({ current, part = "both" }) {
     <>
       {header && (
         <header className="nasa-header">
-          <div className="nasa-notice">
-            <p>A NASA Space Apps Challenge 2026 project. This is not an official NASA website.</p>
-            <div className="site-tools" role="group" aria-label="Display options">
-              <DarkModeToggle />
-              <ColorBlindToggle />
-            </div>
-          </div>
           <div className="nasa-bar">
             <a className="wordmark" {...linkTo("home")}>
               <span className="mark" aria-hidden="true"><EarthRecord /></span>
@@ -43,17 +36,23 @@ export default function SiteChrome({ current, part = "both" }) {
                 <span className="wordmark-sub">Earth Information Jukebox</span>
               </span>
             </a>
-            <nav className="primary-nav" aria-label="Main">
-              <ul>
-                {NAV.map((item) => (
-                  <li key={item.label}>
-                    <a {...linkTo(item.view, item.hash)} aria-current={!item.hash && item.view === current ? "page" : undefined}>
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <div className="nasa-bar-end">
+              <nav className="primary-nav" aria-label="Main">
+                <ul>
+                  {NAV.map((item) => (
+                    <li key={item.label}>
+                      <a {...linkTo(item.view, item.hash)} aria-current={!item.hash && item.view === current ? "page" : undefined}>
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <div className="site-tools" role="group" aria-label="Display options">
+                <DarkModeToggle />
+                <ColorBlindToggle />
+              </div>
+            </div>
           </div>
         </header>
       )}
