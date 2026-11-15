@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Earth Information Jukebox, a NASA Space Apps project. Explore five NASA Earth maps and a space photo of the day, with spoken descriptions and voice navigation.">
+  <meta name="theme-color" content="#0b3d91">
+  <title>Earth Information Jukebox</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.replace("no-js", "js");</script>
+</head>
+<body>
+  <a class="skip-link" href="#overview-title">Skip to content</a>
+
+  <header class="site-header">
+    <div class="notice">
+      <p>A NASA Space Apps Challenge 2026 project. This is not an official NASA website.</p>
+    </div>
+    <div class="bar">
+      <a class="wordmark" href="#overview-title">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="wordmark-text">Earth Jukebox</span>
+      </a>
+      <button type="button" class="explore-button" id="explore-button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <div class="menu" id="site-nav">
+        <nav class="primary-nav" aria-label="Main">
+          <ul>
+            <li><a href="#photo">Photo of the day</a></li>
+            <li><a href="#maps">Maps</a></li>
+            <li><a href="#move">How to navigate</a></li>
+            <li><a href="#access">Accessibility</a></li>
+            <li><a href="../overlay/index.html">Layer explorer</a></li>
+          </ul>
+        </nav>
+        <form class="search" id="search-form" role="search" action="#maps">
+          <label class="visually-hidden" for="site-search">Search maps</label>
+          <input id="site-search" type="search" name="q" placeholder="Search maps" enterkeyhint="search" autocomplete="off">
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <div id="status" class="visually-hidden" role="status"></div>
+
+  <main id="main">
+    <section class="hero" id="overview" data-section data-voice-command="overview" data-voice-label="Overview" aria-labelledby="overview-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Earth Information Center</p>
+        <h1 id="overview-title" tabindex="-1">Hear Earth, not only see it</h1>
+        <p class="lede">Five NASA views of our planet and a space photo of the day, each described in words and designed to be heard. Read, search, or move through the page by keyboard or by voice.</p>
+        <div class="actions">
+          <a class="button button-primary" href="#maps">Explore the maps</a>
+          <button type="button" class="button button-secondary" id="open-overview" aria-haspopup="dialog" aria-controls="overview-dialog">Read page overview</button>
+        </div>
+      </div>
+
+      <aside class="panel" aria-labelledby="listen-title">
+        <h2 id="listen-title" class="panel-title">Listen and speak</h2>
+        <p class="panel-text">Hear a spoken summary, or turn on voice and say where you want to go.</p>
+        <div class="panel-row">
+          <button type="button" class="button button-secondary" id="play-overview">Play overview</button>
+          <button type="button" class="button button-quiet" id="stop-speaking">Stop speaking</button>
+        </div>
+        <div class="panel-row">
+          <button type="button" class="button button-secondary" id="voice-toggle" aria-pressed="false">Start voice</button>
+        </div>
+        <p id="voice-hint" class="voice-hint">Voice is off. Start voice, then say next, previous, photo, or page overview.</p>
+        <div class="panel-row mover" role="group" aria-label="Move between sections">
+          <button type="button" class="button button-quiet" id="prev-section" data-voice-command="previous" data-voice-label="Previous section">Previous section</button>
+          <button type="button" class="button button-quiet" id="next-section" data-voice-command="next" data-voice-label="Next section">Next section</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="band" id="photo" data-section data-voice-command="photo" data-voice-label="Space photo of the day" aria-labelledby="photo-title">
+      <div class="section-head">
+        <p class="eyebrow">Today</p>
+        <h2 id="photo-title" tabindex="-1">Space photo of the day</h2>
+        <p>A new view of Earth or space, with a written description of what it shows.</p>
+      </div>
+      <figure class="photo-frame" id="photo-frame" hidden>
+        <img id="daily-photo" alt="">
+        <figcaption id="daily-caption"></figcaption>
+      </figure>
+      <div class="placeholder" id="photo-missing">
+        <p>Today’s photo has not been posted yet. Please check back soon.</p>
+        <p class="placeholder-note"><a href="photo-of-the-day/">How the photo is added</a></p>
+      </div>
+    </section>
+
+    <section class="band band-plain" id="maps" data-section data-voice-command="maps" data-voice-label="The maps" aria-labelledby="maps-title">
+      <div class="section-head">
+        <p class="eyebrow">Earth data</p>
+        <h2 id="maps-title" tabindex="-1">The five maps</h2>
+        <p>Each map comes from NASA’s Scientific Visualization Studio. The sound described on each card is planned and does not play yet.</p>
+      </div>
+      <p id="map-empty" class="empty" hidden tabindex="-1">No maps match that search. Clear the search box to see all five.</p>
+      <div class="cards" id="map-list">
+        <article class="card" id="map-precipitation" data-voice-command="precipitation" data-voice-label="Precipitation" data-search="precipitation rain snow imerg frozen">
+          <div class="card-body">
+            <h3 tabindex="-1">Precipitation</h3>
+            <p>Rain and frozen precipitation from the Global Precipitation Measurement constellation.</p>
+            <p class="planned"><span class="tag">Planned sound</span> Heavier rain becomes a faster pulse. Frozen precipitation is a softer, higher tone.</p>
+            <p class="source">Latest IMERG composite. <a href="https://svs.gsfc.nasa.gov/4285/">NASA precipitation page</a></p>
+          </div>
+          <figure>
+            <img src="../data/images/precipitation.png" width="3600" height="1800" alt="Global precipitation map from NASA IMERG. Green, yellow, and orange streaks show rain. Blue and white areas show frozen precipitation. The poles are white.">
+          </figure>
+        </article>
+
+        <article class="card" id="map-fires" data-voice-command="fires" data-voice-label="Active fires" data-search="active fires viirs fire radiative power">
+          <div class="card-body">
+            <h3 tabindex="-1">Active fires</h3>
+            <p>Fire detections from the VIIRS instrument. Intensity is fire radiative power.</p>
+            <p class="planned"><span class="tag">Planned sound</span> Each fire cluster is a beacon. Stronger fires pulse faster, placed left or right by longitude.</p>
+            <p class="source">Most recent VIIRS detections. <a href="https://svs.gsfc.nasa.gov/5113/">NASA active fires page</a></p>
+          </div>
+          <figure>
+            <img src="../data/images/active_fires.png" width="4096" height="2048" loading="lazy" alt="Global map of VIIRS active fires. Oceans are dark blue and land is nearly black. A fire radiative power colorbar and a date are printed on the image.">
+          </figure>
+        </article>
+
+        <article class="card" id="map-co" data-voice-command="carbon monoxide" data-voice-label="Carbon monoxide" data-search="carbon monoxide co geos-cf">
+          <div class="card-body">
+            <h3 tabindex="-1">Carbon monoxide</h3>
+            <p>Near-surface carbon monoxide estimated by NASA’s GEOS-CF model.</p>
+            <p class="planned"><span class="tag">Planned sound</span> A low drone thickens where carbon monoxide is higher.</p>
+            <p class="source">First frame of the animation, not a verified latest observation. <a href="https://svs.gsfc.nasa.gov/5153/">NASA carbon monoxide page</a></p>
+          </div>
+          <figure>
+            <img src="../data/images/carbon_monoxide.png" width="2048" height="1024" loading="lazy" alt="First frame of NASA's GEOS-CF visualization of near-surface carbon monoxide. This frame is not claimed to be the latest observation.">
+          </figure>
+        </article>
+
+        <article class="card" id="map-nox" data-voice-command="nitrogen oxides" data-voice-label="Nitrogen oxides" data-search="nitrogen oxides nox no2 geos-cf">
+          <div class="card-body">
+            <h3 tabindex="-1">Nitrogen oxides</h3>
+            <p>Near-surface nitrogen oxides estimated from nitrogen oxide and nitrogen dioxide.</p>
+            <p class="planned"><span class="tag">Planned sound</span> A sharper tone, separate from carbon monoxide, marks higher nitrogen oxides.</p>
+            <p class="source">First frame of the animation, not a verified latest observation. <a href="https://svs.gsfc.nasa.gov/5154/">NASA nitrogen oxides page</a></p>
+          </div>
+          <figure>
+            <img src="../data/images/nitrogen_oxides.png" width="2048" height="1024" loading="lazy" alt="First frame of NASA's GEOS-CF visualization of near-surface nitrogen oxides. This frame is not claimed to be the latest observation.">
+          </figure>
+        </article>
+
+        <article class="card" id="map-temperature" data-voice-command="temperature" data-voice-label="Temperature" data-search="temperature near-surface air geos-fp heat cold">
+          <div class="card-body">
+            <h3 tabindex="-1">Temperature</h3>
+            <p>Air temperature about 3 meters above the surface, from NASA’s GEOS-FP weather analysis.</p>
+            <p class="planned"><span class="tag">Planned sound</span> Pitch follows the temperature. Colder air is lower. Hotter air is higher, on a musical scale.</p>
+            <p class="source">First frame of the animation, not a verified latest observation. <a href="https://svs.gsfc.nasa.gov/5147/">NASA temperature page</a></p>
+          </div>
+          <figure>
+            <img src="../data/images/near_surface_temperature.png" width="2048" height="1024" loading="lazy" alt="First frame of NASA's GEOS-FP near-surface temperature map. Polar regions are blue, middle latitudes yellow, and the tropics orange to dark red. A date and the NASA GMAO name are printed on the image.">
+          </figure>
+        </article>
+      </div>
+    </section>
+
+    <section class="band" id="move" data-section data-voice-command="move" data-voice-label="Moving around" aria-labelledby="move-title">
+      <div class="section-head">
+        <p class="eyebrow">Navigation</p>
+        <h2 id="move-title" tabindex="-1">How to navigate</h2>
+        <p>Buttons, keys, and voice commands all do the same things. Use whichever works best for you.</p>
+      </div>
+      <div class="split">
+        <div class="tile">
+          <h3>Keyboard</h3>
+          <ul class="key-list">
+            <li><kbd>Tab</kbd> <span>Move to the next link, button, or search box.</span></li>
+            <li><kbd>Enter</kbd> <span>Follow a link or press a button.</span></li>
+            <li><kbd>Esc</kbd> <span>Close the menu or the page overview.</span></li>
+          </ul>
+          <p>Previous section and Next section move to the next heading and announce where you landed.</p>
+        </div>
+        <div class="tile">
+          <h3>Voice commands</h3>
+          <p>Press Start voice, then say one of these. You can also say rain, fires, heat, photo of the day, or read the overview.</p>
+          <ul class="command-list" id="command-list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-plain" id="access" data-section data-voice-command="accessibility" data-voice-label="Accessibility" aria-labelledby="access-title">
+      <div class="section-head">
+        <p class="eyebrow">For everyone</p>
+        <h2 id="access-title" tabindex="-1">Accessibility</h2>
+        <p>This site is built to work for people who are blind or have low vision, people who cannot read color maps, and anyone using a keyboard or their voice instead of a mouse.</p>
+      </div>
+      <ul class="checks">
+        <li>Text and buttons meet the enhanced contrast level, at least 7 to 1.</li>
+        <li>Every control works from the keyboard and shows a clear focus outline.</li>
+        <li>Links in text are underlined. Meaning is never shown by color alone.</li>
+        <li>Each map has a written description of what the picture shows, plus its source.</li>
+        <li>Text can be enlarged, and the layout reflows on narrow screens and at high zoom.</li>
+        <li>Search results and section changes are announced to screen readers.</li>
+        <li>The microphone turns on only after you press Start voice. Your speech is recognized on this computer by the speech engine built into Windows. It is not sent to an online service.</li>
+        <li>Nothing moves or plays on its own.</li>
+      </ul>
+      <p class="feedback">Found a barrier? <a href="https://github.com/jjlols/NASA-SPACE-APP/issues">Report an accessibility problem</a>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-title">Earth Information Jukebox</p>
+        <p>A NASA Space Apps Challenge project using imagery from NASA’s Scientific Visualization Studio. Not an official NASA website.</p>
+      </div>
+      <ul aria-label="Related links">
+        <li><a href="https://www.nasa.gov/">nasa.gov</a></li>
+        <li><a href="https://svs.gsfc.nasa.gov/gallery/earth-information-center/">Earth Information Center gallery</a></li>
+        <li><a href="../overlay/index.html">Layer explorer</a></li>
+        <li><a href="https://github.com/jjlols/NASA-SPACE-APP">Project repository</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <dialog id="overview-dialog" aria-labelledby="overview-dialog-title">
+    <h2 id="overview-dialog-title" tabindex="-1">Page overview</h2>
+    <div id="page-overview">
+      <p>Earth Information Jukebox. A NASA Space Apps project, not the official NASA website.</p>
+      <p>This page presents five NASA Earth maps: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. It also has a space photo of the day. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.</p>
+      <p>You can search the maps, read what each one shows, and move with Previous and Next. Start voice, then say next, previous, photo, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.</p>
+    </div>
+    <button type="button" class="button button-primary" id="close-overview">Close</button>
+  </dialog>
+
+  <script src="site.js"></script>
+</body>
+</html>
