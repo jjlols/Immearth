@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import guideCss from "../../site/styles.css?inline";
-import PageSwitch from "../PageSwitch.jsx";
+import SiteChrome from "../SiteChrome.jsx";
+import { goToView, hrefFor } from "../navigation.js";
 import { createVoiceSession } from "./voice.js";
 
 const asset = (file) => `${import.meta.env.BASE_URL}assets/${file}`;
@@ -13,7 +14,7 @@ const MAPS = [
     search: "precipitation rain snow imerg frozen",
     title: "Precipitation",
     text: "Rain and frozen precipitation from the Global Precipitation Measurement constellation.",
-    planned: "Heavier rain becomes a faster pulse. Frozen precipitation is a softer, higher tone.",
+    planned: "Rain and frozen precipitation each get their own gentle filtered swell on the recording. More matching pixels make the swells more frequent.",
     source: "Latest IMERG composite.",
     href: "https://svs.gsfc.nasa.gov/4285/",
     sourceLabel: "NASA precipitation page",
@@ -29,7 +30,7 @@ const MAPS = [
     search: "active fires viirs fire radiative power",
     title: "Active fires",
     text: "Fire detections from the VIIRS instrument. Intensity is fire radiative power.",
-    planned: "Each fire cluster is a beacon. Stronger fires pulse faster, placed left or right by longitude.",
+    planned: "Estimated fire radiative power, from 0 to 8 megawatts, opens a soft filtered accent with long rests between accents. It is not a count of fires.",
     source: "Most recent VIIRS detections.",
     href: "https://svs.gsfc.nasa.gov/5113/",
     sourceLabel: "NASA active fires page",
@@ -45,7 +46,7 @@ const MAPS = [
     search: "carbon monoxide co geos-cf",
     title: "Carbon monoxide",
     text: "Near-surface carbon monoxide estimated by NASA’s GEOS-CF model.",
-    planned: "A low drone thickens where carbon monoxide is higher.",
+    planned: "Higher estimated carbon monoxide, on steps of 40, 100, 130, 200, and 500 parts per billion, raises a low-frequency layer of the recording.",
     source: "First frame of the animation, not a verified latest observation.",
     href: "https://svs.gsfc.nasa.gov/5153/",
     sourceLabel: "NASA carbon monoxide page",
@@ -61,7 +62,7 @@ const MAPS = [
     search: "nitrogen oxides nox no2 geos-cf",
     title: "Nitrogen oxides",
     text: "Near-surface nitrogen oxides estimated from nitrogen oxide and nitrogen dioxide.",
-    planned: "A sharper tone, separate from carbon monoxide, marks higher nitrogen oxides.",
+    planned: "Higher estimated nitrogen oxides, ranked on a logarithmic scale from 0.001 to 10 parts per billion, open a filter so the recording sounds brighter.",
     source: "First frame of the animation, not a verified latest observation.",
     href: "https://svs.gsfc.nasa.gov/5154/",
     sourceLabel: "NASA nitrogen oxides page",
@@ -77,7 +78,7 @@ const MAPS = [
     search: "temperature near-surface air geos-fp heat cold",
     title: "Temperature",
     text: "Air temperature about 3 meters above the surface, from NASA’s GEOS-FP weather analysis.",
-    planned: "Pitch follows the temperature. Colder air is lower. Hotter air is higher, on a musical scale.",
+    planned: "Estimated temperature, from −40 to +40 °C, sets the playback speed. Colder air plays the recording slower and lower. Warmer air plays it faster and higher.",
     source: "First frame of the animation, not a verified latest observation.",
     href: "https://svs.gsfc.nasa.gov/5147/",
     sourceLabel: "NASA temperature page",
@@ -138,6 +139,7 @@ const ALIASES = {
 const OVERVIEW = [
   "Earth Information Jukebox. A NASA Space Apps project, not the official NASA website.",
   "This page presents five NASA Earth maps: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. It also has a space photo of the day. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
+  "Four pages make up the site: this home page, the musical remix, the layer explorer, and the photo of the day. Open them from the menu at the top or from Open a page. The musical remix stays silent until you press Play remix.",
   "You can search the maps, read what each one shows, and move with Previous and Next. Start voice, then say next, previous, photo, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
   "Immersive listening can place sound around you. Headphones are recommended. Use the direction slider, or say turn left, turn right, recenter, or test tones. The camera stays off unless you turn it on, and that picture stays on this computer.",
 ];
@@ -172,7 +174,6 @@ function probePhoto(url) {
 }
 
 export default function GuidePage() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, photo, or page overview.");
@@ -208,7 +209,7 @@ export default function GuidePage() {
     if (section) setLastSection(section.id);
     const label = map?.label || SECTIONS.find(([sectionName]) => sectionName === sectionId)?.[1] || id;
     let message = `${label}.`;
-    if (map) message = `${map.label}. Planned sound. ${map.planned}`;
+    if (map) message = `${map.label}. In the musical remix: ${map.planned}`;
     if (sectionId === "photo" && !photo) message = `${message} Today’s photo has not been posted yet. Please check back soon.`;
     if (!quiet) announce(message);
     if (map) document.getElementById(map.id)?.querySelector("h3")?.focus();
@@ -354,28 +355,6 @@ export default function GuidePage() {
     return undefined;
   }, [overviewOpen]);
 
-  useEffect(() => {
-    function onKey(event) {
-      if (event.key === "Escape" && menuOpen) {
-        setMenuOpen(false);
-        document.getElementById("explore-button")?.focus();
-      }
-    }
-    function onClick(event) {
-      if (!menuOpen) return;
-      const nav = document.getElementById("site-nav");
-      const button = document.getElementById("explore-button");
-      if (nav?.contains(event.target) || button?.contains(event.target)) return;
-      setMenuOpen(false);
-    }
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("click", onClick);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("click", onClick);
-    };
-  }, [menuOpen]);
-
   return (
     <>
       <style>{guideCss}</style>
@@ -385,48 +364,17 @@ export default function GuidePage() {
         <button type="button" className="intro-skip" id="intro-skip">Skip</button>
       </div>
       <a className="skip-link" href="#overview-title">Skip to content</a>
-      <header className="site-header">
-        <div className="notice"><p>A NASA Space Apps Challenge 2026 project. This is not an official NASA website.</p></div>
-        <div className="bar">
-          <a className="wordmark" href="#overview-title"><span className="mark" aria-hidden="true" /><span className="wordmark-text">Earth Jukebox</span></a>
-          <button type="button" className="explore-button" id="explore-button" aria-expanded={menuOpen} aria-controls="site-nav" onClick={() => setMenuOpen((open) => !open)}>Menu</button>
-          <div className={`menu${menuOpen ? " is-open" : ""}`} id="site-nav">
-            <nav className="primary-nav" aria-label="Main">
-              <ul>
-                <li><a href="#maps" onClick={() => setMenuOpen(false)}>Maps</a></li>
-                <li><a href="#immersive" onClick={() => setMenuOpen(false)}>3D listening</a></li>
-                <li><a href="#photo" onClick={() => setMenuOpen(false)}>Photo</a></li>
-                <li><a href="#move" onClick={() => setMenuOpen(false)}>Navigation</a></li>
-                <li><a href="#access" onClick={() => setMenuOpen(false)}>Accessibility</a></li>
-              </ul>
-            </nav>
-            <PageSwitch current="guide" />
-            <form className="search" role="search" action="#maps" onSubmit={(event) => {
-              event.preventDefault();
-              const first = shownMaps[0];
-              if (first) document.getElementById(first.id)?.querySelector("h3")?.focus();
-              else document.getElementById("map-empty")?.focus();
-            }}>
-              <label className="visually-hidden" htmlFor="site-search">Search maps</label>
-              <input id="site-search" type="search" name="q" placeholder="Search maps" enterKeyHint="search" autoComplete="off" value={query} onChange={(event) => {
-                const value = event.target.value;
-                setQuery(value);
-                const count = MAPS.filter((map) => value.trim() === "" || map.search.includes(value.trim().toLowerCase())).length;
-                announce(count === 0 ? `No maps match ${value.trim()}.` : `Showing ${count} of ${MAPS.length} maps.`);
-              }} />
-            </form>
-          </div>
-        </div>
-      </header>
+      <SiteChrome current="home" part="header" />
       <div id="status" className="visually-hidden" role="status">{status}</div>
       <main id="main">
         <section className="hero" id="overview" aria-labelledby="overview-title">
           <div className="hero-copy">
             <p className="eyebrow">Earth Information Center</p>
             <h1 id="overview-title" tabIndex={-1}><span className="highlight">Hear Earth,</span> not only see it</h1>
-            <p className="lede">Five NASA views of our planet and a space photo of the day, each described in words and designed to be heard. Read, search, or move through the page by keyboard or by voice.</p>
+            <p className="lede">Five NASA views of our planet, each described in words and turned into music. Read, search, or move through the site by keyboard or by voice.</p>
             <div className="actions">
-              <a className="button button-primary" href="#maps">Explore the maps</a>
+              <a className="button button-primary" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}>Play the musical remix</a>
+              <a className="button button-secondary" href="#maps">Explore the maps</a>
               <button type="button" className="button button-secondary" ref={openOverviewRef} aria-haspopup="dialog" aria-controls="overview-dialog" onClick={openOverview}>Read page overview</button>
             </div>
           </div>
@@ -455,12 +403,45 @@ export default function GuidePage() {
           </aside>
         </section>
 
+        <section className="band" id="pages" aria-labelledby="destinations-title">
+          <div className="section-head">
+            <p className="eyebrow">Explore</p>
+            <h2 id="destinations-title" tabIndex={-1}>Open a page</h2>
+            <p>The first three open their own page. The last three take you further down this page.</p>
+          </div>
+          <h3 className="destinations-group">Other pages</h3>
+          <ul className="destinations" role="list">
+            <li><a className="destination" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}><strong>Musical remix</strong><span>Hear one recording change with the five maps. Choose one map or all of them, and read what you hear in words.</span><span className="destination-keys">Silent until you press Play remix. W A S D or arrow keys move between 12 regions.</span></a></li>
+            <li><a className="destination" href={hrefFor("layers")} onClick={(event) => { event.preventDefault(); goToView("layers"); }}><strong>Layer explorer</strong><span>Stack the five maps on one world map. Show, hide, or focus on any layer.</span><span className="destination-keys">No sound on this page.</span></a></li>
+            <li><a className="destination" href={hrefFor("photo")} onClick={(event) => { event.preventDefault(); goToView("photo"); }}><strong>Photo of the day</strong><span>How to add today’s space picture and its written description.</span><span className="destination-keys">For the team that updates the site.</span></a></li>
+          </ul>
+          <h3 className="destinations-group">On this page</h3>
+          <ul className="destinations" role="list">
+            <li><a className="destination" href="#maps"><strong>The five maps</strong><span>Each NASA Earth view, described in words, with what it does in the remix.</span></a></li>
+            <li><a className="destination" href="#immersive"><strong>3D listening</strong><span>Place sound around you with the slider, your keyboard, or your head.</span></a></li>
+            <li><a className="destination" href="#move"><strong>Keyboard and voice help</strong><span>Every key and voice command for each page, in one list.</span></a></li>
+          </ul>
+        </section>
+
         <section className="band band-plain" id="maps" aria-labelledby="maps-title">
           <div className="section-head">
             <p className="eyebrow">Earth data</p>
             <h2 id="maps-title" tabIndex={-1}>The five maps</h2>
-            <p>Each map comes from NASA’s Scientific Visualization Studio. The sound described on each card is planned and does not play yet.</p>
-            <p>The musical remix and the stacked maps are React pages too. Use Music or Layer explorer in the page menu.</p>
+            <p>Each map comes from NASA’s Scientific Visualization Studio. Each card says what that map changes in the musical remix. Values are estimated from NASA’s published color bars.</p>
+            <form className="search" role="search" action="#maps" onSubmit={(event) => {
+              event.preventDefault();
+              const first = shownMaps[0];
+              if (first) document.getElementById(first.id)?.querySelector("h3")?.focus();
+              else document.getElementById("map-empty")?.focus();
+            }}>
+              <label className="visually-hidden" htmlFor="site-search">Search maps</label>
+              <input id="site-search" type="search" name="q" placeholder="Search maps" enterKeyHint="search" autoComplete="off" value={query} onChange={(event) => {
+                const value = event.target.value;
+                setQuery(value);
+                const count = MAPS.filter((map) => value.trim() === "" || map.search.includes(value.trim().toLowerCase())).length;
+                announce(count === 0 ? `No maps match ${value.trim()}.` : `Showing ${count} of ${MAPS.length} maps.`);
+              }} />
+            </form>
           </div>
           <p id="map-empty" className="empty" hidden={shownMaps.length !== 0} tabIndex={-1}>No maps match that search. Clear the search box to see all five.</p>
           <div className="cards" id="map-list">
@@ -469,8 +450,9 @@ export default function GuidePage() {
                 <div className="card-body">
                   <h3 tabIndex={-1}>{map.title}</h3>
                   <p>{map.text}</p>
-                  <p className="planned"><span className="tag">Planned sound</span> {map.planned}</p>
+                  <p className="planned"><span className="tag">In the remix</span> {map.planned}</p>
                   <p className="source">{map.source} <a href={map.href}>{map.sourceLabel}</a></p>
+                  <p className="in-remix"><a href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}>Hear {map.label.toLowerCase()} in the musical remix</a></p>
                 </div>
                 <figure>
                   <img src={map.src} width={map.width} height={map.height} alt={map.alt} />
@@ -542,7 +524,7 @@ export default function GuidePage() {
           </figure>
           <div className="placeholder" hidden={Boolean(photo)}>
             <p>Today’s photo has not been posted yet. Please check back soon.</p>
-            <p className="placeholder-note"><a href="?view=photo" onClick={(event) => { event.preventDefault(); import("../navigation.js").then((nav) => nav.goToView("photo")); }}>How the photo is added</a></p>
+            <p className="placeholder-note"><a href={hrefFor("photo")} onClick={(event) => { event.preventDefault(); goToView("photo"); }}>How the photo is added</a></p>
           </div>
         </section>
 
@@ -550,11 +532,39 @@ export default function GuidePage() {
           <div className="section-head">
             <p className="eyebrow">Navigation</p>
             <h2 id="move-title" tabIndex={-1}>How to navigate</h2>
-            <p>Buttons, keys, and voice commands all do the same things. Use whichever works best for you.</p>
+            <p>Every page works with a mouse, a keyboard, or a screen reader. Buttons and keys do the same things, so use whichever works best for you.</p>
           </div>
           <div className="split">
             <div className="tile">
-              <h3>Keyboard</h3>
+              <h3>On every page</h3>
+              <ul className="key-list">
+                <li><kbd>Tab</kbd> <span>The first stop is a Skip link that jumps past the menu.</span></li>
+              </ul>
+              <p>The menu at the top of every page has Home, Musical remix, Layer explorer, Photo of the day, and Help.</p>
+              <p>Color blind colors, at the top right, switches the interface to blue, orange, and patterns. NASA map pictures keep their published colors. Your choice is remembered.</p>
+            </div>
+            <div className="tile">
+              <h3>Musical remix keys</h3>
+              <p>Nothing plays until you press Play remix. Pause, Reset, Mute, and Master volume are next to it.</p>
+              <ul className="key-list">
+                <li><kbd>W ↑</kbd> <span>Move one region north.</span></li>
+                <li><kbd>A ←</kbd> <span>Move one region west.</span></li>
+                <li><kbd>S ↓</kbd> <span>Move one region south.</span></li>
+                <li><kbd>D →</kbd> <span>Move one region east.</span></li>
+                <li><kbd>Home</kbd> <span>Go back to region 1.</span></li>
+              </ul>
+              <p>The 12 regions are a grid of 3 rows and 4 columns. These keys do nothing while you are on a button, link, slider, or search box. Each move is described in words. Moving changes the music only while it is already playing.</p>
+            </div>
+            <div className="tile">
+              <h3>Layer explorer keys</h3>
+              <ul className="key-list">
+                <li><kbd>↑ ↓</kbd> <span>In the layer list, move between the five layers.</span></li>
+                <li><kbd>Home End</kbd> <span>Jump to the first or last layer.</span></li>
+                <li><kbd>Esc</kbd> <span>Stop focusing on one layer and show all of them again.</span></li>
+              </ul>
+            </div>
+            <div className="tile">
+              <h3>This home page</h3>
               <ul className="key-list">
                 <li><kbd>Tab</kbd> <span>Move to the next link, button, or search box.</span></li>
                 <li><kbd>Enter</kbd> <span>Follow a link or press a button.</span></li>
@@ -586,22 +596,16 @@ export default function GuidePage() {
             <li>Each map has a written description of what the picture shows, plus its source.</li>
             <li>Text can be enlarged, and the layout reflows on narrow screens and at high zoom.</li>
             <li>Search results and section changes are announced to screen readers.</li>
-            <li>The microphone turns on only after you press Start voice. Your speech is recognized on this computer by the speech engine built into Windows. It is not sent to an online service.</li>
+            <li>The microphone turns on only after you press Start voice. Your speech is recognized on this computer by sherpa-onnx, an open-source keyword spotter that listens only for this site’s commands. It is not sent to an online service.</li>
             <li>Immersive listening stays quiet until you press Play test tones or another sound is started. A text line shows which way you are facing. Headphones are recommended. The camera stays off until you ask, and the picture is processed on this computer.</li>
             <li>An opening animation plays when you arrive. Press Space, Escape, or Skip, or click the animation, and it fades away. It stays off when your device is set to reduce motion.</li>
+            <li>Color blind colors, at the top of every page, switches the interface to blue, orange, and patterns.</li>
+            <li>The musical remix stays silent until you press Play remix. What you hear is also written out in words, so the music can be followed without sound.</li>
           </ul>
           <p className="feedback">Found a barrier? <a href="https://github.com/jjlols/NASA-SPACE-APP/issues">Report an accessibility problem</a>.</p>
         </section>
       </main>
-      <footer className="site-footer">
-        <div className="footer-inner">
-          <div>
-            <p className="footer-title">Earth Information Jukebox</p>
-            <p>A NASA Space Apps Challenge project using imagery from NASA’s Scientific Visualization Studio. Not an official NASA website.</p>
-          </div>
-          <PageSwitch current="guide" />
-        </div>
-      </footer>
+      <SiteChrome current="home" part="footer" />
       <dialog id="overview-dialog" ref={dialogRef} aria-labelledby="overview-dialog-title" onClose={() => { setOverviewOpen(false); openOverviewRef.current?.focus(); }}>
         <h2 id="overview-dialog-title" ref={dialogTitleRef} tabIndex={-1}>Page overview</h2>
         <div id="page-overview">{OVERVIEW.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>

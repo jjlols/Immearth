@@ -319,10 +319,10 @@ async function waitForSpeechEngine() {
         return false;
       }
     }
-    voiceHint("Starting speech on the server. This happens once.");
+    voiceHint("Starting keyword spotting on the server. This happens once.");
     await new Promise((resolve) => window.setTimeout(resolve, 1000));
   }
-  voiceHint("The speech engine did not start. Run py voice_server.py and open http://127.0.0.1:8765/site/.");
+  voiceHint("The keyword spotter did not start. Run py voice_server.py and open http://127.0.0.1:8765/site/.");
   return false;
 }
 

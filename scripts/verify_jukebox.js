@@ -34,7 +34,7 @@ const region = () => page.locator('[data-exploration-region]').getAttribute('dat
 const engine = expression => page.evaluate(expression);
 
 try {
- await page.goto(origin, { waitUntil: 'networkidle' });
+ await page.goto(`${origin}?view=music`, { waitUntil: 'networkidle' });
  await page.waitForSelector('[data-source-card]');
  await page.waitForFunction(() => !document.querySelector('.music-console .main-action')?.disabled);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
@@ -159,7 +159,7 @@ try {
  await page.getByRole('button', { name: 'Unmute', exact: true }).click();
 
  const failedPage = await browser.newPage();
- await failedPage.goto(origin, { waitUntil: 'networkidle' });
+ await failedPage.goto(`${origin}?view=music`, { waitUntil: 'networkidle' });
  await failedPage.route('**/audio/deliberate-thought.mp3', route => route.fulfill({ status: 503, body: 'unavailable' }));
  await failedPage.getByRole('button', { name: 'Play remix', exact: true }).click();
  await failedPage.getByRole('alert').waitFor();

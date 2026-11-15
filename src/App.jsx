@@ -16,8 +16,8 @@ export default function App() {
 
   return (
     <>
+      {view === "home" && <GuidePage />}
       {view === "music" && <Jukebox />}
-      {view === "guide" && <GuidePage />}
       {view === "layers" && <LayerExplorer />}
       {view === "photo" && <PhotoPage />}
     </>

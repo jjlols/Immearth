@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import guideCss from "../../site/styles.css?inline";
-import PageSwitch from "../PageSwitch.jsx";
+import SiteChrome from "../SiteChrome.jsx";
+import { goToView, hrefFor } from "../navigation.js";
 
 const FILES = ["photo.jpg", "photo.jpeg", "photo.png", "photo.webp", "photo.gif"];
 
@@ -40,20 +41,11 @@ export default function PhotoPage() {
     <>
       <style>{guideCss}</style>
       <a className="skip-link" href="#photo-folder-title">Skip to content</a>
-      <header className="site-header">
-        <div className="notice"><p>A NASA Space Apps Challenge 2026 project. This is not an official NASA website.</p></div>
-        <div className="bar">
-          <a className="wordmark" href="?view=guide" onClick={(event) => { event.preventDefault(); import("../navigation.js").then((nav) => nav.goToView("guide")); }}>
-            <span className="mark" aria-hidden="true" />
-            <span className="wordmark-text">Earth Jukebox</span>
-          </a>
-          <PageSwitch current="photo" />
-        </div>
-      </header>
+      <SiteChrome current="photo" part="header" />
       <main className="band">
         <p className="eyebrow">Photo folder</p>
         <h1 id="photo-folder-title" tabIndex={-1}>Space photo of the day</h1>
-        <p>Put today’s picture in <code>public/photo-of-the-day</code>. The guide page loads it from there. You do not need to edit the page.</p>
+        <p>Put today’s picture in the <code>public/photo-of-the-day</code> folder. The home page loads it from there. You do not need to edit the page.</p>
         <ul className="checks">
           <li>Save the picture as <code>photo.jpg</code>, <code>photo.png</code>, or <code>photo.webp</code>.</li>
           <li>Write what the picture shows in <code>caption.txt</code>, in this same folder. That text is the description for people who cannot see the image.</li>
@@ -64,15 +56,9 @@ export default function PhotoPage() {
           <figcaption>{photo?.text}</figcaption>
         </figure>
         {!photo && <p>No photo file yet.</p>}
+        <p><a className="button button-secondary" href={hrefFor("home")} onClick={(event) => { event.preventDefault(); goToView("home"); }}>Back to Earth Jukebox</a></p>
       </main>
-      <footer className="site-footer">
-        <div className="footer-inner">
-          <div>
-            <p className="footer-title">Earth Information Jukebox</p>
-            <p>A NASA Space Apps Challenge project. Not an official NASA website.</p>
-          </div>
-        </div>
-      </footer>
+      <SiteChrome current="photo" part="footer" />
     </>
   );
 }

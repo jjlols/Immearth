@@ -74,10 +74,10 @@ export function createVoiceSession({ onHint, runCommand }) {
           return false;
         }
       }
-      onHint("Starting speech on the server. This happens once.");
+      onHint("Starting keyword spotting on the server. This happens once.");
       await new Promise((resolve) => window.setTimeout(resolve, 1000));
     }
-    onHint("The speech engine did not start. Run py voice_server.py and keep npm run dev open.");
+    onHint("The keyword spotter did not start. Run py voice_server.py and keep npm run dev open.");
     return false;
   }
 

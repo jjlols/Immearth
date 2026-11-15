@@ -237,6 +237,11 @@ Serve the site over HTTP (Web Audio and the camera need a page address, not a
 `python -m http.server 8765`, then open `http://127.0.0.1:8765/site/`.
 Headphones recommended.
 
+`voice_server.py` is what Start voice talks to. It spots the site’s command
+phrases on this computer with sherpa-onnx keyword spotting (Apache 2.0). The
+English model downloads into `models/` the first time the server starts.
+Plain `python -m http.server` serves the page, but it does not recognize speech.
+
 `window.earthAudio` is one `AudioContext`. Create nodes from
 `earthAudio.context` inside a click or key handler. Do not also connect them
 to `context.destination`, or the dry copy will sit in the middle of the head

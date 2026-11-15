@@ -5,7 +5,8 @@ import SpatialOriginMarker from './components/SpatialOriginMarker.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
 import {explorerPosition,useExplorer} from './hooks/useExplorer.js';
-import PageSwitch from './PageSwitch.jsx';
+import SpaceWash, { SPACE_PHOTOS } from './SpaceWash.jsx';
+import SiteChrome from './SiteChrome.jsx';
 
 function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex}){
  return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration">
@@ -155,10 +156,12 @@ export default function Jukebox(){
 
  const loading=!manifest||!features;
  const voices=Object.values(modelsRef.current).filter(v=>!v.silent).length;
- return <div className="jukebox-shell">
- <a className="skip-link" href="#map-controls">Skip to fields</a><a className="skip-link" href="#learning">Skip to learning guide</a>
- <header className="masthead"><span className="orbit-symbol" aria-hidden="true">◎</span><span className="brand-main">EARTH INFORMATION JUKEBOX</span><span className="brand-note">NASA data · one listening canvas</span><PageSwitch current="music"/><button className="mobile-toggle" type="button" aria-expanded={mobileMenu} onClick={()=>setMobileMenu(!mobileMenu)}>{mobileMenu?'Close transport':'Music'}</button></header>
- <section className="intro-block"><div><p className="small-caps">A QUIET MUSICAL INTERPRETATION OF THE WORLD</p><h1>One planet.<br/><em>Five voices.</em></h1></div><p className="intro-aside">Bring the unseen into the foreground.<br/>Follow a single field, or meet the ensemble.</p></section>
+ return <>
+ <a className="skip-link" href="#music-title">Skip to the music player</a><a className="skip-link" href="#map-controls">Skip to fields</a><a className="skip-link" href="#learning">Skip to learning guide</a>
+ <SiteChrome current="music" part="header" />
+ <div className="jukebox-shell">
+ <header className="masthead"><span className="brand-main" id="music-title" tabIndex={-1}>Musical remix. Press Play remix to start. W, A, S, D or the arrow keys move between 12 regions.</span><button className="mobile-toggle" type="button" aria-expanded={mobileMenu} onClick={()=>setMobileMenu(!mobileMenu)}>{mobileMenu?'Close transport':'Music'}</button></header>
+ <section className="intro-block has-space"><SpaceWash photo={SPACE_PHOTOS.marble} /><div><p className="small-caps">A QUIET MUSICAL INTERPRETATION OF THE WORLD</p><h1>One planet.<br/><em>Five voices.</em></h1></div><p className="intro-aside">Bring the unseen into the foreground.<br/>Follow a single field, or meet the ensemble.</p></section>
  <section className={`${mobileMenu?'music-shortcut':''} music-console`} aria-label="Music controls">
   <div className="score-badge" aria-hidden="true"><span>∿</span></div>
   <div className="track-copy"><p className="small-caps">SOUNDS LIKE A THOUGHT, UNFOLDING</p><h2>Deliberate Thought<span>Kevin MacLeod · 69 BPM</span></h2>
@@ -215,7 +218,9 @@ export default function Jukebox(){
  <p>NASA palette stations support semantic tools not medical/population statements. The same source aspect ratio is not identical geographically verified projection or acquisition time. Continuous global fields drawn as a colored image can be inspected as whole pixels (maps) and reduced to bounded classifications (music). This is an interpretive educational listening aid, not physical truth sonification or a weather warning service. Scientific data must come from verified underlying measurement input for any absolute calibration.</p>
  <p>Navigation and map inspection stay silent before Play. Source values remain nearest-palette estimates with the recorded uncertainty. See README.md and LICENSES.md for full implementation and verification notes. DeepSpace deployment is not configured or claimed.</p></div></details>
  <footer className="notes-footer"><span>NASA Scientific Visualization Studio · Natural Earth geography · Kevin MacLeod</span><span>Built with React and Web Audio, respectfully at 69 BPM.</span></footer>
- </div>;
+ </div>
+ <SiteChrome current="music" part="footer" />
+ </>;
 }
 
 function regionButtonLabel(index,features){

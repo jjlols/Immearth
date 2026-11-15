@@ -2,3 +2,7 @@ requests>=2.31,<3
 beautifulsoup4>=4.12,<5
 Pillow>=10,<14
 numpy>=1.26,<3
+# Local voice commands for voice_server.py. The model itself downloads on first run.
+sherpa-onnx>=1.10,<3
+sentencepiece>=0.2,<1
+pypinyin>=0.51,<1

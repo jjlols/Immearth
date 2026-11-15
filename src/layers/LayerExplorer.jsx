@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import overlayCss from "../../overlay/overlay.css?inline";
-import PageSwitch from "../PageSwitch.jsx";
-import { goToView } from "../navigation.js";
+import SiteChrome from "../SiteChrome.jsx";
 import { OverlayController } from "./OverlayController.js";
 
 const LAYERS = [
@@ -109,13 +108,7 @@ export default function LayerExplorer() {
     <>
       <style>{overlayCss}</style>
       <a className="skip-link" href="#layer-controls">Skip to layer controls</a>
-      <header className="site-header">
-        <div className="notice"><p>A NASA Space Apps Challenge 2026 project. This is not an official NASA website.</p></div>
-        <div className="bar">
-          <a className="wordmark" href="./" onClick={(event) => { event.preventDefault(); goToView("music"); }}><span className="mark" aria-hidden="true" /><span>Earth Jukebox</span></a>
-          <PageSwitch current="layers" />
-        </div>
-      </header>
+      <SiteChrome current="layers" part="header" />
       <main>
         <section className="intro" aria-labelledby="page-title">
           <div>
@@ -201,13 +194,8 @@ export default function LayerExplorer() {
             </div>
           </aside>
         </div>
-        <footer className="page-footer">
-          <div>
-            <p className="footer-title">Earth Information Jukebox</p>
-            <p>Layer explorer. Imagery from NASA’s Scientific Visualization Studio. Not an official NASA website.</p>
-          </div>
-        </footer>
       </main>
+      <SiteChrome current="layers" part="footer" />
     </>
   );
 }
