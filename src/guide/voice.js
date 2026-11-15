@@ -105,13 +105,13 @@ export function createVoiceSession({ onHint, runCommand }) {
         return;
       }
       if (!payload.text) {
-        onHint("Listening. Say next, previous, photo, or page overview.");
+        onHint("Listening. Say next, previous, or page overview.");
         return;
       }
       if (!runCommand(payload.text)) {
-        onHint(`Heard “${payload.text}”. Try next, previous, photo, or page overview.`);
+        onHint(`Heard “${payload.text}”. Try next, previous, or page overview.`);
       } else if (listening) {
-        onHint("Listening. Say next, previous, photo, or page overview.");
+        onHint("Listening. Say next, previous, or page overview.");
       }
     } catch {
       stop();
@@ -132,7 +132,7 @@ export function createVoiceSession({ onHint, runCommand }) {
     audioStream = null;
     audioContext?.close();
     audioContext = null;
-    onHint("Voice is off. Start voice, then say next, previous, photo, or page overview.");
+    onHint("Voice is off. Start voice, then say next, previous, or page overview.");
   }
 
   async function start() {
@@ -185,7 +185,7 @@ export function createVoiceSession({ onHint, runCommand }) {
       meter.connect(mute);
       mute.connect(audioContext.destination);
       listening = true;
-      onHint("Listening. Say next, previous, photo, or page overview.");
+      onHint("Listening. Say next, previous, or page overview.");
       return true;
     } catch (error) {
       const blocked = error && error.name === "NotAllowedError";

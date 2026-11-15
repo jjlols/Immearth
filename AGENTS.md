@@ -52,7 +52,7 @@ explicit **Play remix**. Mount, keys, map/region selection and Vancouver metadat
 not create/resume audio. Pause suspends; reset retires all sources/notes/timers, keeps
 the decoded buffer for a later explicit replay, and leaves the context suspended.
 Visibility-hidden or focus-ineligible voices cannot sound. Preserve the conservative
-last-known-good dry gain 0.085, master default 0.22 and cap 0.24. Before volume changes,
+last-known-good dry gain 0.085, master default 0.48 and cap 0.50. Before volume changes,
 measure source/output RMS and peak; never blindly boost gain and never claim listening
 from only UI, network or tests. Maximum eight bounded active accents; FRP rests are
 at least 8.4 seconds; rain/frozen use separate presence-based schedules.
@@ -69,9 +69,32 @@ W/up=north, A/left=west, S/down=south, D/right=east; clamp edges, Home=region in
 form/editable controls, links, buttons, sliders or modifier shortcuts. Movement changes
 estimated palette controls only while already playing and never audio on its own.
 The amber exploration marker is distinct from fixed Vancouver: **49.2827° N, 123.1207° W
-(WGS84)**. Vancouver remains the reserved future listener origin `(0,0,0)`, not a live
-binaural output. Do not request GPS, map lat/lon to pitch/timing, or infer precise
+(WGS84)**. The committed head-travel source is listener-local `(0,0,0)` and
+bypasses directional panning. Grid-region previews use fixed artistic ±2 m offsets,
+not measured geography; Vancouver remains a geographic reference, not GPS localization. Do not request GPS, map lat/lon to pitch/timing, or infer precise
 geotransform from a shared 2:1 display aspect ratio. See `src/lib/spatialOrigin.js`.
+
+## Head-directed preview travel
+
+Head travel requires both optional spatial sound and head-follow controls, plus
+explicit Play. Keep `useExplorer` as committed-grid owner and preserve head
+thresholds/hysteresis/lost-face handling in `useHeadDirection`. A direction hold
+uses the neighboring region's estimated model but does not move the map marker.
+Recenter within 1500 ms commits exactly one clamped step; later recenter only
+cancels. Repeated events for one direction never advance the target; a new settled
+left/right/up/down immediately replaces the preview without requiring Forward.
+Stop, uncertain
+face after grace, disabling either opt-in, and independent keyboard/grid commits
+clear the preview. The single existing MP3 must stay on one context/buffer/clock;
+no oscillators or independent preview sources. Coordinates are artistic local
+metres, never geographic position. Centered output routes directly to bypass;
+displaced previews use the existing one-panner route without rotating their
+head-local placement away from the indicated direction.
+
+Browser preview checks are manual/synthetic inputs, not human-pose or subjective
+headphone localization evidence. Run `node scripts/test_head_preview.mjs`, the
+head-direction suite, camera cleanup/build and existing scientific/audio tests
+before handing off. No autonomous commit/push/deployment.
 
 ## Verification and deployment
 

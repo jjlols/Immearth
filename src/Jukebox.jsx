@@ -1,10 +1,12 @@
-import React,{useEffect,useMemo,useRef,useState} from 'react';
+import React,{useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {LAYER_OPTIONS,OPACITY_DEFAULTS} from './layerOptions.js';
 import {RemixEngine} from './audio/RemixEngine.js';
 import SpatialOriginMarker from './components/SpatialOriginMarker.jsx';
+import HeadDirectionControl from './components/HeadDirectionControl.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
 import {explorerPosition,useExplorer} from './hooks/useExplorer.js';
+import useHeadPreviewTravel from './hooks/useHeadPreviewTravel.js';
 import SiteChrome from './SiteChrome.jsx';
 import './listening.css';
 
@@ -80,14 +82,20 @@ function SoundMeter({playState,engineRef}){
 export default function Jukebox(){
  const [manifest,setManifest]=useState(null),[features,setFeatures]=useState(null),[loadError,setLoadError]=useState(null);
  const [settings,setSettings]=useState(Object.fromEntries(LAYER_OPTIONS.map(layer=>[layer.id,{visible:true,opacity:OPACITY_DEFAULTS[layer.id]}])));
- const [focus,setFocus]=useState('nitrogen_oxides'),[mode,setMode]=useState('solo'),[onlySelected,setOnlySelected]=useState(false),[showGeography,setShowGeography]=useState(true);
+ const [focus,setFocus]=useState('nitrogen_oxides'),[mode,setMode]=useState('composition'),[onlySelected,setOnlySelected]=useState(false),[showGeography,setShowGeography]=useState(true);
  const {index:explorerIndex,choose:chooseExplorerRegion}=useExplorer();
  const engine=useRef(null),modelsRef=useRef({}),visibilityRef=useRef({});
- const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.38),[progress,setProgress]=useState(0);
+ const headSyncRef=useRef(()=>{});
+ const [spatialEnabled,setSpatialEnabled]=useState(false),[headInfluence,setHeadInfluence]=useState(false);
+ const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.48),[progress,setProgress]=useState(0);
  const layers=useMemo(()=>dataLayers(manifest?.layers),[manifest]);
  const featureById=features?.[focus];
+
+ const chooseExplorer=useCallback(index=>{chooseExplorerRegion(index);},[chooseExplorerRegion]);
+ const travel=useHeadPreviewTravel({index:explorerIndex,choose:chooseExplorer,enabled:spatialEnabled && headInfluence});
+
  const currentLayer=layers.find(l=>l.id===focus)||layers[0]||LAYER_OPTIONS[0];
- const currentIndex=explorerIndex;
+ const currentIndex=travel.previewing?travel.regionIndex:explorerIndex;
  const currentFeature=featureById?.[currentIndex];
 
  /* Load local data side-effects only. Music not fetched here, let alone starts. */
@@ -108,11 +116,12 @@ export default function Jukebox(){
  const musicalModels=useMemo(()=>{
   if(!features)return {};
   return Object.fromEntries(layers.map(layer=>{
-   const cell=features[layer.id]?.[explorerIndex];
+   const cell=features[layer.id]?.[travel.regionIndex];
    return [layer.id,featureModel(layer.id,cell)];
   }));
- },[features,layers,explorerIndex]);
+ },[features,layers,travel.regionIndex]);
  const audibleVisibilities=useMemo(()=>Object.fromEntries(layers.map(layer=>[layer.id,settings[layer.id]?.visible!==false])),[layers,settings]);
+ useEffect(()=>{applyPreviewPosition(engine.current, travel.position);},[travel.position,engine]);
  useEffect(()=>{modelsRef.current=musicalModels;visibilityRef.current=audibleVisibilities;},[musicalModels,audibleVisibilities]);
  useEffect(()=>{if(engine.current){engine.current.setModel(musicalModels,{visibility:audibleVisibilities,selection:focus,mode});}},[focus,mode,musicalModels,audibleVisibilities]);
  useEffect(()=>{const engineInstance=engine.current; return()=>engineInstance?.dispose();},[]);
@@ -122,10 +131,21 @@ export default function Jukebox(){
   return()=>clearInterval(timer);
  },[]);
 
+ const onHeadDirection=event=>{if(event?.spatial){
+  const value=event.enabled;
+  setSpatialEnabled(value);
+  if(!value){setHeadInfluence(false);travel.cancel();}
+  return;
+ }
+ if(event?.browser){setHeadInfluence(event.enabled);return;}
+ travel.onDirectionChange(event);
+ };
+ function setModeSpatial(value){onHeadDirection({enabled:value,spatial:true});}
+ function onHeadInfluence(value){setHeadInfluence(value);if(!value)travel.onDirectionChange({direction:'stop'});}
  const selectMetric=(id)=>{
   setFocus(id);
   // Active focus is not visual visibility. Keep each checkbox's chosen hidden state.
-  if(engine.current){engine.current.setModel(modelsRef.current,{visibility:visibilityRef.current,selection:id,mode});engine.current.setSelected(id);}
+  if(engine.current){engine.current.setModel(musicalModels,{visibility:audibleVisibilities,selection:id,mode});engine.current.setSelected(id);}
  };
  const navigateCards=(event,id)=>{
   const ray=layers.map(layer=>layer.id);const index=ray.indexOf(id);
@@ -136,10 +156,11 @@ export default function Jukebox(){
   event.preventDefault();document.querySelector(`[data-source-select="${ray[nextIndex]}"]`)?.focus();selectMetric(ray[nextIndex]);
  };
  async function togglePlayback(){
-  if(!engine.current)engine.current=new RemixEngine();
+  if(!engine.current){engine.current=new RemixEngine();headSyncRef.current();}
   const player=engine.current;
-  player.setModel(modelsRef.current,{visibility:visibilityRef.current,selection:focus,mode});
-  player.setMute(muted);player.setVolume(volume);
+  player.setModel(musicalModels,{visibility:audibleVisibilities,selection:focus,mode});
+  player.setMute(muted);player.setVolume(volume);player.setSpatialEnabled(spatialEnabled);
+  applyPreviewPosition(engine.current, travel.position);
   setAudioError(null);
   if(player.isRunning){
    try{await player.pause();setPlayState('paused');}catch(error){setAudioError(error.message);setPlayState('unavailable');}
@@ -174,7 +195,7 @@ export default function Jukebox(){
   <div className="track-copy">
    <p className="track-detail">A restrained recording modified by a living map. Music begins only when you press play. W, A, S, D or the arrow keys move between 12 regions, and only while the music is already playing. Those keys do nothing while you are on a button, link, or slider.</p>
    <p role="status" aria-live="polite" className={`playback-status state-${playState}`}><span aria-hidden="true">{ws_icon(playState)}</span> {audioDescription(playState,muted)}</p>
-   <p className="hearing-caption">{hearingCaption({playState,muted,mode,focusId:focus,layers,models:musicalModels,visible:audibleVisibilities})}</p>
+   <p className="hearing-caption">{playbackCaption(playState, muted)}</p>
    <SoundMeter playState={playState} engineRef={engine}/>
    <div className="progress-wrap">
     <div className="progress-rail" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,progress))} aria-label="Music position"><span style={{width:`${Math.min(100,progress)}%`}}/></div>
@@ -183,6 +204,7 @@ export default function Jukebox(){
    <p className="source-license">Kevin MacLeod (incompetech.com) · <a href={TRACK.licenseUrl} target="_blank" rel="noreferrer">CC BY 4.0 (opens in a new tab)</a> · Modified, no manufactured stems.<a className="license-detail" href="#attribution">License details</a></p>
   </div>
  </section>
+ <HeadDirectionControl engineRef={engine} onReady={callback=>{headSyncRef.current=callback;}} spatialEnabled={spatialEnabled} headInfluence={headInfluence} onDirection={onHeadDirection} onSpatialChange={setModeSpatial} onHeadInfluenceChange={onHeadInfluence}/>
 
  {audioError&&<div role="alert" className="app-alert">{audioError}<button type="button" onClick={()=>setAudioError(null)}>Dismiss</button></div>}
  {loadError&&<div role="alert" className="app-alert">{loadError}<span> Existing geographic work is unchanged.</span></div>}
@@ -194,7 +216,7 @@ export default function Jukebox(){
   </main>
   <aside className="explorer-panel" id="map-controls" aria-label="Science field controls">
    <div className="panel-heading"><div><p className="small-caps">THE ENSEMBLE</p><h2>Pick your perspective.</h2></div><span className="metric-number">05</span></div>
-   <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong><small>One map at a time.</small></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Composition</strong><small>All maps together.</small></button></div>
+   <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong><small>One map at a time.</small></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Ensemble</strong><small>All maps together.</small></button></div>
    <p className="mode-explainer">{mode==='solo'?'Learn what a single metric contributes. The selected field stays the audible focus when it meets palette rules.': 'Each enabled field adds its character to the original recording—independently controlled.'}</p>
    <div className="source-controllers" aria-label="Geographic layers and their visibility">
    {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} opacity={settings[layer.id]?.opacity ?? OPACITY_DEFAULTS[layer.id]} onSelect={selectMetric} onVisible={(id,visible)=>{setSettings(current=>({...current,[id]:{...current[id],visible}}));engine.current?.setVisibility(id,visible);}} onOpacity={(id,opacity)=>setSettings(current=>({...current,[id]:{...current[id],opacity}}))} onNavigate={navigateCards}/>)}
@@ -205,22 +227,18 @@ export default function Jukebox(){
  </div>
  <section className="map-navigation" id="map-navigation" aria-labelledby="map-navigation-title">
   <h2 id="map-navigation-title" className="sr-only">Map navigation</h2>
-  <p><a href="/?view=guide#move-title">How this Live Map works <span aria-hidden="true">↗</span></a></p>
+  <p><a href="/?view=guide#move-title">Map controls & details <span aria-hidden="true">↗</span></a></p>
  </section>
  <section className="compact-region-panel" aria-labelledby="region-title">
   <RegionStudy layerLabel={currentLayer.label} regions={featureById||[]} selected={currentIndex} onSelect={chooseExplorerRegion} announcement={regionStatus(currentIndex,currentLayer.label,describeFeature(focus,currentFeature))}/>
  </section>
- <section className="learning-floor" id="learning">
- <section className="instrument-guide" aria-labelledby="voice-title"><div className="guide-label"><p className="small-caps">FIELD STUDY / MUSICAL VOCABULARY</p><span className={`listen-indicator ${playState==='playing'?'playing-dotted':''}`} title={playState==='playing'?'Audio is active':'No sound playing'}>{playState==='playing'?'AUDIO ACTIVE':'SILENT BY CHOICE'}</span></div>
- <h2 id="voice-title">{currentLayer.label}<span className="voice-kind"> / {INSTRUMENT_INFO[currentLayer.id]?.kind||'source mapping'}</span></h2>
- <p className="voice-description">{INSTRUMENT_INFO[currentLayer.id]?.explanation ||'You’re listening to a constrained recursive source composition. The map explains what each voice is and the limits of it.'}</p>
- <div className="value-provision"><span className="estimate-label">ESTIMATED PALETTE EVIDENCE</span><strong>{describeFeature(focus,currentFeature)}</strong></div>
- <div className="mapping-section"><h3>How this voice is derived</h3><p>{INSTRUMENT_INFO[currentLayer.id]?.caveat ||'Review the palette input accounts.'}</p></div>
- <div className="provenance"><span>RGB ≠ direct science.</span><p>Labels-to-values are supplied by previous reviewed palette <em>estimates</em>. Every musical adjustment maps from those closest legitimate classes, not luminance, not geolocation. Raw-data adapters can replace mapping later. Wrong hues, text, boundaries or disconnected pixels remain unclassified—not invented numbers.</p></div>
- </section>
+ <section className="sr-only" id="learning" aria-labelledby="voice-title">
+  <h2 id="voice-title">Hearing {currentLayer.label}</h2>
+  <p>{INSTRUMENT_INFO[currentLayer.id]?.explanation || 'Estimated palette positions reshape this field’s part of the recording.'}</p>
+  <p>{describeFeature(focus,currentFeature)}</p>
  </section>
 
- <details id="attribution" className="license-paper"><summary>Music attribution and scientific uncertainty</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0, opens in a new tab)</a>. The local recording is decoded once per engine lifetime. Generic filters, playback-rate changes and gain envelopes modify the original recording; no oscillator or generated guide tone exists. No official stems are claimed. Attribution is preserved in the interface and project license files.</p>
+ <details id="attribution" className="license-paper"><summary>Details & attribution</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0, opens in a new tab)</a>. The local recording is decoded once per engine lifetime. Generic filters, playback-rate changes and gain envelopes modify the original recording; no oscillator or generated guide tone exists. No official stems are claimed. Attribution is preserved in the interface and project license files.</p>
  <p>NASA palette stations support semantic tools not medical/population statements. The same source aspect ratio is not identical geographically verified projection or acquisition time. Continuous global fields drawn as a colored image can be inspected as whole pixels (maps) and reduced to bounded classifications (music). This is an interpretive educational listening aid, not physical truth sonification or a weather warning service. Scientific data must come from verified underlying measurement input for any absolute calibration.</p>
  <p>Navigation and map inspection stay silent before Play. Source values remain nearest-palette estimates with the recorded uncertainty. See README.md and LICENSES.md for full implementation and verification notes. DeepSpace deployment is not configured or claimed.</p></div></details>
  <footer className="sr-only"><span>NASA Scientific Visualization Studio · Natural Earth geography · Kevin MacLeod</span><span>Built with React and Web Audio, respectfully at 69 BPM.</span></footer>
@@ -229,6 +247,10 @@ export default function Jukebox(){
  </>;
 }
 
+function applyPreviewPosition(engine, position) {
+ if (!engine) return;
+ engine.spatial.setSourcePosition(position ?? { x: 0, y: 0, z: 0 });
+}
 function regionButtonLabel(index,features){
  const count=features?.classified_count||0;
  const total=features?.sample_count||0;
@@ -240,41 +262,15 @@ function regionStatus(selected,layerLabel,featureSentence){
  const column=(selected%4)+1;
  return `Region ${selected+1} of 12, row ${row}, column ${column}. ${layerLabel}. ${featureSentence}`;
 }
-function voiceAction(id,model){
- if(id==='precipitation'){
-  const sounds=[];
-  if(model.densities?.rain)sounds.push('stronger brief music swells');
-  if(model.densities?.frozen)sounds.push('quieter low-frequency swells');
-  return sounds.join(' and ')|| 'silent tuned drops';
- }
- if(id==='active_fires')return 'spaced, brief music accents responding to estimated fire power';
- if(id==='carbon_monoxide')return 'more low-frequency recording volume for higher estimated CO tiers';
- if(id==='nitrogen_oxides')return 'brighter recording for higher estimated NOx, using its logarithmic scale';
- if(id==='near_surface_temperature'){
-  if(model.playbackRate>1.05)return 'a faster recording in warmer estimated regions';
-  if(model.playbackRate<0.95)return 'a slower recording in colder estimated regions';
-  return 'nearly the original music speed';
- }
- return 'an estimated musical mapping';
+
+function playbackCaption(playState, muted) {
+ if (playState === 'loading') return 'Loading the recording.';
+ if (playState === 'unavailable') return 'Audio unavailable. The map and text descriptions remain available.';
+ if (playState === 'paused') return 'Music paused.';
+ if (playState === 'playing' && muted) return 'Music muted.';
+ return '';
 }
-function hearingCaption({playState,muted,mode,focusId,layers,models,visible}){
- const considered=mode==='solo'?layers.filter(layer=>layer.id===focusId):layers;
- const phrases=considered.flatMap(layer=>{
-  const model=models[layer.id];
-  if(!visible[layer.id]||!model||model.silent)return [];
-  return [`${layer.label}: ${voiceAction(layer.id,model)}`];
- });
- const quiet='Layers with no confident palette match stay silent.';
- const preview=phrases.length?`If you press Play remix: ${phrases.join('. ')}. ${quiet}`:`If you press Play remix, this selection stays silent. ${quiet}`;
- if(playState==='loading')return 'Loading the recording. Nothing is audible yet.';
- if(playState==='unavailable')return 'Audio is unavailable. The written description is still on the page.';
- if(playState==='paused')return `Music is paused. ${preview}`;
- if(playState!=='playing')return preview;
- if(muted)return phrases.length?`Muted. Unmute to hear ${phrases.join('. ')}. ${quiet}`:`Muted. Unmute to hear this selection. ${quiet}`;
- if(!phrases.length)return `Playing, and this selection is silent. ${quiet}`;
- const scope=mode==='solo'?'One map at a time.':'All audible maps together.';
- return `${scope} ${phrases.join('. ')}. ${quiet}`;
-}
+
 const ws_icon=state=>({playing:'▸',paused:'Ⅱ',loading:'⋯',idle:'○',unavailable:'!'})[state]||'○';
 const audioDescription=(state,muted)=>({idle:'No music yet. Set the scene and listen.',loading:'Reading the shared recording and estimated feature map…',paused:'Music paused. Your map and estimated palette analyses remain readable.',playing:muted?'Muted; musical map mode stays readable.':'Playing a gentle data-led remix.',unavailable:'Audio unavailable; you can explore readably without playing.'}[state]||'Make up your own map.');
 const popularCreativeVoice=(state)=>state==='playing'?`One recording. One shared clock. ${'Gentle foreground voices each cycle. '}`:'No audio until you call the musical field, card and play control.';

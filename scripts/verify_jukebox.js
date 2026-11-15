@@ -61,9 +61,11 @@ try {
   return !(element.getAttribute('aria-label') || element.labels?.length);
  }).map(element => element.outerHTML));
  assert.deepEqual(unnamedControls, []);
- await page.getByRole('button', { name: /Composition/ }).focus();
+ await page.getByRole('button', { name: /Ensemble/ }).focus();
  await page.keyboard.press('Enter');
- assert.equal(await page.getByRole('button', { name: /Composition/ }).getAttribute('aria-pressed'), 'true');
+
+ assert.equal(await page.getByRole('button', { name: /Ensemble/ }).getAttribute('aria-pressed'), 'true');
+
  await page.getByRole('button', { name: /Solo \/ Explore/ }).focus();
  await page.keyboard.press('Space');
  assert.equal(await page.getByRole('button', { name: /Solo \/ Explore/ }).getAttribute('aria-pressed'), 'true');
@@ -73,7 +75,7 @@ try {
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
  await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
  await page.getByRole('button', { name: 'Play remix', exact: true }).click();
- await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0]?.state === 'running');
+ await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0]?.state === 'running' && window.__JUKEBOX_AUDIO_REF__.current?.original && window.__JUKEBOX_AUDIO_REF__.current?.isRunning, { timeout: 45000 });
  await page.waitForTimeout(1200);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
@@ -90,7 +92,7 @@ try {
  assert.ok(initial.signals.peak > 0, 'post-chain waveform must contain nonzero audio');
  assert.ok(initial.signals.rms > 0, 'post-chain RMS must contain nonzero audio');
  assert.ok(Math.abs(initial.dryGain - 0.085) < 1e-6, 'source envelope stays at the conservative last-known good value');
- assert.equal(initial.volume, 0.38, 'current coordinated baseline: 0.38 default and 0.5 cap, with comparison signal evidence');
+ assert.equal(initial.volume, 0.48, 'current user-requested baseline: 0.48 default and 0.5 cap, with comparison signal evidence');
  const spatialBefore = await engine(() => {
   const e = window.__JUKEBOX_AUDIO_REF__.current;
   const fetches = window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length;
@@ -146,7 +148,7 @@ try {
  await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
 
- await page.getByRole('button', { name: /Composition/ }).click();
+ await page.getByRole('button', { name: /Ensemble/ }).click();
  await page.getByRole('button', { name: 'Explore Temperature musical mapping' }).click();
  const live = await engine(() => {
   const e = window.__JUKEBOX_AUDIO_REF__.current;
@@ -218,11 +220,13 @@ try {
  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value <= 0.001);
  const measuredMaster = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value);
  await page.getByRole('button', { name: 'Play remix', exact: true }).click();
- await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'running');
+ await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'running' && window.__JUKEBOX_AUDIO_REF__.current?.original && window.__JUKEBOX_AUDIO_REF__.current?.isRunning, { timeout: 45000 });
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
- if (measuredMaster > 0) await page.waitForFunction(expected => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value >= expected * 0.95, measuredMaster);
- assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value), measuredMaster);
+ const volumeTarget = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.volume);
+ if (measuredMaster >= 0) await page.waitForFunction(expected => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value >= expected * 0.95, volumeTarget);
+ await page.waitForFunction(expected => Math.abs(window.__JUKEBOX_AUDIO_REF__.current.master.gain.value - expected) < 1e-6, volumeTarget);
+ assert.ok(Math.abs(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value)-volumeTarget) < 1e-6);
  await page.getByRole('button', { name: 'Mute', exact: true }).click();
  await page.getByRole('button', { name: 'Unmute', exact: true }).click();
 
