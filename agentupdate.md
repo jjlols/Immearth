@@ -389,3 +389,51 @@ Pre .48 at .38: conservative sample RMS/peak .00258690/.00538170 (channel peak
 .00439745/.01194114, max channel .01510510. Full audit measured independently.
 These are different short windows at analyser not subjective speaker audibility,
 and no universal loudness-safety claim. No further automatic gain rise inferred.
+
+## Head-directed preview travel — local verification, no push/deploy
+
+Local branch `feature/head-direction-listener` retains the earlier head-detection
+assets and scientific/audio mappings. `PreviewTravelController` is the single
+preview state owner, with `useExplorer` as committed-region owner. Left/right/up/
+down preview one neighboring region using its estimated palette feature model;
+return to center within 1500 ms commits one clamped step. Long/expired holds,
+blocked edges, repeated events, missing-face grace expiry, disabling opt-ins or
+independent direct-region changes do not cause recursive travel. The committed
+marker does not move during a look. The existing one MP3/source/context/clock
+continues without oscillator, preview snippets or extra musical generator.
+
+The source is direct stereo bypass at (0,0,0). Direction previews use one existing
+panner at an artistic ±2 m head-local offset; they do not map latitude/longitude
+or alter the Vancouver geographic reference. Spatial sound, head travel and Play
+are all required opt-ins. Fixed a lifecycle regression where re-render cleanup
+could stop the camera on opt-in change: cleanup is now genuinely mount-unmount
+only; explicit stop/pagehide/visibility still release camera resources. No change
+to master .48, cap .50, dry gain .085 or scientific/no-data policy.
+
+Verified on http://127.0.0.1:8001 using synthetic inputs, not human head tracking
+or subjective listening: `npm run test:head-preview` passed all four direction
+semantics, repeated holds, clamped edge, elapsed timeout, manual commit, disabling
+head travel, live regional model changes, and one context/source/zero oscillator.
+`npm run test:head-direction` passed for manual buttons at 390px and a synthetic
+fake-stream/detector run with first preview x=2 while committed=0, missing-face
+cancel without travel, then prompt recenter commit=1, monotonically increasing
+video timestamps, no errors and stopped tracks/detector. `npm run
+test:head-direction` is deterministic local test injection (geometry only).
+
+Earlier final regression runs: 49 Node tests; npm build; all five map hide/restore,
+original offline spatial RMS checks, full `test:browser`, and camera permission
+cleanup passed. No real head tracking, headphone localization, human listening,
+push, main merge or DeepSpace deployment claimed.
+
+### Direction-to-direction preview fix (reported regression)
+
+The pending preview previously ignored every later settled direction, so a
+right -> left (or other) change without a center report retained the old point.
+`PreviewTravelController.preview` now ignores only repeated events for the same
+held direction. A changed settled direction replaces pending position/model
+from the still-committed index and starts a fresh 1500 ms quick-return window.
+No extra travel commit occurs while the user is looking around. Added direct
+all-four-direction tests and asserted real browser source/model changes, plus
+a synthetic-camera right -> left panning regression with no forward event.
+No changes to raw detector threshold/hysteresis, source engine, or scientific
+scale mappings. No push/deploy or human-headphone validation claim.

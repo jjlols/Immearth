@@ -52,7 +52,7 @@ explicit **Play remix**. Mount, keys, map/region selection and Vancouver metadat
 not create/resume audio. Pause suspends; reset retires all sources/notes/timers, keeps
 the decoded buffer for a later explicit replay, and leaves the context suspended.
 Visibility-hidden or focus-ineligible voices cannot sound. Preserve the conservative
-last-known-good dry gain 0.085. The current user-requested master default is 0.48 with cap 0.50 (superseding older 0.22/0.24 and 0.38/0.50 records). Before volume changes,
+last-known-good dry gain 0.085, master default 0.48 and cap 0.50. Before volume changes,
 measure source/output RMS and peak; never blindly boost gain and never claim listening
 from only UI, network or tests. Maximum eight bounded active accents; FRP rests are
 at least 8.4 seconds; rain/frozen use separate presence-based schedules.

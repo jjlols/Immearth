@@ -21,7 +21,6 @@ export class RemixEngine {
     this.models = new Map();
     this.hidden = new Set();
     this.selection = null;
-    this.mode = 'composition'
     this.gates = new Map();
     this.accents = new Set();
     this.targets = new Map();
@@ -452,7 +451,12 @@ export class RemixEngine {
 
   async reset() {
     this.stopSources();
-    if (this.master) this.master.gain.value = 0;
+    if (this.master) {
+      const now = this.currentTime;
+      if (typeof this.master.gain.cancelAndHoldAtTime === 'function') this.master.gain.cancelAndHoldAtTime(now);
+      else this.master.gain.cancelScheduledValues?.(now);
+      this.master.gain.value = 0;
+    }
     if (this.ctx && this.ctx.state === 'running') await this.ctx.suspend();
     this.onChange?.(this);
   }

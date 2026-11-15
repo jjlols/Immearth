@@ -116,7 +116,7 @@ the same explicit listener. **Reset** stops track and scheduled source accents.
 
 The Vancouver origin is a reserved **metadata reference**, not a real listener GPS
 position or scientific source calculation. Optional local-rendered art uses an
-explicitly synthetic model described below; bypass remains the default. Source-patterned original isn't louder in higher
+explicitly synthetic model described below; spatial audio remains opt-in. Source-patterned original isn't louder in higher
 scientific quantile nor evil spray-relevant sound of the pollutant chemicals.
 **Do not make the song gain high just because a fixture green button on screen.**
 
@@ -128,6 +128,32 @@ time, pitch, rhythm, or automatic pan. Original intended future coordinate origi
 is inside listener head at Vancouver local **0,0,0** when traceable model available,
 not browser cross-shaped mystery. Current map displayed x≈15.8%, y≈22.6%; actual
 raster matches may change with calibrated geodata inputs.
+
+### Hold to preview, return to travel
+
+Enable **Spatial sound**, then **Head travel**, and explicitly press Play. Hold
+left/right/up/down to preview the adjacent west/east/north/south region through
+the shared MP3, using that region’s existing estimated palette model. The amber
+map marker remains on its committed region while you look. Return to center
+within 1500 ms to commit exactly one step; after that window, recenter simply
+cancels the preview. A new direction immediately replaces the preview from the
+same committed region, including when Forward is not crossed. Repeated events
+from one held direction never recursively move across the grid, and
+a blocked edge cannot manufacture movement. Stop tracking, an expired lost-face
+grace period, disabling either opt-in, and direct keyboard/grid selection cancel
+the transient preview.
+
+The centered source uses listener-local `(0,0,0)` and the direct stereo bypass.
+A preview uses the existing panner at a fixed artistic ±2 m direction offset.
+No additional recording, context, clock, oscillator or separately synthesized
+sound is created. The camera is opt-in and processed locally, while the manual
+direction controls test the same interaction without camera permission. Browser
+tests use manual input or synthetic face matrices, not a human head-pose test.
+
+Run `npm run test:head-preview`, `npm run test:head-direction`, and
+`node scripts/verify_head_lifecycle.js` against `http://127.0.0.1:8001/` (or set
+`JUKEBOX_URL`). Analyser and geometry checks do not establish physical headphone
+localization, real-face accuracy, or speaker audibility.
 
 See `src/lib/spatialOrigin.js` and `src/lib/VANCOUVER_ORIGIN.md` for documented structure.
 No user geolocation or actual hidden coordinate trick beyond mention of the prompt.
