@@ -44,10 +44,10 @@ try {
         renderer.setSourcePosition(position);
       }
       output.connect(context.destination);
-      renderer.reset();
       if (position) {
-        renderer.setSourcePosition(position);
         renderer.setEnabled(true);
+        renderer.setSourcePosition(position);
+        renderer.settle();
       }
       source.start();
       const rendered = await context.startRendering();

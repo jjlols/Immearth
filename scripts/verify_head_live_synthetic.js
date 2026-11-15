@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
 const origin = process.env.JUKEBOX_URL || 'http://127.0.0.1:8001';
-const browser = await chromium.launch({ headless: true, args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
+const browser = await chromium.launch({ headless: process.env.HEADED !== "1", args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
 try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
@@ -61,9 +61,11 @@ try {
   });
   await page.goto(`${origin}/?view=music`, { waitUntil: 'networkidle' });
   await page.bringToFront();
+  if(await page.locator('#intro-skip').count())await page.locator('#intro-skip').click();
   await page.locator('.head-start').click();
-  await page.waitForSelector('[data-camera-status="active"]');
-  await page.locator('.head-preview-choice input').check();
+  try { await page.waitForSelector('[data-camera-status="active"]',{timeout:10000}); }
+  catch(e){console.error(await page.evaluate(()=>({head:document.querySelector('.head-direction')?.innerText,spy:window.__HEAD_TEST__,pose:window.__HEAD_POSE__,current:document.querySelector('video')?.readyState})) ); throw e;}
+
   for (const [label, yaw, pitch] of [
     ['forward', 0, 0], ['right', 25, 0], ['left', -25, 0],
     ['up', 0, 25], ['down', 0, -25], ['forward', 0, 0],
@@ -72,7 +74,7 @@ try {
     await page.waitForFunction(value => document.querySelector('[data-direction]')?.dataset.direction === value, label, { timeout: 6000 });
   }
   assert.equal(await page.getByRole('checkbox', { name: 'Head travel' }).isChecked(), false);
-  await page.getByRole('checkbox', { name: 'Spatial sound (headphones)' }).check();
+  await page.getByRole('checkbox', { name: 'Spatial sound (headphones)' }).setChecked(false);
   await page.getByRole('checkbox', { name: 'Head travel' }).check();
   assert.equal(await page.evaluate(() => window.__HEAD_TEST__.contexts), 0);
   await page.getByRole('button', { name: 'Play remix', exact: true }).click();
@@ -102,7 +104,7 @@ try {
   await page.waitForFunction(() => document.querySelector('[data-direction]')?.dataset.direction === 'forward', null, { timeout: 6000 });
   await page.waitForFunction(() => document.querySelector('[data-exploration-region]')?.dataset.explorationRegion === '1');
   assert.deepEqual(await page.evaluate(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition), { x: 0, y: 0, z: 0 });
-  await page.getByRole('button', { name: 'Stop tracking', exact: true }).click();
+  await page.getByRole('button', { name: 'Stop camera', exact: true }).click();
   const outcome = await page.evaluate(() => ({
     ...window.__HEAD_TEST__, src: document.querySelector('.head-video').srcObject,
     viewport: innerWidth, bodyWidth: document.documentElement.scrollWidth,

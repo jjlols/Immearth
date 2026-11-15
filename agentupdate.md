@@ -4,6 +4,39 @@ Last updated: 2026-11-15 (spatial renderer integrated; map visibility response r
 
 ## Ownership
 
+### Listener-origin repair — complete code, integrated verification
+
+Scope bounded to `src/audio/spatialRenderer.js`, related audio/origin tests,
+browser audits, package dedicated origin task and coordination files. No
+`Jukebox`/camera/tone/converter/scientific/GPS changes authored/reset here.
+
+User-reported failure cause: an unfinished wet/dry draft didn't connect input
+to dry branch and had no robust source/listener co-location book-keeping. I
+retain TWO alternate GAIN branches (not two recording sources): panner→wetGain
+and direct stereo→dryGain, both separately wired into *existing shared*
+limiter/AudioContext/source. At nonzero `enabled && distance>0`: dry 0/wet 1;
+origin `distance=0`: dry 1/wet 0. Listener updates writer before pan_target to
+support `engine.setSpatialListenerPosition(0,0,0)` in console sequence. Native
+zero normalized; `settle()` deterministically forces native same target ramp
+end of fix (never context creation, clock, buffer). No duplicate input chains.
+
+**Green:** `npm test` **54** including 3 exact-origin tests and head preview
+sensitive expected states; `npm run test:spatial` at 8019 **passed** 5 cases
+(left/right returned 2.1995/2.2358 correlation-energy factors; coincident
+ordinary stereo L/R **0.21212860063/0.10606381035**, peaks .3/.15);
+`npm run test:head-preview` **passed** all 4 manual/synthetic previews & new
+command zero origin not holding displaced source. Current `verify_origin_signal`
+passed separate online-suspended time-sliced right→origin sequence last-window
+**0.2121184/0.1060651** (float32 2:1), dry/wet preserved. Final fake-camera +
+full audit details appended separately pending; generated no headphones listen
+claim. Head direction may deliberately set source ±2 afterward if Head travel
+enabled while user manually resets; no per-console override suppression invented.
+
+Mismatched old `master === panner` fixtures were corrected to actual link path
+wet/dry predictor rather than weakening one-buffer assertions. Spatial renderer
+contract file separately restored lost stripped pure cases, not raw overwrite
+to another+'s source file. No pushes/deployment requested or performed now.
+
 - Audio agent: `src/audio/**`, `test-js/musical-sonification.test.js`,
   audio-related verification in `scripts/verify_jukebox.js` and audio documentation.
 - Frontend agent: teammate HTML-to-React migration, UI structure and styles,

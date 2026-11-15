@@ -85,6 +85,7 @@ test('NOₓ log rank filters the existing music, with no oscillators or repeated
  const low = source.playbackRate.value;
  engine.setModel({ nitrogen_oxides: featureModel('nitrogen_oxides', model(10)) }, { mode: 'composition' });
  assert.equal(engine.playableParameters.noxFrequency, 16000);
+ assert.equal(engine.spatial.outputMode, false);
  assert.equal(engine.original, source);
  assert.equal(source.playbackRate.value, low, 'NOx filtering must not alter playback rate');
  assert.equal(engine.ctx.sources.length, 1);
@@ -258,14 +259,16 @@ test('spatial opt-in keeps one lazy context/source/buffer and one selected nondu
  assert.equal(engine.ctx.decodeCount, 1);
  assert.equal(engine.ctx.sources.length, 1);
  const source = engine.original;
+ engine.spatial.settle();
  assert.equal(engine.spatial.getDiagnostics().enabled, true);
- assert.equal(engine.master.connect_type, engine.spatial.panner);
- assert.equal(engine.spatial.panner.connect_type, engine.limiter);
+ assert.equal(engine.spatial.wetGain.connect_type, engine.limiter);
+ assert.equal(engine.spatial.panner.connect_type, engine.spatial.wetGain);
  assert.equal(engine.spatial.getDiagnostics().routes, 1);
  assert.equal(engine.spatial.panner.positionX.value, 1.5);
  engine.setSpatialEnabled(false);
- assert.equal(engine.master.connect_type, engine.limiter);
- assert.equal(engine.original, source);
+ engine.spatial.settle();
+ assert.equal(engine.spatial.wetGain.gain.value, 0);
+ assert.equal(engine.spatial.dryGain.gain.value, 1);
  engine.setSpatialEnabled(true);
  engine.setVisibility('carbon_monoxide', false);
  assert.equal(engine.gates.get('carbon_monoxide').gain.gain.value, 0);
@@ -276,11 +279,14 @@ test('spatial opt-in keeps one lazy context/source/buffer and one selected nondu
  assert.equal(engine.master.gain.value, 0);
  await engine.pause();
  assert.equal(engine.ctx.state, 'suspended');
+ assert.equal(engine.spatial.outputMode, false);
  assert.equal(engine.original, source);
  await engine.reset();
+ engine.spatial.settle();
  assert.equal(engine.original, null);
- assert.equal(engine.spatial.panner.connect_type, engine.limiter);
- assert.equal(engine.master.connect_type, engine.limiter);
+ assert.equal(engine.spatial.panner.connect_type, engine.spatial.wetGain);
+ assert.equal(engine.spatial.wetGain.connect_type, engine.limiter);
+ assert.equal(engine.spatial.outputMode, false);
  await engine.play();
  assert.equal(engine.ctx.decodeCount, 1);
  assert.equal(MockContext.instances, before + 1);
@@ -309,9 +315,9 @@ test('dispose invalidates a pending decode and cannot later publish or resume re
 test('unsupported panners leave the approved recording playable and bypassed', async () => {
  const engine = await playingEngine({}, class extends MockContext { createPanner() { throw new Error('unsupported'); } });
  assert.equal(engine.ctx.sources.length, 1);
- assert.equal(engine.master.connect_type, engine.limiter);
+ assert.equal(engine.spatial.outputMode, false);
  assert.equal(engine.spatial.getDiagnostics().enabled, false);
  assert.throws(() => engine.setSpatialEnabled(true), /PannerNode/);
- assert.equal(engine.master.connect_type, engine.limiter);
+ assert.equal(engine.spatial.outputMode, false);
  await engine.dispose();
 });
