@@ -93,11 +93,22 @@ const MAPS = [
 const SECTIONS = [
   ["overview", "Overview"],
   ["maps", "The maps"],
-  ["immersive", "Immersive listening"],
   ["photo", "Space photo of the day"],
+  ["pages", "Open a page"],
+  ["immersive", "Immersive listening"],
   ["move", "Moving around"],
   ["access", "Accessibility"],
 ];
+
+const SECTION_COMMAND = {
+  overview: "overview",
+  maps: "maps",
+  photo: "photo",
+  pages: "open a page",
+  immersive: "immersive listening",
+  move: "move",
+  access: "accessibility",
+};
 
 const ALIASES = {
   "read the overview": "page overview",
@@ -110,6 +121,8 @@ const ALIASES = {
   "go to the maps": "maps",
   "moving around": "move",
   movement: "move",
+  pages: "open a page",
+  "open page": "open a page",
   "photo of the day": "photo",
   "space photo": "photo",
   "image of the day": "photo",
@@ -140,13 +153,13 @@ const ALIASES = {
 const OVERVIEW = [
   "Earth Information Jukebox. A NASA Space Apps project, not the official NASA website.",
   "This page presents five NASA Earth maps: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. It also has a space photo of the day. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
-  "Four pages make up the site: this home page, the musical remix, the layer explorer, and the photo of the day. Open them from the menu at the top or from Open a page. The Live Map stays silent until you press Play remix.",
-  "You can search the maps, read what each one shows, and move with Previous and Next. Start voice, then say next, previous, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
-  "3D listening opens the live map. Explore its regions with W/A/S/D or arrow keys, choose one field or all of them, and select Play remix when you are ready.",
+  "Three pages make up the site: this home page, the Live Map, and the layer explorer. The space photo of the day is a section on this page. Open the other pages from the menu at the top or from Open a page. The Live Map stays silent until you press Play remix.",
+  "You can search the maps, read what each one shows, and move with Previous and Next. From the top, the page continues through the maps, the photo, Open a page, 3D listening, keyboard help, and accessibility. Start voice, then say next, previous, photo, open a page, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
+  "3D listening opens the live map. Explore its regions with W, A, S, D or arrow keys, choose one field or all of them, and select Play remix when you are ready. Headphones are recommended. Nothing plays until you press Play remix.",
 ];
 
 const COMMAND_NAMES = [
-  ...SECTIONS.map(([id]) => (id === "overview" ? "overview" : id === "immersive" ? "immersive listening" : id === "move" ? "move" : id === "access" ? "accessibility" : id === "photo" ? "photo" : id)),
+  ...SECTIONS.map(([id]) => SECTION_COMMAND[id]),
   "precipitation",
   "fires",
   "carbon monoxide",
@@ -180,7 +193,7 @@ export default function GuidePage() {
   const [voiceHint, setVoiceHint] = useState("Voice is off. Start voice, then say next, previous, or page overview.");
   const [listening, setListening] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
-  const [setPhoto] = useState(null);
+  const [photo, setPhoto] = useState(null);
   const [lastSection, setLastSection] = useState("overview");
   const dialogRef = useRef(null);
   const dialogTitleRef = useRef(null);
@@ -204,7 +217,8 @@ export default function GuidePage() {
 
   function goTo(id, quiet) {
     const map = MAPS.find((item) => item.command === id || item.id === id);
-    const sectionId = map ? "maps" : id === "immersive listening" ? "immersive" : id === "accessibility" ? "access" : id;
+    const commandToId = Object.fromEntries(Object.entries(SECTION_COMMAND).map(([sectionId, command]) => [command, sectionId]));
+    const sectionId = map ? "maps" : commandToId[id] || id;
     const section = focusHeading(sectionId) || focusHeading(map?.id);
     if (!section && map) document.getElementById(map.id)?.querySelector("h3")?.focus();
     if (section) setLastSection(section.id);
@@ -271,7 +285,7 @@ export default function GuidePage() {
       return true;
     }
     const entries = [
-      ...["overview", "maps", "immersive listening", "photo", "move", "accessibility", "precipitation", "fires", "carbon monoxide", "nitrogen oxides", "temperature", "next", "previous", "page overview", "turn left", "turn right", "recenter", "test tones"].map((name) => [name, name]),
+      ...[...COMMAND_NAMES, "precipitation", "fires", "carbon monoxide", "nitrogen oxides", "temperature", "next", "previous", "page overview", "turn left", "turn right", "recenter", "test tones"].map((name) => [name, name]),
       ...Object.entries(ALIASES),
     ];
     let best = null;
@@ -296,6 +310,31 @@ export default function GuidePage() {
     if (typeof result === "string") speak(result);
     return true;
   };
+
+  useEffect(() => {
+    let cancel = false;
+    const folder = `${import.meta.env.BASE_URL}photo-of-the-day/`;
+    const files = ["photo.jpg", "photo.jpeg", "photo.png", "photo.webp", "photo.gif"];
+    (async () => {
+      let text = "";
+      try {
+        const response = await fetch(`${folder}caption.txt`);
+        if (response.ok) text = (await response.text()).trim();
+      } catch {
+        text = "";
+      }
+      for (const file of files) {
+        const url = `${folder}${file}`;
+        if (await probePhoto(url)) {
+          if (!cancel) setPhoto({ url, text });
+          return;
+        }
+      }
+    })();
+    return () => {
+      cancel = true;
+    };
+  }, []);
 
   useEffect(() => {
     const session = createVoiceSession({
@@ -355,9 +394,7 @@ export default function GuidePage() {
             <div className="panel-row">
               <button type="button" className="button button-secondary" onClick={() => { openOverview(); speak(OVERVIEW.join(" ")); }}>Play overview</button>
               <button type="button" className="button button-quiet" onClick={() => { window.speechSynthesis?.cancel(); setVoiceHint("Stopped speaking."); announce("Stopped speaking."); }}>Stop speaking</button>
-            </div>
-            <div className="panel-row">
-              <button type="button" className="button button-secondary" aria-pressed={listening} onClick={() => {
+              <button type="button" className="button button-secondary" aria-pressed={listening} aria-describedby="voice-hint" onClick={() => {
                 if (listening) {
                   voiceRef.current?.stop();
                   setListening(false);
@@ -372,26 +409,6 @@ export default function GuidePage() {
               <button type="button" className="button button-quiet" onClick={() => step(1)}>Next section</button>
             </div>
           </aside>
-        </section>
-
-        <section className="band" id="pages" aria-labelledby="destinations-title">
-          <div className="section-head">
-            <p className="eyebrow">Explore</p>
-            <h2 id="destinations-title" tabIndex={-1}>Open a page</h2>
-            <p>The first three open their own page. The last three take you further down this page.</p>
-          </div>
-          <h3 className="destinations-group">Other pages</h3>
-          <ul className="destinations" role="list">
-            <li><a className="destination" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}><strong>Live Map</strong><span>Choose a metric and hear its estimated palette guide the music.</span><span className="destination-keys">Nothing plays until you press Play remix.</span></a></li>
-            <li><a className="destination" href={hrefFor("layers")} onClick={(event) => { event.preventDefault(); goToView("layers"); }}><strong>Layer explorer</strong><span>Stack the five maps on one world map. Show, hide, or focus on any layer.</span><span className="destination-keys">No sound on this page.</span></a></li>
-
-          </ul>
-          <h3 className="destinations-group">On this page</h3>
-          <ul className="destinations" role="list">
-            <li><a className="destination" href="#maps"><strong>The five maps</strong><span>Each NASA Earth view, described in words, with what it does in the remix.</span></a></li>
-            <li><a className="destination" href={hrefFor("music") + "#map-navigation"} onClick={(event) => { event.preventDefault(); goToView("music", "map-navigation"); }}><strong>3D listening</strong><span>Open the live map. Move between regions and let your selected field shape the music.</span></a></li>
-            <li><a className="destination" href="#move"><strong>Keyboard and voice help</strong><span>Every key and voice command for each page, in one list.</span></a></li>
-          </ul>
         </section>
 
         <section className="band band-plain" id="maps" aria-labelledby="maps-title">
@@ -433,15 +450,52 @@ export default function GuidePage() {
           </div>
         </section>
 
+        <section className="band" id="photo" aria-labelledby="photo-title">
+          <div className="section-head">
+            <p className="eyebrow">Today</p>
+            <h2 id="photo-title" tabIndex={-1}>Space photo of the day</h2>
+            <p>A new view of Earth or space, with a written description of what it shows.</p>
+          </div>
+          <figure className="photo-frame" hidden={!photo}>
+            {photo && <img src={photo.url} alt={photo.text || "Space photo of the day. Add caption.txt in the photo folder so this picture can be described."} />}
+            <figcaption>{photo?.text || "Add caption.txt next to the photo so people who cannot see it know what it shows."}</figcaption>
+          </figure>
+          <div className="placeholder" hidden={Boolean(photo)}>
+            <p>Today’s photo has not been posted yet. Please check back soon.</p>
+            <p className="placeholder-note">Save the picture as photo.jpg in the photo-of-the-day folder, and describe it in caption.txt.</p>
+          </div>
+        </section>
+
+        <section className="band band-plain" id="pages" aria-labelledby="destinations-title">
+          <div className="section-head">
+            <p className="eyebrow">Explore</p>
+            <h2 id="destinations-title" tabIndex={-1}>Open a page</h2>
+            <p>Live Map and Layer explorer open their own pages. The rest move through this page, in the same order as Previous section, Next section, and the voice commands.</p>
+          </div>
+          <h3 className="destinations-group">Other pages</h3>
+          <ul className="destinations" role="list">
+            <li><a className="destination" href={hrefFor("music")} onClick={(event) => { event.preventDefault(); goToView("music"); }}><strong>Live Map</strong><span>Choose a metric and hear its estimated palette guide the music. What you hear is also written out.</span><span className="destination-keys">Nothing plays until you press Play remix. W A S D or arrow keys move between 12 regions.</span></a></li>
+            <li><a className="destination" href={hrefFor("layers")} onClick={(event) => { event.preventDefault(); goToView("layers"); }}><strong>Layer explorer</strong><span>Stack the five maps on one world map. Show, hide, or focus on any layer.</span><span className="destination-keys">No sound on this page.</span></a></li>
+          </ul>
+          <h3 className="destinations-group">On this page</h3>
+          <ul className="destinations" role="list">
+            <li><a className="destination" href="#maps"><strong>The five maps</strong><span>Each NASA Earth view, described in words, with what it does in the remix.</span></a></li>
+            <li><a className="destination" href="#photo"><strong>Space photo of the day</strong><span>Today’s picture, with a written description.</span></a></li>
+            <li><a className="destination" href={hrefFor("music") + "#map-navigation"} onClick={(event) => { event.preventDefault(); goToView("music", "map-navigation"); }}><strong>3D listening</strong><span>Open the live map. Move between regions and let your selected field shape the music.</span></a></li>
+            <li><a className="destination" href="#move"><strong>Keyboard and voice help</strong><span>Every key and voice command for each page, in one list.</span></a></li>
+            <li><a className="destination" href="#access"><strong>Accessibility</strong><span>How the page works with a keyboard, a screen reader, voice, and color-blind colors.</span></a></li>
+          </ul>
+        </section>
+
         <section className="band" id="immersive" aria-labelledby="immersive-title">
           <div className="section-head"><p className="eyebrow">Spatial sound</p><h2 id="immersive-title" tabIndex={-1}>3D listening</h2>
             <p>Move through twelve musical map regions and hear one shared recording respond to your chosen field.</p>
             <a className="button button-primary" href={hrefFor('music') + '#map-navigation'} onClick={(event) => { event.preventDefault(); goToView('music', 'map-navigation'); }}>Open the listening map</a>
-            <p className="field-note">A live map shows you how to use W/A/S/D, arrow keys and region buttons. Nothing plays until you choose Play remix. Headphones are recommended. GPS or camera access is not requested for map exploration.</p>
+            <p className="field-note">A live map shows you how to use W, A, S, D, arrow keys, and region buttons. Nothing plays until you choose Play remix. Headphones are recommended. GPS or camera access is not requested for map exploration.</p>
           </div>
         </section>
 
-        <section className="band" id="move" aria-labelledby="move-title">
+        <section className="band band-plain" id="move" aria-labelledby="move-title">
           <div className="section-head">
             <p className="eyebrow">Navigation</p>
             <h2 id="move-title" tabIndex={-1}>How to navigate</h2>
@@ -453,7 +507,7 @@ export default function GuidePage() {
               <ul className="key-list">
                 <li><kbd>Tab</kbd> <span>The first stop is a Skip link that jumps past the menu.</span></li>
               </ul>
-              <p>The menu at the top of every page has Home, Live Map, Layer explorer, , and Help.</p>
+              <p>The menu at the top of every page has Home, Live Map, Layer explorer, How to use the map, and Help.</p>
               <p>Color blind colors, at the top right, switches the interface to blue, orange, and patterns. NASA map pictures keep their published colors. Your choice is remembered.</p>
             </div>
             <div className="tile">
@@ -481,10 +535,9 @@ export default function GuidePage() {
               <ul className="key-list">
                 <li><kbd>Tab</kbd> <span>Move to the next link, button, or search box.</span></li>
                 <li><kbd>Enter</kbd> <span>Follow a link or press a button.</span></li>
-                <li><kbd>Esc</kbd> <span>Close the menu or the page overview, and stop test tones if they are playing.</span></li>
-                <li><kbd>← →</kbd> <span>Turn while the Listening direction slider is focused. Arrow keys do not turn from the rest of the page.</span></li>
+                <li><kbd>Esc</kbd> <span>Close the menu or the page overview.</span></li>
               </ul>
-              <p>Previous section and Next section move to the next heading and announce where you landed.</p>
+              <p>Previous section and Next section follow the page from top to bottom: the maps, the photo, Open a page, 3D listening, this help, then accessibility. The same order is what the voice commands call next and previous.</p>
             </div>
             <div className="tile">
               <h3>Voice commands</h3>
@@ -496,7 +549,7 @@ export default function GuidePage() {
           </div>
         </section>
 
-        <section className="band band-plain" id="access" aria-labelledby="access-title">
+        <section className="band" id="access" aria-labelledby="access-title">
           <div className="section-head">
             <p className="eyebrow">For everyone</p>
             <h2 id="access-title" tabIndex={-1}>Accessibility</h2>

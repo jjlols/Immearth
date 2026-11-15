@@ -50,7 +50,7 @@ function SourceControl({layer,visible,opacity,focus,onSelect,onVisible,onOpacity
 }
 
 function RegionStudy({regions,layerLabel,selected,onSelect,announcement}){
- return <div className="region-study compact"><h3 className="sr-only">Select region for {layerLabel}</h3>
+ return <div className="region-study compact"><h3 id="region-title" className="sr-only">Select region for {layerLabel}</h3>
  <div className="regional-grid" role="group" aria-label={`Select regional sample for ${layerLabel}`}>
  {Array.from({length:12},(_,i)=>{
  const feat=regions?.[i];const selectedState=selected===i;
@@ -83,7 +83,7 @@ export default function Jukebox(){
  const [focus,setFocus]=useState('nitrogen_oxides'),[mode,setMode]=useState('solo'),[onlySelected,setOnlySelected]=useState(false),[showGeography,setShowGeography]=useState(true);
  const {index:explorerIndex,choose:chooseExplorerRegion}=useExplorer();
  const engine=useRef(null),modelsRef=useRef({}),visibilityRef=useRef({});
- const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.38),[progress,setProgress]=useState(0),[mobileMenu,setMobileMenu]=useState(false);
+ const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.38),[progress,setProgress]=useState(0);
  const layers=useMemo(()=>dataLayers(manifest?.layers),[manifest]);
  const featureById=features?.[focus];
  const currentLayer=layers.find(l=>l.id===focus)||layers[0]||LAYER_OPTIONS[0];
@@ -156,30 +156,31 @@ export default function Jukebox(){
  const loading=!manifest||!features;
  const voices=Object.values(modelsRef.current).filter(v=>!v.silent).length;
  return <>
- <a className="skip-link" href="#music-title">Skip to the music player</a><a className="skip-link" href="#map-controls">Skip to fields</a><a className="skip-link" href="#learning">Skip to learning guide</a>
+ <a className="skip-link" href="#music-player">Skip to the music player</a><a className="skip-link" href="#map-controls">Skip to fields</a><a className="skip-link" href="#learning">Skip to learning guide</a>
  <SiteChrome current="music" part="header" />
  <div className="jukebox-shell">
  <header className="masthead"><h1 className="brand-main" id="music-title" tabIndex={-1}>Listening map. Music begins only when you press Play remix.</h1></header>
  <section className="intro-block"><div><p className="eyebrow">Earth Information Center / 3D listening</p><h1>Hear your place.<br/><em>Feel the world.</em></h1></div><p className="intro-aside">Choose one map or combine eligible layers in the shared recording. Explore its regions with your keyboard.</p></section>
- <section className={`${mobileMenu?'music-shortcut':''} music-console`} aria-label="Music controls">
+ <section className="music-console" id="music-player" tabIndex={-1} aria-label="Music controls">
   <div className="score-badge" aria-hidden="true"><span>∿</span></div>
-  <div className="track-copy"><p className="small-caps">SOUNDS LIKE A THOUGHT, UNFOLDING</p><h2>Deliberate Thought<span>Kevin MacLeod · 69 BPM</span></h2>
-   <p className="track-detail">A restrained recording modified by a living map. Music begins only when you press play.</p>
-   <p role="status" aria-live="polite" className={`playback-status state-${playState}`}><span aria-hidden="true">{ws_icon(playState)}</span> {audioDescription(playState,muted)}</p>
-   <p className="quieting-info">Press Play when you’re ready.</p>
-   <SoundMeter playState={playState} engineRef={engine}/>
-   <div className="progress-wrap">
-    <div className="progress-rail" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,progress))} aria-label="Music position"><span style={{width:`${Math.min(100,progress)}%`}}/></div>
-    <span className="progress-percent">{Math.round(Math.min(100,progress))}%</span>
-   </div>
-   <p className="source-license">Kevin MacLeod (incompetech.com) · <a href={TRACK.licenseUrl} target="_blank" rel="noreferrer">CC BY 4.0 (opens in a new tab)</a> · Modified, no manufactured stems.<a className="license-detail" href="#attribution">License details</a></p>
-  </div>
+  <div className="track-heading"><p className="small-caps">SOUNDS LIKE A THOUGHT, UNFOLDING</p><h2>Deliberate Thought<span>Kevin MacLeod · 69 BPM</span></h2></div>
   <div className="transport-buttons">
    <button type="button" className="main-action" onClick={togglePlayback} disabled={loading||playState==='loading'}>{playState==='playing'?'Pause':playState==='paused'?'Resume':playState==='loading'?'Loading…':playState==='unavailable'?'Retry':'Play remix'}<span aria-hidden="true">{playState==='playing'?'Ⅱ':'↗'}</span></button>
    <div className="secondary-peripherals"><button className="secondary-action" type="button" onClick={resetMusic} aria-label="Reset music playback">↻ <span>Reset</span></button>
    <button className={`secondary-action ${muted?'muted-off':''}`} type="button" onClick={()=>{setMuted(!muted);engine.current?.setMute(!muted)}}><span>{muted?'Unmute':'Mute'}</span></button></div>
    <label className="master-volume"><span>Master volume</span><input type="range" min="0" max="50" step="0.01" aria-label="Master volume" value={volume*100} onChange={event=>{const v=Number(event.target.value)/100;setVolume(v);engine.current?.setVolume(v)}}/> <span className="volume-cap">{Math.round(volume*100)}%</span></label>
    <p className="tiny-attribution">{popularCreativeVoice(playState)}</p>
+  </div>
+  <div className="track-copy">
+   <p className="track-detail">A restrained recording modified by a living map. Music begins only when you press play. W, A, S, D or the arrow keys move between 12 regions, and only while the music is already playing. Those keys do nothing while you are on a button, link, or slider.</p>
+   <p role="status" aria-live="polite" className={`playback-status state-${playState}`}><span aria-hidden="true">{ws_icon(playState)}</span> {audioDescription(playState,muted)}</p>
+   <p className="hearing-caption">{hearingCaption({playState,muted,mode,focusId:focus,layers,models:musicalModels,visible:audibleVisibilities})}</p>
+   <SoundMeter playState={playState} engineRef={engine}/>
+   <div className="progress-wrap">
+    <div className="progress-rail" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,progress))} aria-label="Music position"><span style={{width:`${Math.min(100,progress)}%`}}/></div>
+    <span className="progress-percent">{Math.round(Math.min(100,progress))}%</span>
+   </div>
+   <p className="source-license">Kevin MacLeod (incompetech.com) · <a href={TRACK.licenseUrl} target="_blank" rel="noreferrer">CC BY 4.0 (opens in a new tab)</a> · Modified, no manufactured stems.<a className="license-detail" href="#attribution">License details</a></p>
   </div>
  </section>
 
@@ -206,8 +207,17 @@ export default function Jukebox(){
   <h2 id="map-navigation-title" className="sr-only">Map navigation</h2>
   <p><a href="/?view=guide#move-title">How this Live Map works <span aria-hidden="true">↗</span></a></p>
  </section>
- <section className="compact-region-panel">
+ <section className="compact-region-panel" aria-labelledby="region-title">
   <RegionStudy layerLabel={currentLayer.label} regions={featureById||[]} selected={currentIndex} onSelect={chooseExplorerRegion} announcement={regionStatus(currentIndex,currentLayer.label,describeFeature(focus,currentFeature))}/>
+ </section>
+ <section className="learning-floor" id="learning">
+ <section className="instrument-guide" aria-labelledby="voice-title"><div className="guide-label"><p className="small-caps">FIELD STUDY / MUSICAL VOCABULARY</p><span className={`listen-indicator ${playState==='playing'?'playing-dotted':''}`} title={playState==='playing'?'Audio is active':'No sound playing'}>{playState==='playing'?'AUDIO ACTIVE':'SILENT BY CHOICE'}</span></div>
+ <h2 id="voice-title">{currentLayer.label}<span className="voice-kind"> / {INSTRUMENT_INFO[currentLayer.id]?.kind||'source mapping'}</span></h2>
+ <p className="voice-description">{INSTRUMENT_INFO[currentLayer.id]?.explanation ||'You’re listening to a constrained recursive source composition. The map explains what each voice is and the limits of it.'}</p>
+ <div className="value-provision"><span className="estimate-label">ESTIMATED PALETTE EVIDENCE</span><strong>{describeFeature(focus,currentFeature)}</strong></div>
+ <div className="mapping-section"><h3>How this voice is derived</h3><p>{INSTRUMENT_INFO[currentLayer.id]?.caveat ||'Review the palette input accounts.'}</p></div>
+ <div className="provenance"><span>RGB ≠ direct science.</span><p>Labels-to-values are supplied by previous reviewed palette <em>estimates</em>. Every musical adjustment maps from those closest legitimate classes, not luminance, not geolocation. Raw-data adapters can replace mapping later. Wrong hues, text, boundaries or disconnected pixels remain unclassified—not invented numbers.</p></div>
+ </section>
  </section>
 
  <details id="attribution" className="license-paper"><summary>Music attribution and scientific uncertainty</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0, opens in a new tab)</a>. The local recording is decoded once per engine lifetime. Generic filters, playback-rate changes and gain envelopes modify the original recording; no oscillator or generated guide tone exists. No official stems are claimed. Attribution is preserved in the interface and project license files.</p>
