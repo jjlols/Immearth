@@ -354,3 +354,23 @@ and visibility handoff. Screenshot extraction was unavailable; DOM, native
 click/keyboard, native browser geometry and regression assertions are verified.
 The Layer explorer route is retained for any existing direct links, without a
 top-level navigation item.
+
+
+## Production deployment — 2026-11-15
+
+At the user's request, main `c1e51a4` was built and deployed through the installed
+DeepSpace CLI to **https://immearth.app.space**, release
+`rel_01M7F8VXAF1MT2B3C34HV32D9D`, application `app_01M7EV3BKC9CZ9MZM3K7H1EH31`.
+The deployment uses the complete tested static bundle and a direct ASSETS worker,
+not the old revision-pinned media proxy. Production verification: updated four-
+item navigation, five initial map canvases, successful precipitation remove/restore,
+successful MP3 decode/start, one audio context/recording source, no oscillators,
+and no browser errors. Subjective speaker/listener audibility is not claimed.
+
+The separate deployment package has uncommitted generated bundle changes (as with
+the earlier GitHub-source releases), with the exact reconstruction and release
+recorded in `~/.deepspace/immearth-deploy/PRODUCTION_NOTES.md`. The application's
+main working tree and remote are unchanged and clean. CLI confirmed release #6
+serving; `dataPlane: unconfirmed` remains explicitly unconfirmed, as this static
+site has no backend/data-plane verification. Do not redeploy silently: use the
+separate deployment package and read its production notes.
