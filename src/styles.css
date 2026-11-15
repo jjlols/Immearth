@@ -594,3 +594,115 @@ html[data-cvd="safe"] .regional-grid button i.filled-region {
     display: none;
   }
 }
+
+.jukebox-shell .intro-block {
+  margin-top: 1.75rem;
+}
+
+.jukebox-shell .music-console {
+  display: grid;
+  grid-template-columns: 65px minmax(0, 1fr) minmax(16rem, 265px);
+  grid-template-areas:
+    "badge heading transport"
+    "badge copy transport";
+  align-items: start;
+}
+
+.jukebox-shell .music-console .score-badge { grid-area: badge; }
+.jukebox-shell .music-console .track-heading { grid-area: heading; }
+.jukebox-shell .music-console .track-copy { grid-area: copy; }
+.jukebox-shell .music-console .transport-buttons { grid-area: transport; align-self: start; }
+
+.jukebox-shell .track-heading .small-caps { margin-top: 0; }
+.jukebox-shell .track-heading h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 28px;
+  margin: 0 0 7px;
+  letter-spacing: -0.4px;
+}
+.jukebox-shell .track-heading h2 > span {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: #3d4f63;
+  font-weight: 400;
+  padding-left: 15px;
+  margin-left: 12px;
+  border-left: 1px solid #c9d6e4;
+  letter-spacing: 0.1px;
+}
+
+@media (max-width: 1150px) {
+  .jukebox-shell .track-heading h2 { font-size: 25px; }
+  .jukebox-shell .track-heading h2 > span { font-size: 9px; padding-left: 10px; margin-left: 10px; }
+}
+
+@media (max-width: 650px) {
+  .jukebox-shell .track-heading h2 { font-size: 24px; line-height: 1.2; }
+  .jukebox-shell .track-heading h2 > span {
+    display: block;
+    border-left: 0;
+    padding: 0;
+    margin: 5px 0 0;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .jukebox-shell .music-console {
+    grid-template-columns: 62px minmax(0, 1fr);
+    grid-template-areas:
+      "badge heading"
+      "transport transport"
+      "copy copy";
+  }
+}
+
+.jukebox-shell .region-band,
+.jukebox-shell .compact-region-panel {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 901px) {
+  .jukebox-shell .region-band,
+  .jukebox-shell .compact-region-panel {
+    width: calc(100% - 310px - 19px);
+  }
+}
+
+@media (min-width: 1151px) {
+  .jukebox-shell .region-band,
+  .jukebox-shell .compact-region-panel {
+    width: calc(100% - 350px - 27px);
+  }
+}
+
+@media (min-width: 1550px) {
+  .jukebox-shell .region-band,
+  .jukebox-shell .compact-region-panel {
+    width: calc(100% - 350px - 32px);
+  }
+}
+
+.jukebox-shell .learning-floor {
+  grid-template-columns: 1fr;
+}
+
+.jukebox-shell .learning-floor > .instrument-guide {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1120px) {
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+}
+
+@media (min-width: 1120px) and (max-height: 600px) {
+  .site-header {
+    position: static;
+  }
+}
+
