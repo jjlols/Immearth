@@ -9,6 +9,7 @@
     "test": "node --test test-js/*.test.js",
     "test:browser": "node scripts/verify_jukebox.js",
     "test:spatial": "node scripts/verify_spatial_signal.js",
+    "test:visibility": "node tests/map-visibility-browser.mjs",
     "features": "python3 -m sonification.build_sonification_assets"
   },
   "dependencies": {

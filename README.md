@@ -203,19 +203,37 @@ required partition.
 `python3 -m http.server 8001 --bind 127.0.0.1 --directory dist`, before running it.
 For a current-source Vite server, run `JUKEBOX_URL=http://127.0.0.1:PORT npm run test:browser`.
 The separate `npm run test:spatial` stereo offline audit uses this same server variable.
-The current production audit passed on **14 November 2026, Node 22.19.0**: it checks
-no context on raw load/navigation, one context/one MP3 decode, buffer duration,
-transport, post-chain signal, Solo/Composition, layer hiding, shared WASD/Home grid
-selection, accessible native controls, Vancouver inertness and 390 px overflow.
+The spatial browser audits were run **15 November 2026** (Node 22.19.0).
+`npm run test:visibility` verifies all-five-map hiding/restoring and keyboard controls; run it against a local server as well.
+`npm run test:spatial` passed on a fresh Vite server `http://127.0.0.1:8017`;
+the full production `npm run test:browser` passed against freshly built `dist/`
+on `http://127.0.0.1:8018`, using the actual current intro's Skip control. The
+latter checks no context on raw load/navigation, one context/one MP3 decode,
+actual decoded duration **177.3913 seconds**, one continuous recording source,
+**zero oscillators**, spatial On/Bypass with no extra fetch, final left/right
+RMS/peak, pause/reset/replay, mute/Solo/Composition, layer hiding, WASD/Home,
+Vancouver inertness, 503 retry, accessible native buttons and 390 px overflow.
+The width was exactly **390 px**, with transport controls reachable.
 
-These tests also run a sustained rain/fire scheduling interval and assert
-**zero oscillators** and **one continuous recording source**; a separate simulated
-503 tab covers MP3 failure recovery. The latest sampled post-chain waveform had
-**RMS 0.0046 / peak 0.0126** initially and **RMS 0.0044 / peak 0.0194** later in
-Composition; browser-decoded duration was **177.391 seconds**. Short analysis
-windows naturally vary with the source recording. These verify generated output
-at the analyser, **not subjective audibility through physical speakers or headphones**.
-No gain increase was made; background dry gain remains 0.085 and master defaults 0.22.
+Independent offline tests used two different signed prerecorded arrays (with
+positive and negative samples) through a `ChannelMerger`. Center/coincident
+left/right RMS was **0.0538347 each**, correlation **1**. At right: left/right
+**0.0267536 / 0.0588445 RMS**, peaks **0.0454910 / 0.1093811** (right 2.1995×).
+At left: left/right **0.0586027 / 0.0262113 RMS**, peaks
+**0.1094381 / 0.0441370** (left 2.2358×). These verify the selected panner's
+directional channel behavior; not subjective perception or measurement of a
+physical head. Five independent offline cases had five prerecorded sources and
+zero oscillators; panning created no extra recording events.
+
+The production recording window measured analyser **RMS 0.00311576 / peak
+0.00913688** (per-ear RMS **0.00556700 / 0.00319546**, peak **0.01331956 /
+0.00673370**). Short analysis windows naturally vary with music and envelopes.
+Current coordinated baseline is master **0.38**, cap **0.50**,
+**dryGain 0.085**, as tested in this audit; that later volume baseline is not
+attributed to the spatial renderer. Prior measurements from .22 are historical,
+not simultaneously matched gain comparisons. No further automatic boost should
+be inferred. Browser/audio hardware **subjective audibility and headphone
+localization remain unverified/listen needed**.
 
 
 No configured DeepSpace integration or deployment was used or claimed here. The app

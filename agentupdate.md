@@ -1,6 +1,6 @@
 # Agent coordination — audio / React frontend
 
-Last updated: 2026-11-14 (audio work in progress, **not pushed or deployed**).
+Last updated: 2026-11-15 (spatial renderer integrated; map visibility response ready for main).
 
 ## Ownership
 
@@ -44,6 +44,107 @@ Last updated: 2026-11-14 (audio work in progress, **not pushed or deployed**).
   and subjective HRTF quality remain unverified by this agent/listen needed;
   offline/analyser checks are numeric signals only. No push/deploy requested.
 
+### Spatial verification and current-source handoff — completed locally
+
+**Final integration is present in the feature branch `feature/spatial-audio-renderer`; no main merge,
+push or deployment was performed.** Current work during later frontend integration
+is `cdaa096` (includes renderer as part of a synchronized branch commit); its base
+was `02961d2`. File ownership remains the audio module/tests/verification/docs
+listed above. Current frontend files and extra `map-check-local.mjs` were not
+edited here.
+
+Verified November 15 2026, Node **22.19.0**:
+
+- `npm test`: **24 passed**, including geometry/orientation/zero distance,
+  unsupported and legacy contexts, single route, source/visibility/card modes,
+  lifecycle, no oscillators, and no spatial context/allocation at import/move.
+- `npm run build`: passed.
+- `PYTHONPATH=. .venv/bin/python -m pytest -q tests`: **40 passed, 5 subtests**.
+- `PYTHONPATH=. .venv/bin/python -m pytest -q color_scales/tests`: **19 passed,
+  5 subtests**, independently (extractor-independence assertion preserved).
+- Fresh Vite **http://127.0.0.1:8017**: `npm run test:spatial` passed. Offline
+  ChannelMerger used differing left/right source buf arrays (not oscillators);
+  one source per offline case, five cases total. Center/coincident left/right
+  RMS **0.0538347 each**, correlation **1**. Right placement left/right
+  **0.0267536 / 0.0588445** RMS, peaks **0.0454910 / 0.1093811**; left placement
+  left/right **0.0586027 / 0.0262113** RMS, peaks **0.1094381 / 0.0441370**.
+  Right-energy factor **2.1995** and left-energy factor **2.2358**, center 1.
+  Exact native channel configuration was `channelCount=1`,
+  `channelCountMode=explicit` (order matters in Chromium).
+- Fresh production `dist/` server **http://127.0.0.1:8018**:
+  `npm run test:browser` passed with actual decoded MP3 duration
+  **177.3912916667 s**, **one context, one buffer decode, one recording source,
+  zero oscillators**, one successful MP3 200 response, no spatial toggle fetch,
+  spatial on/off mute visibility solo/composition pause/reset replay, HTTP
+  503 failure and retry; no console/page errors; **390 px: width 390, no
+  horizontal overflow, all transport buttons within reach.** Initial overall
+  analyser RMS/peak **0.00311576 / 0.00913688**; per-channel RMS
+  **0.00556700 / 0.00319546**, peaks **0.01331956 / 0.00673370**. Spatially
+  selected right-channel final RMS/peak **0.00292010 / 0.00739281**, left
+  **0.00408133 / 0.01411753**. Another left-position window captured left
+  **0.00525180**, right **0.00382778**. Amplitude differs with music window;
+  these are analyser samples, not listener ratings or gain guarantees.
+
+Current commit cdaa096's independent **volume increase is not my spatial change**:
+`volume=0.38`, UI slider max `.50` / engine cap `0.5`, `dryGain=0.085` retained.
+This branch cap is knowingly recorded instead of silently contradicting it with
+an old `.24` assertion. The audit now captures that configuration and per-ear
+comparison. Historical master `.22` claims are replaced, not retroactively
+relabeled. Browser values may have AudioParam float precision e.g.
+`0.085000000894`; numeric tolerance is used for source dry gain. Headphone
+manual check/OS volume/subjective binaural effect remain **unverified/listen
+needed**; numerical RMS/peak does not establish that rise is universally
+comfortable. Do not add a further blind gain increase based on this audit.
+
+Frontend integration handoff:
+
+1. Existing `src/Jukebox.jsx` `.transport-buttons` owner should optionally add a
+   native toggle/button labeled **Spatial sound On / Bypass**. It should call
+   `engineRef.current?.setSpatialEnabled(bool)` but **never `play()`, resume a
+   context or feed map/WASD indexes/latlon to the source**. Its initial/aria
+   pressed/off state should report `engine.spatial.getDiagnostics().enabled`,
+   default false; handle unsupported Panner by presenting the thrown message and
+   preserving ordinary stereo. No actual space toggle is wired in this audio
+   branch; exposing is optional to preserve initial behavior.
+2. Any chosen-synthetic-source demo must be explicitly labelled **artistic
+   local-metre placement, not measured geography**. Reuse the current playing
+   shared decoded source, e.g. `setSpatialSourcePosition({x:2,y:.5,z:0})`.
+   Explain headphones vs ordinary stereo, no GPS inferred. No new oscillator.
+3. `engine.setSpatialListenerPosition`, `setSpatialListenerOrientation`,
+   `setSpatialDistanceModel`, `engine.spatial.getDiagnostics` are optional pure
+   settings/diagnostics. `playableParameters.spatial` also exists. Existing
+   getters/setters and `window.__JUKEBOX_AUDIO_REF__` are retained. Stereo
+   metrics add `channels[]` and `spatial` without dropping old `rms/peak`.
+4. Current intro is `#intro #intro-skip` loading `src/IntroOverlay.jsx`, not
+   the deleted tutorial dialog. Browser audit enters through actual Skip and
+   waits for inert page release; no silent Play/resume callback is used.
+
+Important audio finding: setting `PannerNode.channelCount=1` before switching
+from `clamped-max` did not change actual count in Chromium and yielded unreliable
+stereo-direction claims. The final module sets `channelCountMode=explicit`, then
+`channelCount=1`, so the mix is downmixed once before HRTF panning, not treated
+as two palready-localized sources. Offline numeric tests caught this before any
+binaural-correctness promise.
+
+CIPIC/materials provenance: **none added/downloaded**, no HRIR MAT fetch,
+no claimed CIPIC-to-native loading or measured HRTF. Generic Chromium HRTF or
+named equalpower fallback only. No extra dependency, soundtrack, infrastructure,
+hidden network/head-tracking or location request. No DeepSpace integration or
+deploy claimed. Proposed future dataset/licensed measurements need one explicit
+user choice and a separate native-output verification.
+
+Remaining explicit limitations: ordinary bypass is initial user-facing state;
+the React On/Bypass UI and any synthetic same-recording placement selector
+belong to the existing frontend owner. Subjective left-right/up-down localization
+with physical headphones is unverified by me (no listening claim). Scientific
+lat/lon, measured metres, geographic ray transformations and palette-region
+positions remain unavailable; optional artistic coordinates must not be described
+as those facts. Generic HRTF implementation varies by browser; only this
+Chromium build was numerically checked. Pausing actually suspends; reset retires
+recording sources/gains; disposal retires panner/listener/stereo measurement
+connections and closes the one context. The recorded normalized forward+cross-up
+orientation makes consistent *artistic* rotations but is not geodetic orientation.
+
 ## Current audio contract (preserved)
 
 Use one `new RemixEngine()` retained through playback. Set field models and
@@ -58,7 +159,7 @@ await engine.dispose(); // only unmount/disposal
 engine.setVisibility(id, visible);
 engine.setSelected(id);
 engine.setMode('solo' /* or 'composition' */);
-engine.setVolume(value); // engine caps it at 0.24
+engine.setVolume(value); // early branch capped .24; cdaa096 coordinated base now .50
 engine.setMute(boolean);
 engine.playableParameters;
 engine.getOutputMetrics();
@@ -148,7 +249,7 @@ verification; repeated browser reloads alone did not fix that server's memory.
 The main browser audit uses real playback; its simulated 503 runs on an
 independent tab afterwards (rather than depending on a double-click retry).
 The historic post-chain signals were not recalibrated by boosting gain;
-`dryGain=0.085` and master `0.22` are retained.
+`dryGain=0.085` was retained here; current cdaa096 volume `.38`/cap `.50` and audit evidence supersede this historical `.22` baseline.
 
 Frontend migration agent: please append your component architecture, changed
 audio UI selectors, and any conflicts here. Keep the explicit Play and existing
@@ -231,3 +332,25 @@ Use detailed commands and contract in prompt, append actual results and file sco
 here rather than claiming all-HRTF-speakers/heard verification prematurely.
 
 No code for spatial audio was implemented by this preparation task. No push/deploy.
+
+## Map visibility and navigation handoff — 2026-11-15
+
+Final Live Map checkbox fix: visibility is filtered at the canvas-render boundary
+and focus/selection no longer silently re-enables a hidden field. The checkbox is
+a proper `onChange`-controlled native input. Its five-map controls and original
+NASA colors remain unchanged. The separate Layer explorer also filters its
+canvas while retaining its five restore controls; the application does no
+scientific mutation. `LayerExplorer.css` scopes that page's missing layout and
+keeps the map/canvas out of pointer hit-testing. New main header navigation is
+Home, Live Map, How to use the map, and Help (no Layer explorer tab).
+
+Verification passed locally on 15 November 2026 at http://127.0.0.1:8001:
+`npm run build`, `npm test` (24 tests), `npm run test:browser` (full audio/UI
+suite), and `npm run test:visibility` (all five hidden/restored, keyboard,
+Solo/selected-only, explorer reset). Desktop 1440px map/control columns were
+1009px/350px; 390px screen had zero horizontal overflow. No scientific data,
+audio architecture, audio gains, or unrelated worktree was changed by this tab
+and visibility handoff. Screenshot extraction was unavailable; DOM, native
+click/keyboard, native browser geometry and regression assertions are verified.
+The Layer explorer route is retained for any existing direct links, without a
+top-level navigation item.

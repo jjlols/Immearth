@@ -32,14 +32,22 @@ await page.addInitScript(() => {
 });
 const region = () => page.locator('[data-exploration-region]').getAttribute('data-exploration-region').then(Number);
 const engine = expression => page.evaluate(expression);
+async function enterPage(target = page) {
+ if (await target.locator('dialog.listening-tutorial[open]').count()) {
+  await target.getByRole('button', { name: 'Start exploring', exact: true }).click();
+ }
+ if (await target.locator('#intro #intro-skip').count()) {
+  await target.locator('#intro-skip').click();
+  await target.waitForSelector('#intro', { state: 'detached', timeout: 5000 });
+ }
+ await target.evaluate(() => document.activeElement?.blur());
+}
 
 try {
  const musicUrl = new URL(origin);
  musicUrl.searchParams.set('view', 'music');
  await page.goto(musicUrl.href, { waitUntil: 'networkidle' });
- if (await page.locator('dialog.listening-tutorial[open]').count()) {
-  await page.getByRole('button', { name: 'Start exploring', exact: true }).click();
- }
+ await enterPage();
  await page.waitForSelector('[data-source-card]');
  await page.waitForFunction(() => !document.querySelector('.music-console .main-action')?.disabled);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
@@ -73,13 +81,16 @@ try {
  const initial = await engine(() => {
   const e = window.__JUKEBOX_AUDIO_REF__.current;
   return { duration: e.buffer.duration, rateTarget: e.original.playbackRate.value,
-   state: e.ctx.state, signals: e.getOutputMetrics(), ids: [...e.models.keys()].filter(id => e.audible(id)) };
+   state: e.ctx.state, signals: e.getOutputMetrics(), volume: e.volume, dryGain: e.dryGain?.gain.value,
+   ids: [...e.models.keys()].filter(id => e.audible(id)) };
  });
  assert.ok(initial.duration > 170);
  assert.equal(initial.state, 'running');
  assert.deepEqual(requests, [200], 'one successful source request per decoded track');
  assert.ok(initial.signals.peak > 0, 'post-chain waveform must contain nonzero audio');
  assert.ok(initial.signals.rms > 0, 'post-chain RMS must contain nonzero audio');
+ assert.ok(Math.abs(initial.dryGain - 0.085) < 1e-6, 'source envelope stays at the conservative last-known good value');
+ assert.equal(initial.volume, 0.38, 'current coordinated baseline: 0.38 default and 0.5 cap, with comparison signal evidence');
  const spatialBefore = await engine(() => {
   const e = window.__JUKEBOX_AUDIO_REF__.current;
   const fetches = window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length;
@@ -219,9 +230,7 @@ try {
  const failureUrl = new URL(origin);
  failureUrl.searchParams.set('view', 'music');
  await failedPage.goto(failureUrl.href, { waitUntil: 'networkidle' });
- if (await failedPage.locator('dialog.listening-tutorial[open]').count()) {
-  await failedPage.getByRole('button', { name: 'Start exploring', exact: true }).click();
- }
+ await enterPage(failedPage);
  await failedPage.route('**/audio/deliberate-thought.mp3', route => route.fulfill({ status: 503, body: 'unavailable' }));
  await failedPage.getByRole('button', { name: 'Play remix', exact: true }).click();
  await failedPage.getByRole('alert').waitFor();

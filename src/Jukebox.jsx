@@ -11,7 +11,7 @@ import './listening.css';
 function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex}){
  return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration">
  {showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
- {layers.map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
+ {layers.filter(layer=>settings[layer.id]?.visible!==false).map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
  <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span>↗</span><small>Sample {explorerIndex+1}/12</small></div>
  <SpatialOriginMarker />
  {loading&&<div className="loading-scrim" role="status">Loading geography and palette features…</div>}
@@ -21,7 +21,7 @@ function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,load
 }
 
 function MapField({layer,settings,solo}){
- const ref=useRef(null);const visibility=settings.visible!==false;
+ const ref=useRef(null);
  useEffect(()=>{
   const canvas=ref.current;if(!canvas)return;
   const ctx=canvas.getContext('2d');const img=new Image();
@@ -30,7 +30,7 @@ function MapField({layer,settings,solo}){
   img.src=`${import.meta.env.BASE_URL}assets/${layer.id}.png`;
   return()=>{img.onload=null;img.onerror=null};
  },[layer.id,layer.url]);
- const opacity=!visibility?0:solo?(solo===layer.id?1:0):settings.opacity??.66;
+ const opacity=solo?(solo===layer.id?1:0):settings.opacity??.66;
  return <canvas ref={ref} className="map-raster" data-map-field={layer.id} aria-hidden="true" width={layer.width||4096} height={layer.height||2048} style={{opacity,zIndex:solo===layer.id?110:layer.order}}/>;
 }
 
@@ -124,8 +124,8 @@ export default function Jukebox(){
 
  const selectMetric=(id)=>{
   setFocus(id);
-  setSettings(previous=>({...previous,[id]:{...previous[id],visible:true}}));
-  if(engine.current){engine.current.setModel(modelsRef.current,{visibility:{...visibilityRef.current,[id]:true},selection:id,mode});engine.current.setSelected(id);}
+  // Active focus is not visual visibility. Keep each checkbox's chosen hidden state.
+  if(engine.current){engine.current.setModel(modelsRef.current,{visibility:visibilityRef.current,selection:id,mode});engine.current.setSelected(id);}
  };
  const navigateCards=(event,id)=>{
   const ray=layers.map(layer=>layer.id);const index=ray.indexOf(id);
@@ -196,7 +196,7 @@ export default function Jukebox(){
    <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong><small>One map at a time.</small></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Composition</strong><small>All maps together.</small></button></div>
    <p className="mode-explainer">{mode==='solo'?'Learn what a single metric contributes. The selected field stays the audible focus when it meets palette rules.': 'Each enabled field adds its character to the original recording—independently controlled.'}</p>
    <div className="source-controllers" aria-label="Geographic layers and their visibility">
-   {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} opacity={settings[layer.id]?.opacity ?? OPACITY_DEFAULTS[layer.id]} onSelect={selectMetric} onVisible={(id,on)=>{setSettings(current=>({...current,[id]:{...current[id],visible:on}}));engine.current?.setVisibility(id,on);}} onOpacity={(id,opacity)=>setSettings(current=>({...current,[id]:{...current[id],opacity}}))} onNavigate={navigateCards}/>)}
+   {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} opacity={settings[layer.id]?.opacity ?? OPACITY_DEFAULTS[layer.id]} onSelect={selectMetric} onVisible={(id,visible)=>{setSettings(current=>({...current,[id]:{...current[id],visible}}));engine.current?.setVisibility(id,visible);}} onOpacity={(id,opacity)=>setSettings(current=>({...current,[id]:{...current[id],opacity}}))} onNavigate={navigateCards}/>)}
    </div>
    <div className="map-options"><label><input type="checkbox" checked={showGeography} onChange={e=>setShowGeography(e.target.checked)}/> Show geographic land & coasts</label><label><input type="checkbox" checked={onlySelected} onChange={e=>setOnlySelected(e.target.checked)}/> Selected field only</label>
    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>↻ Reset layers</button></div>

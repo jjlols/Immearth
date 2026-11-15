@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import "./LayerExplorer.css";
 import overlayCss from "../../overlay/overlay.css?inline";
 import SiteChrome from "../SiteChrome.jsx";
 import { OverlayController } from "./OverlayController.js";
@@ -109,7 +110,7 @@ export default function LayerExplorer() {
       <style>{overlayCss}</style>
       <a className="skip-link" href="#layer-controls">Skip to layer controls</a>
       <SiteChrome current="layers" part="header" />
-      <main>
+      <main className="layer-studio">
         <section className="intro" aria-labelledby="page-title">
           <div>
             <p className="eyebrow">Earth Information Center</p>
@@ -128,11 +129,11 @@ export default function LayerExplorer() {
               <div id="map-canvas" className={`map-canvas${state.basemapVisible ? "" : " no-base"}`} role="img" aria-label="A composed view of NASA Earth visualization layers. Use the adjacent controls to select an individual metric.">
                 <div className="map-blueprint" aria-hidden="true" />
                 <div className="map-layers">
-                  {state.layers.map((layer) => (
+                  {state.layers.filter((layer) => layer.visible).map((layer) => (
                     <canvas
                       key={layer.id}
                       ref={(node) => { canvasRefs.current[layer.id] = node; }}
-                      className={`map-layer${layer.visible ? "" : " is-hidden"}${layer.id === state.focusedId ? " is-selected" : ""}${state.focusedId && layer.id !== state.focusedId ? " is-muted" : ""}`}
+                      className={`map-layer${layer.id === state.focusedId ? " is-selected" : ""}${state.focusedId && layer.id !== state.focusedId ? " is-muted" : ""}`}
                       data-layer-id={layer.id}
                       aria-hidden="true"
                       width={layer.width}
