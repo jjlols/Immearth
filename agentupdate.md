@@ -458,3 +458,23 @@ the deployed selector has 48 regions and all 5 feature datasets have 48 entries.
 Manual right/left preview moves shared source to +/-2 offset; prompt recenter
 commits one real 8-column-grid step to index 1 then restores origin direction. No
 second oscillator/source, no frontend errors in the last production check.
+
+### Fast settled head-direction publishing
+
+`feature/fast-head-direction`: the old 360ms recognition dwell no longer delays
+each settled direction change. Direction-class intents publish immediately,
+sample cap is 32ms, vector publish interval is 55ms, center dwell is 80ms,
+matching the -- beware -- threshold / hysteresis / last face grace / PSP clock
+preserve. Equal direction frames no longer repaint unnecessary React/audio
+model work. Preview source audio now updates synchronously with committed useExplorer
+and cancels stale offsets immediately on manual keyboard/grid changes and stop.
+No additional sources/resumes/notes or sensor access changes were added.
+
+Verified 53 Node tests, npm build, head-preview four direction + commit/blocked/
+late expiry, synthetic camera lifecycle/error+cleanup/unmount, manual 2->-2 and
+lost-face/prompt commit path. Recorded synthetic settled input -> right x2 panner
+latency 12.875 ms on a localhost run, not a real-camera model timing claim or a
+subjective headphone inference. No blob/photo/GPS camera uploads. The marker
+still only advances after prompt centering within the 1500 ms return window,
+not instantly on directional preview. No commit, push or DeepSpace deployment
+requested/performed in this change.

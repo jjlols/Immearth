@@ -139,8 +139,16 @@ export default function useHeadDirection({
             const timestamp = nextVideoTimestamp(current, video);
             const result = current.detector.detectForVideo(video, timestamp);
             const output = detectorState.current.frame(result, performance.now());
-            notify.current?.({ direction: output.direction, now: performance.now(), source: 'head' });
-            setState({ status: 'active', direction: output.direction, calibrated: output.calibrated, error: null });
+            if (current.publishedDirection !== output.direction) {
+              notify.current?.({ direction: output.direction, now: performance.now(), source: 'head' });
+            }
+            if (current.publishedDirection !== output.direction || current.publishedCalibration !== output.calibrated) {
+              setState({ status: 'active', direction: output.direction, calibrated: output.calibrated, error: null });
+            }
+            current.publishedDirection = output.direction;
+            current.publishedCalibration = output.calibrated;
+            // Repeated equal-direction camera frames do not repaint the React
+            // tree or reset preview timing. Travel commits only on recenter.
             write(output.orientation);
           } catch (error) { fail(error); return; }
         }
