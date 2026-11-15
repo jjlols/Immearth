@@ -1,0 +1,25 @@
+{
+  "layer": "nitrogen_oxides",
+  "title": "Near-surface nitrogen oxides",
+  "summary": "Near-surface nitrogen oxides. These values are estimated from NASA's published colorbar, not official data. Across the grid, estimated values run from about 0.001 parts per billion by volume to about 9.47 parts per billion by volume. The highest estimated values, about 9.47 parts per billion by volume, are spread across several regions. The largest share is in or near East Asia, around 36 degrees north and 120 degrees east. The lowest estimated values, about 0.001 parts per billion by volume, fall in or near Antarctica, around 80 degrees south and 77 degrees east. About 90 percent of Earth's surface had a color close enough to the legend to decode. A cell is left empty when fewer than 30 percent of its pixels match the legend. The NASA and GMAO logo and the date badge are masked out so they are not read as nitrogen oxides.",
+  "units": "parts per billion by volume (ppbv)",
+  "scale_verification": "estimated",
+  "value_min": 0.001,
+  "value_max": 9.47,
+  "highest": {
+    "value": 9.47,
+    "latitude": 35.5,
+    "longitude": 120.5,
+    "region": "East Asia",
+    "cell_count": 102
+  },
+  "lowest": {
+    "value": 0.001,
+    "latitude": -79.5,
+    "longitude": 76.7,
+    "region": "Antarctica",
+    "cell_count": 1301
+  },
+  "coverage_percent": 90.4,
+  "caveat": "These values are estimated from NASA's published colorbar, not official data."
+}

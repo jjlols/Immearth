@@ -1,0 +1,25 @@
+{
+  "layer": "precipitation",
+  "title": "Precipitation rate",
+  "summary": "Precipitation rate. These values are estimated from NASA's published colorbar, not official data. Across the grid, estimated values run from about 0.141 millimeters per hour to about 31.6 millimeters per hour. The highest estimated values, about 31.6 millimeters per hour, fall in or near the North Pacific Ocean, around 30 degrees north and 170 degrees east. The lowest estimated values, about 0.141 millimeters per hour, are spread across several regions. The largest share is in or near the Southern Ocean, around 62 degrees south and 156 degrees west. About 9 percent of Earth's surface had a color close enough to the legend to decode. A cell is left empty when fewer than 30 percent of its pixels match the legend. This precipitation image has no legend drawn on the map. Ocean, land, ice, and the grey swatch stay empty when their colors are far from the rain and snow palettes. Of the cells with a decoded rate, about 82 percent matched the liquid palette and about 18 percent matched the frozen palette. Each rain or snow color is one legend block. The stored number is the geometric mean of that block's labeled edges. The darkest liquid color is the block that starts at 50 millimeters per hour, and the legend does not set an upper limit, so 50 means 50 or more. The two darkest frozen colors in the legend file are the same RGB, so frozen rates above 20 millimeters per hour cannot be split from the 50-or-more block.",
+  "units": "mm/hour",
+  "scale_verification": "estimated",
+  "value_min": 0.141,
+  "value_max": 31.6,
+  "highest": {
+    "value": 31.6,
+    "latitude": 30.5,
+    "longitude": 169.5,
+    "region": "the North Pacific Ocean",
+    "cell_count": 6
+  },
+  "lowest": {
+    "value": 0.141,
+    "latitude": -62.5,
+    "longitude": -156.5,
+    "region": "the Southern Ocean",
+    "cell_count": 195
+  },
+  "coverage_percent": 9.4,
+  "caveat": "These values are estimated from NASA's published colorbar, not official data."
+}
