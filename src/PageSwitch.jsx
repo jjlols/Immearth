@@ -1,4 +1,5 @@
 import { goToView, hrefFor } from "./navigation.js";
+import ColorBlindToggle from "./ColorBlindToggle.jsx";
 
 const LINKS = [
   ["music", "Music"],
@@ -23,6 +24,7 @@ export default function PageSwitch({ current }) {
           {label}
         </a>
       ))}
+      <ColorBlindToggle />
     </nav>
   );
 }

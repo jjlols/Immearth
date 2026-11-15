@@ -166,7 +166,7 @@ export default function LayerExplorer() {
             <p className="controls-description">Select a metric to make it stand out.<br />Switch layers off to shape the composition.</p>
             <div className="layer-list" role="group" aria-label="Visualization layers" onKeyDown={moveRoving}>
               {state.layers.map((layer) => (
-                <div className={`layer-item${layer.visible ? "" : " is-off"}`} key={layer.id} style={{ "--layer-color": layer.color }} aria-current={layer.id === state.focusedId}>
+                <div className={`layer-item${layer.visible ? "" : " is-off"}`} key={layer.id} data-layer-id={layer.id} style={{ "--layer-color": layer.color }} aria-current={layer.id === state.focusedId}>
                   <button
                     type="button"
                     className="layer-select"

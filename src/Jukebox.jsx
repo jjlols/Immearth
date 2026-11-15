@@ -48,19 +48,33 @@ function SourceControl({layer,visible,opacity,focus,onSelect,onVisible,onOpacity
  </article>;
 }
 
-function RegionStudy({regions,layerLabel,selected,onSelect}){
+function RegionStudy({regions,layerLabel,selected,onSelect,announcement}){
  return <div className="region-study"><h3>Regional analysis, in context</h3>
- <p>Use W/A/S/D or arrow keys while not operating a control; or select a region below. Home returns to image region 1 (the Vancouver-associated start). Movement changes palette analysis only—not coordinates, geolocation or spatial pitch. A region without confident matches can stay silent.</p>
+ <p>Use the 12 region buttons. You can also use W, A, S, D, or the arrow keys when you are not on a button, link, or slider. Home returns to region 1. Moving changes the estimated palette description. It does not start the music, and it does not use your location. A region without a confident match stays silent.</p>
  <div className="regional-grid" role="group" aria-label={`Select regional sample for ${layerLabel}`}>
  {Array.from({length:12},(_,i)=>{
  const feat=regions?.[i];const selectedState=selected===i;
- return <button key={i} type="button" aria-pressed={selectedState} aria-label={`Analyze region ${i+1}: ${feat?.classified_count||0} usable palette matches of ${feat?.sample_count||0} samples`} onClick={()=>onSelect(i)}>
+ return <button key={i} type="button" aria-pressed={selectedState} aria-label={regionButtonLabel(i,feat)} onClick={()=>onSelect(i)}>
  <span>{String(i+1).padStart(2,'0')}</span><i className={feat?.classified_count?'filled-region':''}/>
  </button>})}
  </div>
  {regions?.[selected]&&<div className="region-counts"><span><strong>{regions[selected].classified_count||0}</strong> matched</span><span><strong>{regions[selected].unclassified_count||0}</strong> unclassified / silent</span><span><strong>{regions[selected].sample_count||0}</strong> sampled</span><small>Estimated accepted palette comparisons, not verified geographic measurements.</small></div>}
- <div className="current-region" role="status" aria-live="polite">Exploration sample {selected+1}/12 — region row {Math.floor(selected/4)+1}, column {(selected%4)+1}. W = north, A = west, S = south, D = east; edges clamp.</div>
+ <div className="current-region" role="status" aria-live="polite">{announcement}</div>
  </div>
+}
+
+function SoundMeter({playState,engineRef}){
+ const [level,setLevel]=useState(0);
+ useEffect(()=>{
+  if(playState!=='playing'){setLevel(0);return undefined;}
+  const timer=setInterval(()=>{
+   const metrics=engineRef.current?.getOutputMetrics();
+   setLevel(metrics?Math.min(1,metrics.rms/0.05):0);
+  },200);
+  return()=>clearInterval(timer);
+ },[playState,engineRef]);
+ const words=playState!=='playing'?'silent':level<0.12?'very quiet':level<0.28?'quiet':level<0.6?'medium':'strong';
+ return <div className="sound-meter"><span className="sound-meter-label">Sound level: {words}.</span><span className="sound-meter-bars" aria-hidden="true">{[0.12,0.28,0.45,0.6,0.8].map(step=><i key={step} className={level>=step?'is-on':''}/>)}</span></div>;
 }
 
 export default function Jukebox(){
@@ -150,8 +164,13 @@ export default function Jukebox(){
   <div className="track-copy"><p className="small-caps">SOUNDS LIKE A THOUGHT, UNFOLDING</p><h2>Deliberate Thought<span>Kevin MacLeod · 69 BPM</span></h2>
    <p className="track-detail">A restrained recording modified by a living map. Music begins only when you press play.</p>
    <p role="status" aria-live="polite" className={`playback-status state-${playState}`}><span aria-hidden="true">{ws_icon(playState)}</span> {audioDescription(playState,muted)}</p>
-   <div className="progress-rail" aria-label={`Music position: ${Math.round(progress)} percent`}><span style={{width:`${Math.min(100,progress)}%`}}/></div>
-   <p className="source-license">Kevin MacLeod (incompetech.com) · <a href={TRACK.licenseUrl} target="_blank" rel="noreferrer">CC BY 4.0</a> · Modified, no manufactured stems.<a className="license-detail" href="#attribution">License details</a></p>
+   <p className="hearing-caption" role="status">{hearingCaption({playState,muted,mode,focusId:currentLayer.id,layers,models:musicalModels,visible:audibleVisibilities})}</p>
+   <SoundMeter playState={playState} engineRef={engine}/>
+   <div className="progress-wrap">
+    <div className="progress-rail" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,progress))} aria-label="Music position"><span style={{width:`${Math.min(100,progress)}%`}}/></div>
+    <span className="progress-percent">{Math.round(Math.min(100,progress))}%</span>
+   </div>
+   <p className="source-license">Kevin MacLeod (incompetech.com) · <a href={TRACK.licenseUrl} target="_blank" rel="noreferrer">CC BY 4.0 (opens in a new tab)</a> · Modified, no manufactured stems.<a className="license-detail" href="#attribution">License details</a></p>
   </div>
   <div className="transport-buttons">
    <button type="button" className="main-action" onClick={togglePlayback} disabled={loading||playState==='loading'}>{playState==='playing'?'Pause':playState==='paused'?'Resume':playState==='loading'?'Loading…':playState==='unavailable'?'Retry':'Play remix'}<span aria-hidden="true">{playState==='playing'?'Ⅱ':'↗'}</span></button>
@@ -172,7 +191,7 @@ export default function Jukebox(){
   </main>
   <aside className="explorer-panel" id="map-controls" aria-label="Science field controls">
    <div className="panel-heading"><div><p className="small-caps">THE ENSEMBLE</p><h2>Pick your perspective.</h2></div><span className="metric-number">05</span></div>
-   <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong><small>One voice, in focus.</small></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Composition</strong><small>The shared ensemble.</small></button></div>
+   <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong><small>One map at a time.</small></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Composition</strong><small>All maps together.</small></button></div>
    <p className="mode-explainer">{mode==='solo'?'Learn what a single metric contributes. The selected field stays the audible focus when it meets palette rules.': 'Each enabled field adds its character to the original recording—independently controlled.'}</p>
    <div className="source-controllers" aria-label="Geographic layers and their visibility">
    {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} opacity={settings[layer.id]?.opacity ?? OPACITY_DEFAULTS[layer.id]} onSelect={selectMetric} onVisible={(id,on)=>{setSettings(current=>({...current,[id]:{...current[id],visible:on}}));engine.current?.setVisibility(id,on);}} onOpacity={(id,opacity)=>setSettings(current=>({...current,[id]:{...current[id],opacity}}))} onNavigate={navigateCards}/>)}
@@ -181,7 +200,7 @@ export default function Jukebox(){
    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>↻ Reset layers</button></div>
   </aside>
  </div>
- <section className="learning-floor" id="learning" aria-live="polite">
+ <section className="learning-floor" id="learning">
  <section className="instrument-guide" aria-labelledby="voice-title"><div className="guide-label"><p className="small-caps">FIELD STUDY / MUSICAL VOCABULARY</p><span className={`listen-indicator ${playState==='playing'?'playing-dotted':''}`} title={playState==='playing'?'Audio is active':'No sound playing'}>{playState==='playing'?'AUDIO ACTIVE':'SILENT BY CHOICE'}</span></div>
  <h2 id="voice-title">{currentLayer.label}<span className="voice-kind"> / {INSTRUMENT_INFO[currentLayer.id]?.kind||'source mapping'}</span></h2>
  <p className="voice-description">{INSTRUMENT_INFO[currentLayer.id]?.explanation ||'You’re listening to a constrained recursive source composition. The map explains what each voice is and the limits of it.'}</p>
@@ -189,16 +208,62 @@ export default function Jukebox(){
  <div className="mapping-section"><h3>How this voice is derived</h3><p>{INSTRUMENT_INFO[currentLayer.id]?.caveat ||'Review the palette input accounts.'}</p></div>
  <div className="provenance"><span>RGB ≠ direct science.</span><p>Labels-to-values are supplied by previous reviewed palette <em>estimates</em>. Every musical adjustment maps from those closest legitimate classes, not luminance, not geolocation. Raw-data adapters can replace mapping later. Wrong hues, text, boundaries or disconnected pixels remain unclassified—not invented numbers.</p></div>
  </section>
- <RegionStudy layerLabel={currentLayer.label} regions={featureById||[]} selected={currentIndex} onSelect={chooseExplorerRegion}/>
+ <RegionStudy layerLabel={currentLayer.label} regions={featureById||[]} selected={currentIndex} onSelect={chooseExplorerRegion} announcement={regionStatus(currentIndex,currentLayer.label,describeFeature(focus,currentFeature))}/>
  </section>
  <section className="function-explainer" id="method"><span className="imagined-icon" aria-hidden="true">↺</span><div><h2>Hear what the data has to say—not guess what it cannot.</h2><p>The soundtrack’s role is to support guided curiosity. High on a <em>specific scientific scale</em> does not mean higher pitch automatically. NOₓ follows log₁₀ ranks while CO uses nonuniform palette anchors. Precipitation respects separate liquid/frozen groupings and fire strength respects FRP units. Temperature T2M is set in Celsius with the short-caption 3m vs detailed 2m note kept. Raw times are independent from music elapsed time.</p></div></section>
- <details id="attribution" className="license-paper"><summary>Music attribution and scientific uncertainty</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0)</a>. The local recording is decoded once per engine lifetime. Generic filters, pad-gain branches and limited synthesized voices are modifications of the approved recording, not official stems. Attribution is preserved in the interface and project license files.</p>
+ <details id="attribution" className="license-paper"><summary>Music attribution and scientific uncertainty</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0, opens in a new tab)</a>. The local recording is decoded once per engine lifetime. Generic filters, pad-gain branches and limited synthesized voices are modifications of the approved recording, not official stems. Attribution is preserved in the interface and project license files.</p>
  <p>NASA palette stations support semantic tools not medical/population statements. The same source aspect ratio is not identical geographically verified projection or acquisition time. Continuous global fields drawn as a colored image can be inspected as whole pixels (maps) and reduced to bounded classifications (music). This is an interpretive educational listening aid, not physical truth sonification or a weather warning service. Scientific data must come from verified underlying measurement input for any absolute calibration.</p>
  <p>Navigation and map inspection stay silent before Play. Source values remain nearest-palette estimates with the recorded uncertainty. See README.md and LICENSES.md for full implementation and verification notes. DeepSpace deployment is not configured or claimed.</p></div></details>
  <footer className="notes-footer"><span>NASA Scientific Visualization Studio · Natural Earth geography · Kevin MacLeod</span><span>Built with React and Web Audio, respectfully at 69 BPM.</span></footer>
  </div>;
 }
 
+function regionButtonLabel(index,features){
+ const count=features?.classified_count||0;
+ const total=features?.sample_count||0;
+ const plain=count===0?'no confident match, this region stays silent':count/Math.max(total,1)<0.25?'few confident matches':'several confident matches';
+ return `Analyze region ${index+1}: ${count} usable palette matches of ${total} samples, ${plain}`;
+}
+function regionStatus(selected,layerLabel,featureSentence){
+ const row=Math.floor(selected/4)+1;
+ const column=(selected%4)+1;
+ return `Region ${selected+1} of 12, row ${row}, column ${column}. ${layerLabel}. ${featureSentence}`;
+}
+function voiceAction(id,model){
+ if(id==='precipitation'){
+  const bits=[];
+  if(model.densities?.rain)bits.push('limited rain-like droplets');
+  if(model.densities?.frozen)bits.push('separate frozen droplets');
+  return bits.join(' and ')||'no droplet density';
+ }
+ if(id==='active_fires')return 'an occasional accent from estimated fire radiative power';
+ if(id==='carbon_monoxide')return 'a filtered pad following the estimated carbon monoxide tier';
+ if(id==='nitrogen_oxides')return 'one sustained note from the estimated nitrogen oxides range';
+ if(id==='near_surface_temperature'){
+  if(model.playbackRate>1.05)return 'the shared recording faster, from a warmer estimated palette';
+  if(model.playbackRate<0.95)return 'the shared recording slower, from a colder estimated palette';
+  return 'the shared recording near its original speed';
+ }
+ return 'an estimated palette voice';
+}
+function hearingCaption({playState,muted,mode,focusId,layers,models,visible}){
+ const considered=mode==='solo'?layers.filter(layer=>layer.id===focusId):layers;
+ const phrases=considered.flatMap(layer=>{
+  const model=models[layer.id];
+  if(!visible[layer.id]||!model||model.silent)return [];
+  return [`${layer.label}: ${voiceAction(layer.id,model)}`];
+ });
+ const quiet='Layers with no confident palette match stay silent.';
+ const preview=phrases.length?`If you press Play remix: ${phrases.join('. ')}. ${quiet}`:`If you press Play remix, this selection stays silent. ${quiet}`;
+ if(playState==='loading')return 'Loading the recording. Nothing is audible yet.';
+ if(playState==='unavailable')return 'Audio is unavailable. The written description is still on the page.';
+ if(playState==='paused')return `Music is paused. ${preview}`;
+ if(playState!=='playing')return preview;
+ if(muted)return phrases.length?`Muted. Unmute to hear ${phrases.join('. ')}. ${quiet}`:`Muted. Unmute to hear this selection. ${quiet}`;
+ if(!phrases.length)return `Playing, and this selection is silent. ${quiet}`;
+ const scope=mode==='solo'?'One map at a time.':'All audible maps together.';
+ return `${scope} ${phrases.join('. ')}. ${quiet}`;
+}
 const ws_icon=state=>({playing:'▸',paused:'Ⅱ',loading:'⋯',idle:'○',unavailable:'!'})[state]||'○';
 const audioDescription=(state,muted)=>({idle:'No music yet. Set the scene and listen.',loading:'Reading the shared recording and estimated feature map…',paused:'Music paused. Your map and estimated palette analyses remain readable.',playing:muted?'Muted; musical map mode stays readable.':'Playing a gentle data-led remix.',unavailable:'Audio unavailable; you can explore readably without playing.'}[state]||'Make up your own map.');
 const popularCreativeVoice=(state)=>state==='playing'?`One recording. One shared clock. ${'Gentle foreground voices each cycle. '}`:'No audio until you call the musical field, card and play control.';
