@@ -17,3 +17,14 @@ This project *modifies* the recording locally: Web Audio playback uses one decod
 The author’s licensing guide is at https://incompetech.com/music/royalty-free/licenses/. The Copy’s official reference catalog page remains JS-driven; it was not asserted to be a machine-known track-stem registry.
 
 Scientific maps remain NASA assets; they retain all existing caveats. Independent Natural Earth vectors are public domain. Color scales stay estimated reviewed raster interpretations; no value is authoritative because a converted musical frequency is output.
+
+## Local optional MediaPipe camera investigation (`@mediapipe/tasks-vision@1.2.3`)
+
+Pinned Apache-2.0 package/runtime preserves its license in
+`public/head-tracking/MEDIPIPE-LICENSE.txt`. Local WASM, exact task-source URL,
+package integrity, hashes and limitations are in `public/head-tracking/PROVENANCE.md`.
+The task is fetched only after explicit camera consent, not on Live Map mount.
+No frames are served from this repository, no HRIR/CIPIC or other sound file is
+added. Head pose estimation runs locally after explicit camera opt-in; unsupported, unavailable and uncertain pose states still retain the manual fallback. This
+must not be confused with an eye-gaze or geolocation-based direction service,
+nor with the continued single Kevin MacLeod audio transport license.

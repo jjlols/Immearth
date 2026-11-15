@@ -165,6 +165,21 @@ export class SpatialRenderer {
   }
   #writeSource() {
     if (!this.panner) return;
+    // Keep the same sample stream and gain model. Centered sources bypass
+    // panning; directionally displaced sources use the exactly one panner route.
+    const coincident = this.sourcePosition.x === this.listenerPosition.x &&
+      this.sourcePosition.y === this.listenerPosition.y && this.sourcePosition.z === this.listenerPosition.z;
+    if (this.enabled && coincident) {
+      this.input.disconnect();
+      disconnect(this.panner);
+      this.input.connect(this.output);
+      return;
+    }
+    if (this.enabled) {
+      this.input.disconnect();
+      disconnect(this.panner);
+      this.input.connect(this.panner).connect(this.output);
+    }
     // Coincident source is simply zero; no directional jitter or invented azimuth.
     const position = listenerRelativePosition(this.sourcePosition, this.listenerPosition, this.forward, this.up);
     ['X', 'Y', 'Z'].forEach(axis => write(this.panner[`position${axis}`], position[axis.toLowerCase()], this.ctx.currentTime, this.transitionSeconds));
@@ -219,7 +234,7 @@ export class SpatialRenderer {
       orientation: { forward: { ...this.forward }, up: { ...this.up } },
       distanceModel: this.distanceModel, referenceDistance: this.referenceDistance,
       maxDistance: this.maxDistance, rolloffFactor: this.rolloffFactor,
-      routes: this.ctx ? 1 : 0, route: available && this.enabled ? 'panner-only' : 'bypass-only',
+      routes: this.ctx ? 1 : 0, route: available && this.enabled && distanceBetween(this.sourcePosition,this.listenerPosition)>0 ? 'panner-only' : 'bypass-only',
       // No propagation delay relocation/partial MP3 events; clock remains shared.
       commonPropagationDelayApplied: false, mixesStereoToMonoWhenEnabled: true,
       measuredGeography: false, hrirDataset: null,

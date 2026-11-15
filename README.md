@@ -60,15 +60,15 @@ transport/nodes—not hides/reinterprets the dataset.
 Buttons use keyboard Space/Enter. Use **up/down arrow keys** (or left/right) on
 field cards to navigate (Home/End for bounds); tab freely among other controls.
 
-### Explore the image-relative 3 × 4 grid
+### Explore the image-relative 8 × 6 grid
 
-The separate amber **Sample n/12** marker shows the current exploration region;
+The separate amber **Sample n/48** marker shows the current exploration region;
 the fixed green Vancouver marker remains a geographic reference, not the same pin.
 Use **W/A/S/D** or the **arrow keys** while the page background is focused:
 **W/up = north**, **A/left = west**, **S/down = south**, **D/right = east**.
-The three rows and four columns are image-relative analysis regions, numbered
-`row * 4 + column` (zero-based). Movement clamps at the edges (no wrap); **Home**
-returns to **region 1**, the Vancouver-associated start. The twelve region buttons
+The six rows and eight columns are image-relative analysis regions, numbered
+`row * 8 + column` (zero-based). Movement clamps at the edges (no wrap); **Home**
+returns to **region 1**, the Vancouver-associated start. The 48 region buttons
 use exactly the same state, so a subsequent keystroke continues from a clicked button.
 
 Keyboard exploration never intercepts typing, sliders, buttons, links, editable
@@ -116,7 +116,7 @@ the same explicit listener. **Reset** stops track and scheduled source accents.
 
 The Vancouver origin is a reserved **metadata reference**, not a real listener GPS
 position or scientific source calculation. Optional local-rendered art uses an
-explicitly synthetic model described below; bypass remains the default. Source-patterned original isn't louder in higher
+explicitly synthetic model described below; spatial audio remains opt-in. Source-patterned original isn't louder in higher
 scientific quantile nor evil spray-relevant sound of the pollutant chemicals.
 **Do not make the song gain high just because a fixture green button on screen.**
 
@@ -128,6 +128,32 @@ time, pitch, rhythm, or automatic pan. Original intended future coordinate origi
 is inside listener head at Vancouver local **0,0,0** when traceable model available,
 not browser cross-shaped mystery. Current map displayed x≈15.8%, y≈22.6%; actual
 raster matches may change with calibrated geodata inputs.
+
+### Hold to preview, return to travel
+
+Enable **Spatial sound**, then **Head travel**, and explicitly press Play. Hold
+left/right/up/down to preview the adjacent west/east/north/south region through
+the shared MP3, using that region’s existing estimated palette model. The amber
+map marker remains on its committed region while you look. Return to center
+within 1500 ms to commit exactly one step; after that window, recenter simply
+cancels the preview. A new direction immediately replaces the preview from the
+same committed region, including when Forward is not crossed. Repeated events
+from one held direction never recursively move across the grid, and
+a blocked edge cannot manufacture movement. Stop tracking, an expired lost-face
+grace period, disabling either opt-in, and direct keyboard/grid selection cancel
+the transient preview.
+
+The centered source uses listener-local `(0,0,0)` and the direct stereo bypass.
+A preview uses the existing panner at a fixed artistic ±2 m direction offset.
+No additional recording, context, clock, oscillator or separately synthesized
+sound is created. The camera is opt-in and processed locally, while the manual
+direction controls test the same interaction without camera permission. Browser
+tests use manual input or synthetic face matrices, not a human head-pose test.
+
+Run `npm run test:head-preview`, `npm run test:head-direction`, and
+`node scripts/verify_head_lifecycle.js` against `http://127.0.0.1:8001/` (or set
+`JUKEBOX_URL`). Analyser and geometry checks do not establish physical headphone
+localization, real-face accuracy, or speaker audibility.
 
 See `src/lib/spatialOrigin.js` and `src/lib/VANCOUVER_ORIGIN.md` for documented structure.
 No user geolocation or actual hidden coordinate trick beyond mention of the prompt.
@@ -277,7 +303,7 @@ normalized, orthogonalized, and used to transform the source into the canonical
 native head frame; orientation angles do not claim measured compass heading.
 
 Only explicit Cartesian metre data belongs in this API. Do not pass unlabelled
-latitude/longitude, RGB pixels, 3×4 sample indexes, display aspect ratios or
+latitude/longitude, RGB pixels, 8×6 sample indexes, display aspect ratios or
 Vancouver's marker percentages as positions. This does not move sources when
 WASD moves the palette explorer, start audio on mount/map navigation, or alter
 pitch/timing from coordinates. There are no microphone/camera/geolocation calls

@@ -52,7 +52,7 @@ explicit **Play remix**. Mount, keys, map/region selection and Vancouver metadat
 not create/resume audio. Pause suspends; reset retires all sources/notes/timers, keeps
 the decoded buffer for a later explicit replay, and leaves the context suspended.
 Visibility-hidden or focus-ineligible voices cannot sound. Preserve the conservative
-last-known-good dry gain 0.085. The current user-requested master default is 0.48 with cap 0.50 (superseding older 0.22/0.24 and 0.38/0.50 records). Before volume changes,
+last-known-good dry gain 0.085, master default 0.48 and cap 0.50. Before volume changes,
 measure source/output RMS and peak; never blindly boost gain and never claim listening
 from only UI, network or tests. Maximum eight bounded active accents; FRP rests are
 at least 8.4 seconds; rain/frozen use separate presence-based schedules.
@@ -63,9 +63,9 @@ precipitation/fire regime gentle filtered gain envelopes on the one synchronized
 Audio instrumentation tests must assert these source/filter properties rather than
 reintroducing removed legacy oscillator fields.
 
-The exploration grid is **3 rows × 4 columns**, shared by WASD/arrows and region buttons.
+The exploration grid is **6 rows × 8 columns**, shared by WASD/arrows and region buttons.
 W/up=north, A/left=west, S/down=south, D/right=east; clamp edges, Home=region index 0
-(Vancouver-associated start), and index=`row*4+column`. Never trigger it within native
+(Vancouver-associated start), and index=`row*8+column`. Never trigger it within native
 form/editable controls, links, buttons, sliders or modifier shortcuts. Movement changes
 estimated palette controls only while already playing and never audio on its own.
 The amber exploration marker is distinct from fixed Vancouver: **49.2827° N, 123.1207° W

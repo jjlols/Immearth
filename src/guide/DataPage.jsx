@@ -80,7 +80,7 @@ export default function DataPage() {
           <div className="split">
             <div className="tile">
               <h3>From picture to value</h3>
-              <p>Each map is a published NASA image. The site compares the colors in each of twelve regions to the map’s own legend and keeps only confident matches. Brightness, latitude, and longitude are never used as a quantity.</p>
+              <p>Each map is a published NASA image. The site compares the colors in each of 48 regions to the map’s own legend and keeps only confident matches. Brightness, latitude, and longitude are never used as a quantity.</p>
               <p>Precipitation keeps liquid and frozen palettes separate. Fires use estimated fire radiative power in megawatts, not a count of fires. Carbon monoxide uses uneven steps in parts per billion. Nitrogen oxides are ranked on a logarithmic scale. Temperature runs from −40 to +40 °C.</p>
             </div>
             <div className="tile">

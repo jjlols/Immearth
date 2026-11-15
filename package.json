@@ -10,17 +10,20 @@
     "test:browser": "node scripts/verify_jukebox.js",
     "test:spatial": "node scripts/verify_spatial_signal.js",
     "test:visibility": "node tests/map-visibility-browser.mjs",
-    "features": "python3 -m sonification.build_sonification_assets"
+    "features": "python3 -m sonification.build_sonification_assets",
+    "test:head-direction": "node scripts/verify_direction_manual.js && node scripts/verify_head_live_synthetic.js",
+    "test:head-preview": "node scripts/test_head_preview.mjs"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "1.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "vite": "^7.1.9"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.2",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^5.0.2",
     "jsdom": "^27.0.1",
     "playwright": "^1.58.2"
   }

@@ -74,9 +74,10 @@ def rgb_distance(rgb,other):
     return math.sqrt(.3*r*r+.59*g*g+.11*b*b)
 
 
-def nearest_palette(category,rgb,alpha=255,tolerance=62,record=None):
+def nearest_palette(category,rgb,alpha=255,tolerance=62,record=None,library=None):
     if alpha<25:return {'status':'no_data'}
-    library=build_library(category,record)
+    if library is None:
+        library=build_library(category,record)
     if not library:return {'status':'no_data'}
     rgb=tuple(rgb)
     match=min(library,key=lambda entry:rgb_distance(rgb,entry['rgb']))
@@ -88,7 +89,7 @@ def nearest_palette(category,rgb,alpha=255,tolerance=62,record=None):
 
 def summarize(results):
     accepted=[r for r in results if r['status']=='matched']
-    summary={'classified_count':len(accepted),'sample_count':len(results),'unclassified_count':len(results)-len(accepted),'no_data_count':len(results)-len(accepted),'estimated':True}
+    summary={'classified_count':len(accepted),'sample_count':len(results),'unclassified_count':sum(result['status'].startswith('unclassified_') for result in results),'no_data_count':sum(result['status']=='no_data' for result in results),'estimated':True}
     if not accepted:return {'status':'silent',**summary}
     kind=accepted[0]['legend']
     if kind in ('liquid','frozen'):
@@ -111,3 +112,92 @@ class RawDataAdapter:
         if not records.get('unit') or not records.get('values') or not isinstance(records['values'],Sequence):
             raise ValueError('Raw features require values, units and explicit provenance.')
         return {'source':records,'kind':'caller_supplied_data_frame','validated_input':bool(records.get('scientific_input_verified',False))}
+
+from functools import lru_cache
+import numpy as np
+
+
+@lru_cache(maxsize=5)
+def palette_arrays(category):
+    entries = build_library(category)
+    return (entries, np.asarray([entry['rgb'] for entry in entries], dtype=np.float64),
+            np.asarray([entry['value'] for entry in entries], dtype=np.float64))
+
+
+def nearest_pixels(category, rgba):
+    """Per-pixel nearest-palette classification; vectorized over real raster colors."""
+    shape = np.asarray(rgba).shape
+    flat = np.asarray(rgba, dtype=np.float64).reshape((-1, 4))
+    entries, colors, values = palette_arrays(category)
+    no_data = flat[:, 3] < 25
+    matched = np.zeros(len(flat), bool)
+    unclassified = np.zeros(len(flat), bool)
+    nearest = np.zeros(len(flat), dtype=np.int64)
+    distances = np.zeros(len(flat), dtype=np.float64)
+    neutral = np.ptp(flat[:, :3], axis=1) < 15
+    for start in range(0, len(flat), 32768):
+        stop = min(start + 32768, len(flat))
+        active = np.flatnonzero(flat[start:stop, 3] >= 25) + start
+        if not active.size:
+            continue
+        rgb = flat[active, :3]
+        squared = .3 * (rgb[:, 0, None] - colors[None, :, 0]) ** 2 + \
+            .59 * (rgb[:, 1, None] - colors[None, :, 1]) ** 2 + \
+            .11 * (rgb[:, 2, None] - colors[None, :, 2]) ** 2
+        indices = squared.argmin(axis=1)
+        minimum = np.sqrt(squared[np.arange(len(rgb)), indices])
+        accepted = (minimum <= 62) & (~neutral[active] | (minimum <= 10))
+        matched[active[accepted]] = True
+        unclassified[active[~accepted]] = True
+        nearest[active] = indices
+        distances[active] = minimum
+    return {'matched': matched, 'unclassified': unclassified,
+            'no_data': no_data, 'values': values,
+            'library': entries, 'neutral': neutral,
+            'distances': distances, 'indices': nearest, 'shape': shape}
+
+
+def region_features(category, rgba):
+    """Return summaries, not hundreds of thousands of per-pixel JSON records."""
+    data = nearest_pixels(category, rgba)
+    accepted = data['matched']
+    entries = data['library']
+    count = int(accepted.sum())
+    summary = {'classified_count': count, 'sample_count': int(accepted.size),
+               'unclassified_count': int(data['unclassified'].sum()),
+               'no_data_count': int(data['no_data'].sum()), 'estimated': True}
+    if not count:
+        return {'status': 'silent', **summary}
+    matched_indices = data['indices'][accepted]
+    kinds = tuple(entry['legend'] for entry in entries)
+    if 'liquid' in kinds or 'frozen' in kinds:
+        liquid = [index for index, entry in enumerate(entries) if entry['legend'] == 'liquid']
+        frozen = [index for index, entry in enumerate(entries) if entry['legend'] == 'frozen']
+        summary['rain_count'] = int(np.isin(matched_indices, liquid).sum())
+        summary['snow_count'] = int(np.isin(matched_indices, frozen).sum())
+        summary['max_value'] = float(data['values'][matched_indices].max())
+        return summary
+    values = np.sort(data['values'][matched_indices])
+    summary['median'] = float(values[len(values) // 2])
+    summary['q20'] = float(values[int((len(values) - 1) * .2)])
+    summary['q80'] = float(values[int((len(values) - 1) * .8)])
+    summary['max_value'] = float(values[-1])
+    return summary
+
+
+def pixel_records(category, rgba):
+    """Small diagnostic adapter retaining the original per-pixel vocabulary."""
+    data = nearest_pixels(category, rgba)
+    result = []
+    for index in range(len(data['matched'])):
+        if data['no_data'][index]:
+            result.append({'status': 'no_data'})
+        elif data['unclassified'][index]:
+            distance = data['distances'][index]
+            result.append({'status': 'unclassified_color' if distance > 62 else 'unclassified_neutral'})
+        else:
+            result.append({'status': 'matched', 'category': category,
+                           **data['library'][data['indices'][index]],
+                           'color_distance': float(data['distances'][index]),
+                           'estimate_method': 'nearest_palette_color_estimated_reviewed_labels'})
+    return result

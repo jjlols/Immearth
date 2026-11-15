@@ -11,7 +11,7 @@ import HomeLivePreview from "../HomeLivePreview.jsx";
 const OVERVIEW = [
   "Immearth. A NASA Space Apps project, not the official NASA website.",
   "This site turns five NASA Earth maps into one shared piece of music: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
-  "The home page introduces the maps, plays a Live Map preview, and links to every other page. The preview keeps your place fixed and starts the music on its own. The full Live Map is where you choose a map, move between twelve regions, and use every sound setting. That page stays silent until you press Play remix. The Layer explorer stacks the five maps on one silent world map. Earth data describes each map in detail. Accessibility and help lists every key and voice command.",
+  "The home page introduces the maps, plays a Live Map preview, and links to every other page. The preview keeps your place fixed and starts the music on its own. The full Live Map is where you choose a map, move between 48 regions, and use every sound setting. That page stays silent until you press Play remix. The Layer explorer stacks the five maps on one silent world map. Earth data describes each map in detail. Accessibility and help lists every key and voice command.",
   "On this page you can say next or previous to move between sections, say a map name, or say page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
 ];
 
@@ -19,7 +19,7 @@ const DESTINATIONS = [
   {
     view: "music",
     title: "Live Map",
-    text: "Choose a map, move between twelve regions, and hear the recording respond. All sound settings live here.",
+    text: "Choose a map, move between 48 regions, and hear the recording respond. All sound settings live here.",
     note: "Silent until you press Play remix.",
     photo: SPACE_PHOTOS.night,
     Icon: IconPlay,

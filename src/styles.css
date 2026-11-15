@@ -570,3 +570,8 @@ html[data-theme="dark"] .jukebox-shell .value-provision {
   border-color: #3d6288;
 }
 
+
+/* 48 compact, keyboard-addressable analysis regions; grid rows stay 6x8. */
+.jukebox-shell .regional-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; }
+.jukebox-shell .regional-grid button { min-width: 0; padding: 4px 2px; font-size: 10px; }
+.jukebox-shell .compact-region-panel .region-counts { flex-wrap: wrap; }
