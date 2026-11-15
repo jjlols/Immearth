@@ -448,3 +448,13 @@ not by repeating old region summaries. Existing nearest-color rules are preserve
 NumPy-backed bounded summaries replace millions of per-pixel JSON dictionaries;
 feature totals, nearest-palette matches and no-data states remain estimates. The
 five maps, audio synthesis approach and geographic-origin caveats are unchanged.
+
+### Production release: 48-region six-by-eight map
+
+Pushed main at `e0a5aa8` normal fast-forward history. DeepSpace production
+release `rel_01M7G7FJ9G36KVAH6H1QCW093W` (#8) is confirmed serving at
+https://immearth.app.space; static data-plane status is unconfirmed. Verified
+the deployed selector has 48 regions and all 5 feature datasets have 48 entries.
+Manual right/left preview moves shared source to +/-2 offset; prompt recenter
+commits one real 8-column-grid step to index 1 then restores origin direction. No
+second oscillator/source, no frontend errors in the last production check.
