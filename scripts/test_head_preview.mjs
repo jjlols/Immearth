@@ -57,6 +57,7 @@ try {
   await page.locator('.regional-grid button').nth(0).click();
   await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition.x === 0);
 
+  await page.waitForFunction(()=>window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition.y===0);
   const start = await measure();
   assert.equal(start.committed, '0');
   assert.deepEqual(start.position, { x: 0, y: 0, z: 0 });

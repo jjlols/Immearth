@@ -73,7 +73,7 @@ export default function Jukebox(){
  const featureById=features?.[focus];
 
  const chooseExplorer=useCallback(index=>{chooseExplorerRegion(index);},[chooseExplorerRegion]);
- const travel=useHeadPreviewTravel({index:explorerIndex,choose:chooseExplorer,enabled:spatialEnabled && headInfluence});
+ const travel=useHeadPreviewTravel({index:explorerIndex,choose:chooseExplorer,enabled:spatialEnabled && headInfluence,engineRef:engine});
 
  const currentLayer=layers.find(l=>l.id===focus)||layers[0]||LAYER_OPTIONS[0];
  const currentIndex=travel.previewing?travel.regionIndex:explorerIndex;

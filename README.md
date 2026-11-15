@@ -135,7 +135,9 @@ Enable **Spatial sound**, then **Head travel**, and explicitly press Play. Hold
 left/right/up/down to preview the adjacent west/east/north/south region through
 the shared MP3, using that region’s existing estimated palette model. The amber
 map marker remains on its committed region while you look. Return to center
-within 1500 ms to commit exactly one step; after that window, recenter simply
+within 1500 ms to commit exactly one step; settled direction intents are
+published without an extra 360 ms hold, and unchanging frames avoid redundant UI work. Recognition
+remains local MediaPipe and time-scale of model frames varies hardware; shallow thresholds remain. after that window, recenter simply
 cancels the preview. A new direction immediately replaces the preview from the
 same committed region, including when Forward is not crossed. Repeated events
 from one held direction never recursively move across the grid, and

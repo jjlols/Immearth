@@ -8,7 +8,7 @@ import {
  * Head looks select only temporary musical features. useExplorer remains the
  * sole owner of the map marker and has the final say on its committed index.
  */
-export default function useHeadPreviewTravel({ index, choose, enabled = false }) {
+export default function useHeadPreviewTravel({ index, choose, enabled = false, engineRef }) {
   const controllerRef = useRef(null);
   const chooseRef = useRef(choose);
   chooseRef.current = choose;
@@ -21,18 +21,20 @@ export default function useHeadPreviewTravel({ index, choose, enabled = false })
 
   // A keyboard/grid commit cancels an old look; it must not be reinterpreted
   // relative to the region that the user just selected.
-  useEffect(() => {
-    controller.setCommittedIndex(index);
-    setPreview(null);
-  }, [controller, index]);
-
   const clear = useCallback(() => {
     controller.cancel();
+    engineRef?.current?.spatial?.setSourcePosition(CENTERED_SOURCE_POSITION);
     setPreview(null);
-  }, [controller]);
+  }, [controller, engineRef]);
 
   useEffect(() => {
-    if (!enabled) clear();
+    if (controller.pendingPreview) clear();
+    controller.setCommittedIndex(index);
+    setPreview(null);
+  }, [controller, index, clear]);
+
+  useEffect(() => {
+    clear();
   }, [enabled, clear]);
 
   const onDirectionChange = useCallback(event => {
@@ -41,14 +43,20 @@ export default function useHeadPreviewTravel({ index, choose, enabled = false })
     if (direction === 'forward' || direction === 'center' || direction === 'neutral') {
       controller.recenter(event.now ?? performance.now());
     } else if (['left', 'right', 'up', 'down'].includes(direction)) {
-      controller.preview(direction, event.now ?? performance.now());
+      if (controller.pendingPreview?.direction !== direction) {
+        controller.preview(direction, event.now ?? performance.now());
+      }
     } else {
       // stop, uncertain, calibration loss, and disabled opt-in are cancellation,
       // not a commit and never another input direction.
       controller.cancel();
     }
-    setPreview(controller.pendingPreview ? { ...controller.pendingPreview } : null);
-  }, [controller, enabled]);
+    const pending = controller.pendingPreview;
+    engineRef?.current?.spatial?.setSourcePosition(pending?.position ?? CENTERED_SOURCE_POSITION);
+    // Audio placement must follow an accepted head intent immediately; the
+    // following React paint remains committed selection/prose bookkeeping.
+    setPreview(pending ? { ...pending } : null);
+  }, [controller, enabled, engineRef, clear]);
 
   return {
     regionIndex: preview ? preview.index : index,

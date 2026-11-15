@@ -448,3 +448,39 @@ not by repeating old region summaries. Existing nearest-color rules are preserve
 NumPy-backed bounded summaries replace millions of per-pixel JSON dictionaries;
 feature totals, nearest-palette matches and no-data states remain estimates. The
 five maps, audio synthesis approach and geographic-origin caveats are unchanged.
+
+### Production release: 48-region six-by-eight map
+
+Pushed main at `e0a5aa8` normal fast-forward history. DeepSpace production
+release `rel_01M7G7FJ9G36KVAH6H1QCW093W` (#8) is confirmed serving at
+https://immearth.app.space; static data-plane status is unconfirmed. Verified
+the deployed selector has 48 regions and all 5 feature datasets have 48 entries.
+Manual right/left preview moves shared source to +/-2 offset; prompt recenter
+commits one real 8-column-grid step to index 1 then restores origin direction. No
+second oscillator/source, no frontend errors in the last production check.
+
+### Fast settled head-direction publishing
+
+`feature/fast-head-direction`: the old 360ms recognition dwell no longer delays
+each settled direction change. Direction-class intents publish immediately,
+sample cap is 32ms, vector publish interval is 55ms, center dwell is 80ms,
+matching the -- beware -- threshold / hysteresis / last face grace / PSP clock
+preserve. Equal direction frames no longer repaint unnecessary React/audio
+model work. Preview source audio now updates synchronously with committed useExplorer
+and cancels stale offsets immediately on manual keyboard/grid changes and stop.
+No additional sources/resumes/notes or sensor access changes were added.
+
+Verified 53 Node tests, npm build, head-preview four direction + commit/blocked/
+late expiry, synthetic camera lifecycle/error+cleanup/unmount, manual 2->-2 and
+lost-face/prompt commit path. Recorded synthetic settled input -> right x2 panner
+latency 12.875 ms on a localhost run, not a real-camera model timing claim or a
+subjective headphone inference. No blob/photo/GPS camera uploads. The marker
+still only advances after prompt centering within the 1500 ms return window,
+not instantly on directional preview. No commit, push or DeepSpace deployment
+requested/performed in this change.
+
+The optimization above was pushed at `c0554c6` and deployed as DeepSpace
+release `rel_01M7G9WKFT7QVJ8B2QD47FZV4V` (#9) after the stated local tests.
+Live check at http://immearth.app.space south preview y=-2 then committed
+Region 9 of 48 (index 8) with direct bypass at origin. All previous 'not pushed
+or deployed' fragments in this file describe older checkpoints, not this record.

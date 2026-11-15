@@ -68,8 +68,8 @@ test('classification boundaries preserve uncertain and per-axis hysteresis', () 
 });
 test('missing face uses short retained vector grace and then neutral without engine', () => {
  const state = createHeadDirectionState();
- assert.equal(state.poseAt({ yaw: 20, pitch: 0 }, 0).direction, 'uncertain');
- assert.equal(state.poseAt({ yaw: 20, pitch: 0 }, HEAD_DIRECTION_DEFAULTS.dwellMs).direction, 'right');
+ assert.equal(state.poseAt({ yaw: 20, pitch: 0 }, 0).direction, 'right');
+ assert.equal(state.poseAt({ yaw: 20, pitch: 0 }, HEAD_DIRECTION_DEFAULTS.directionDwellMs).direction, 'right');
  assert.equal(state.poseAt(null, 500).direction, 'right');
  assert.equal(state.poseAt(null, 1400).orientation.forward.y, 1);
  assert.equal(state.stop().orientation.forward.y, 1);
@@ -102,7 +102,7 @@ test('lost face can reacquire directional pose and vector after same dwell', () 
 test('sustained face after uncertain and pending dwell never overrides stable audio labels',()=>{
  const state=createHeadDirectionState();
  assert.equal(state.poseAt(null,0).direction,'uncertain');
- assert.equal(state.poseAt({yaw:25,pitch:0},200).direction,'uncertain');
+ assert.equal(state.poseAt({yaw:25,pitch:0},200).direction,'right');
  assert.equal(state.poseAt({yaw:25,pitch:0},600).direction,'right');
  assert.equal(state.poseAt({yaw:25,pitch:0},900).direction,'right');
 });
@@ -118,4 +118,23 @@ test('horizontal direction changes bypass a center classification and update vec
  assert.equal(changed.direction,'left');
  assert.ok(changed.orientation.forward.x<0,'right-to-left does not require forward or a stale orientation');
 
+});
+
+test('direction is fast while centering remains deliberate', () => {
+ const state=createHeadDirectionState();
+ assert.equal(state.poseAt({yaw:25,pitch:0},0).direction,'right');
+ assert.equal(state.poseAt({yaw:-25,pitch:0},50).direction,'left');
+ assert.equal(state.poseAt({yaw:0,pitch:0},60).direction,'left');
+ assert.equal(state.poseAt({yaw:0,pitch:0},HEAD_DIRECTION_DEFAULTS.centerDwellMs+60).direction,'forward');
+});
+
+test('current low-latency budgets have no redundant direction hold',()=>{
+ assert.equal(HEAD_DIRECTION_DEFAULTS.directionDwellMs,0);
+ assert.ok(HEAD_DIRECTION_DEFAULTS.centerDwellMs<=120);
+ assert.ok(HEAD_DIRECTION_DEFAULTS.sampleIntervalMs<=50);
+ assert.ok(HEAD_DIRECTION_DEFAULTS.minimumPublishMs<=100);
+ const state=createHeadDirectionState();
+ assert.equal(state.poseAt({yaw:22,pitch:0},0).direction,'right');
+ assert.equal(state.poseAt({yaw:0,pitch:0},1).direction,'right');
+ assert.equal(state.poseAt({yaw:0,pitch:0},HEAD_DIRECTION_DEFAULTS.centerDwellMs+1).direction,'forward');
 });

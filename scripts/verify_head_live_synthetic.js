@@ -90,7 +90,7 @@ try {
   // both source placement and preview model, without any grid movement.
   await page.evaluate(() => { window.__HEAD_POSE__ = { yaw: -25, pitch: 0, missing: false }; });
   await page.waitForFunction(() => document.querySelector('[data-direction]')?.dataset.direction === 'left', null, { timeout: 6000 });
-  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition.x === -2);
+  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition.x === -2, null, { timeout: 1000 });
   assert.equal(await page.locator('[data-exploration-region]').getAttribute('data-exploration-region'), '0');
   await page.evaluate(() => { window.__HEAD_POSE__ = { yaw: 0, pitch: 0, missing: true }; });
   await page.waitForFunction(() => document.querySelector('[data-direction]')?.dataset.direction === 'uncertain', null, { timeout: 6000 });
