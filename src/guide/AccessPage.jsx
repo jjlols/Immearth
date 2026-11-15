@@ -111,7 +111,7 @@ export default function AccessPage() {
             <div className="tile">
               <h3>How to look</h3>
               <ul className="key-list">
-                <li><span>Face the camera. That first look is forward, and the sound stays centered.</span></li>
+                <li><span>Face the camera. That first look is forward, and the sound stays centered. Calibrate front sets the way you are facing now as forward again.</span></li>
                 <li><span>Turn left to preview west, right to preview east, up to preview north, and down to preview south.</span></li>
                 <li><span>Come back to center within 1.5 seconds to take exactly one step. The marker stays on the current region while you look.</span></li>
                 <li><span>Looking the same way again does not keep walking. A blocked edge does not invent a move.</span></li>
