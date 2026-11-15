@@ -478,3 +478,9 @@ subjective headphone inference. No blob/photo/GPS camera uploads. The marker
 still only advances after prompt centering within the 1500 ms return window,
 not instantly on directional preview. No commit, push or DeepSpace deployment
 requested/performed in this change.
+
+The optimization above was pushed at `c0554c6` and deployed as DeepSpace
+release `rel_01M7G9WKFT7QVJ8B2QD47FZV4V` (#9) after the stated local tests.
+Live check at http://immearth.app.space south preview y=-2 then committed
+Region 9 of 48 (index 8) with direct bypass at origin. All previous 'not pushed
+or deployed' fragments in this file describe older checkpoints, not this record.
