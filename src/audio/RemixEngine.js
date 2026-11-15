@@ -287,21 +287,40 @@ export class RemixEngine {
 
   syncNOx() {
     if (!this.ctx || this.ctx.state !== 'running' || !this.isRunning) return;
-    const active = this.audible('nitrogen_oxides');
-    const model = this.models.get('nitrogen_oxides');
-    if (active && !this.noxVoice) {
-      const oscillator = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      oscillator.type = 'sine';
-      oscillator.frequency.value = finite(model.frequency, 220);
-      gain.gain.value = 0;
-      oscillator.connect(gain).connect(this.master);
-      oscillator.start();
-      this.noxVoice = { oscillator, gain };
+    const now = this.currentTime;
+    if (this.noxVoice && now >= this.noxVoice.expires) {
+      const voice = this.noxVoice;
+      this.noxVoice = null;
+      try { voice.oscillator.stop(now); } catch { /* Already ended. */ }
+      voice.oscillator.disconnect();
+      voice.gain.disconnect();
     }
-    if (!this.noxVoice) return;
-    this.ramp(this.noxVoice.oscillator.frequency, active ? model.frequency : 220, 0.65);
-    this.ramp(this.noxVoice.gain.gain, active && !this.muted ? 0.038 : 0, 0.35);
+    const model = this.models.get('nitrogen_oxides');
+    const active = this.audible('nitrogen_oxides') && model;
+    if (!active) return;
+    if (this.noxVoice) {
+      this.ramp(this.noxVoice.oscillator.frequency, model.frequency, 0.65);
+      this.ramp(this.noxVoice.gain.gain, this.muted ? 0 : 0.026, 0.6);
+      return;
+    }
+    if (now < (this.nextNoxPhraseAt || 0) || this.muted) return;
+    // A finite phrase: every source has the same names used by mixer/lifecycle.
+    const oscillator = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = Math.max(100, Math.min(1400, model.frequency));
+    gain.gain.value = 0;
+    oscillator.connect(gain).connect(this.master);
+    oscillator.start(now);
+    const record = {oscillator, gain, expires: now + 3.4};
+    this.noxVoice = record;
+    oscillator.onended = () => {
+      oscillator.disconnect();
+      gain.disconnect();
+      if (this.noxVoice === record) this.noxVoice = null;
+    };
+    this.ramp(gain.gain, 0.026, 0.05);
+    this.nextNoxPhraseAt = now + 10.5;
   }
 
   getOutputMetrics() {
@@ -331,10 +350,12 @@ export class RemixEngine {
     }
     this.accents.clear();
     if (this.noxVoice) {
-      try { this.noxVoice.oscillator.stop(); } catch { /* Already ended. */ }
-      this.noxVoice.oscillator.disconnect();
-      this.noxVoice.gain.disconnect();
+      const fadingVoice = this.noxVoice;
       this.noxVoice = null;
+      fadingVoice.oscillator.onended = null;
+      try { fadingVoice.oscillator.stop(); } catch { /* Already ended. */ }
+      fadingVoice.oscillator.disconnect();
+      fadingVoice.gain.disconnect();
     }
     if (this.original) {
       try { this.original.stop(); } catch { /* Already ended. */ }

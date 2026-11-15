@@ -71,7 +71,7 @@ test('CO uses actual nonuniform anchor gains, with no obsolete 65 ppbv sampling 
  assert.equal(coPadGain(undefined), 0);
 });
 
-test('NOₓ uses log rank and a bounded sustained voice rather than identical repeated chirps', async () => {
+test('NOₓ uses log rank with a bounded finite legato note rather than endless repeated chirps', async () => {
  assert.ok(pitchNOx(0.001) < pitchNOx(0.01));
  assert.ok(pitchNOx(0.01) < pitchNOx(10));
  assert.ok(pitchNOx(10) <= 1500);
@@ -80,12 +80,20 @@ test('NOₓ uses log rank and a bounded sustained voice rather than identical re
  await engine.tick();
  const guide = engine.noxVoice;
  assert.equal(guide.oscillator.started, 1);
- for (let i = 0; i < 12; i++) engine.tick();
+ engine.ctx.currentTime += 2.0;
+ engine.tick();
  assert.equal(engine.noxVoice, guide);
  assert.equal(engine.ctx.oscillators.length, 1);
  const low = guide.oscillator.frequency.value;
  engine.setModel({ nitrogen_oxides: featureModel('nitrogen_oxides', model(10)) }, { mode: 'composition' });
  assert.ok(guide.oscillator.frequency.value > low);
+ assert.ok(guide.expires - engine.currentTime < 4);
+ engine.ctx.currentTime = guide.expires + 0.1;
+ engine.tick();
+ assert.equal(engine.noxVoice, null);
+ engine.setVisibility('nitrogen_oxides', false);
+ assert.equal(engine.audible('nitrogen_oxides'), false);
+ assert.equal(engine.noxVoice, null);
  await engine.dispose();
 });
 
