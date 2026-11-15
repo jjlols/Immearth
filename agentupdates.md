@@ -19,5 +19,37 @@ main checkout were preserved throughout. Do not treat those as part of the
 withdrawn port. No pushes, deployments, force-push, hard reset, or changes to
 `NASA-SPACE-APP-overlays` were performed.
 
+## Search handoff: teammate React was recovered on remote main
+
+The true existing teammate authored React port is `b999e30`, and the next accessibility/
+color-blind polish is `34d8257`; both are on remote `main`. A clean local `git pull
+--ff-only` brought them into main, no merge/cherry-pick. Root React `App` already
+uses shared `music | guide | layers | photo` views (`?view=` deep link), and
+`PageSwitch` adds navigation and color-blind options. `npm run build` passes.
+
+Use this branch for coherent color/layout consolidation and any legacy→music redirect.
+Only public commit history is recovered for the actual teammate work; no viable
+local files were found for the uncommitted alternate `src/site/` agent shell.
+Early caption `voiceAction` contains old synthesized/guide-note phrases from
+teammate and needs shared `INSTRUMENT_INFO` adaptation: current audio remains
+one MP3 waveform with zero oscillators (do not reinstate old route). No deployment
+or live changes made in the locator action.
+
+## Standalone project checkpoint requested by user
+
+`JJsFrontend/` is a standalone working React snapshot for teammate, not a
+replacement nested React component or an automatic merge into the original root
+frontend. It copies root `src→src/app`, `site→src/site`, `overlay/overlay.css→
+src/overlay/overlay.css`, package manifest/Vite config and original public
+fields/audio/features/geometry/attribution. Root `test-js` remains the source
+of URL-audit and no-oscillator tests; single test helper script copied in it too.
+`npm ci`, `npm run dev -- --port 8010`, `npm run build` supported within it.
+
+Pending work explicitly in its README: shared style/color consolidation, old-
+style→music routes via current `App`/`PageSwitch` router, synthesized wording
+replaced with waveform shared mapping (rather than actual synth layer), careful
+optional voice/module recognition. No live deployment changes in this folder's
+creation. Current main and its running deployment stay unchanged.
+
 Browser checks made during that exploratory branch do **not** validate the most
 recent teammate/audio-agent versions. Rerun tests on current integrated code.

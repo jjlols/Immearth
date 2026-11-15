@@ -5,6 +5,7 @@ import { RemixEngine } from '../src/audio/RemixEngine.js';
 
 function createParams() {
  return { value: 0, events: [], cancelScheduledValues() { return this; },
+  cancelAndHoldAtTime() { return this; },
   setTargetAtTime(v) { this.value = v; this.events.push(['target', v]); return this; },
   setValueAtTime(v) { this.value = v; return this; },
   linearRampToValueAtTime(v) { this.value = v; return this; },
@@ -21,6 +22,8 @@ class MockContext {
  createGain() { const node = new ParamNode(); node.gain = createParams(); return node; }
  createOscillator() { throw new Error('Remix must never synthesize a tone.'); }
  createBiquadFilter() { const node = new ParamNode(); node.frequency = createParams(); node.Q = createParams(); return node; }
+ createPanner() { const node = new ParamNode(); this.panners ||= []; this.panners.push(node);
+  for (const key of ['positionX', 'positionY', 'positionZ']) node[key] = createParams(); return node; }
  createDynamicsCompressor() { const node = new ParamNode(); for (const key of ['threshold', 'knee', 'ratio', 'attack', 'release']) node[key] = createParams(); return node; }
  createBufferSource() { const node = new MockBufferSource(); node.loop = false; node.playbackRate = createParams(); (this.sources ||= []).push(node); return node; }
  get destination() { return {}; }
@@ -222,4 +225,69 @@ test('context stays suspended while a play load is pending, and load failures ne
  assert.equal(failed.isRunning, false);
  assert.equal(failed.ctx.state, 'suspended');
  await failed.dispose();
+});
+
+test('spatial opt-in keeps one lazy context/source/buffer and one selected nonduplicated output route', async () => {
+ const before = MockContext.instances;
+ let fetches = 0;
+ globalThis.fetch = () => { fetches++; return okFetch(); };
+ const engine = new RemixEngine({ contextClass: MockContext });
+ engine.setSpatialEnabled(true);
+ engine.setSpatialSourcePosition({ x: 1.5, y: 0.25, z: 0 });
+ engine.setSpatialListenerPosition({ x: 0, y: 0, z: 0 });
+ engine.setModel({ carbon_monoxide: featureModel('carbon_monoxide', model(500)) }, { mode: 'solo', selection: 'carbon_monoxide' });
+ assert.equal(engine.ctx, null);
+ assert.equal(MockContext.instances, before);
+ assert.equal(fetches, 0);
+ await engine.play();
+ assert.equal(MockContext.instances, before + 1);
+ assert.equal(engine.ctx.decodeCount, 1);
+ assert.equal(engine.ctx.sources.length, 1);
+ const source = engine.original;
+ assert.equal(engine.spatial.getDiagnostics().enabled, true);
+ assert.equal(engine.master.connect_type, engine.spatial.panner);
+ assert.equal(engine.spatial.panner.connect_type, engine.limiter);
+ assert.equal(engine.spatial.getDiagnostics().routes, 1);
+ assert.equal(engine.spatial.panner.positionX.value, 1.5);
+ engine.setSpatialEnabled(false);
+ assert.equal(engine.master.connect_type, engine.limiter);
+ assert.equal(engine.original, source);
+ engine.setSpatialEnabled(true);
+ engine.setVisibility('carbon_monoxide', false);
+ assert.equal(engine.gates.get('carbon_monoxide').gain.gain.value, 0);
+ assert.equal(engine.ctx.sources.length, 1);
+ assert.equal(fetches, 1);
+ engine.setMute(true);
+ engine.setSpatialEnabled(false);
+ assert.equal(engine.master.gain.value, 0);
+ await engine.pause();
+ assert.equal(engine.ctx.state, 'suspended');
+ assert.equal(engine.original, source);
+ await engine.reset();
+ assert.equal(engine.original, null);
+ assert.equal(engine.spatial.panner.connect_type, engine.limiter);
+ assert.equal(engine.master.connect_type, engine.limiter);
+ await engine.play();
+ assert.equal(engine.ctx.decodeCount, 1);
+ assert.equal(MockContext.instances, before + 1);
+ await engine.dispose();
+ assert.equal(engine.spatial.panner, null);
+ assert.equal(engine.spatial.getDiagnostics().enabled, false);
+ assert.equal(engine.ctx, null);
+});
+
+test('dispose invalidates a pending decode and cannot later publish or resume removed audio', async () => {
+ const engine = new RemixEngine({ contextClass: MockContext });
+ let resolveFetch;
+ globalThis.fetch = () => new Promise(done => { resolveFetch = done; });
+ const pending = engine.play();
+ await Promise.resolve();
+ await engine.dispose();
+ resolveFetch({ ok: true, arrayBuffer: async () => new ArrayBuffer(8) });
+ await pending;
+ assert.equal(engine.ctx, null);
+ assert.equal(engine.original, null);
+ assert.equal(engine.buffer, null);
+ assert.equal(engine.timer, null);
+ assert.equal(engine.isRunning, false);
 });

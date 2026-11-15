@@ -141,7 +141,7 @@ const OVERVIEW = [
   "This page presents five NASA Earth maps: precipitation, active fires, carbon monoxide, nitrogen oxides, and near-surface temperature. It also has a space photo of the day. Precipitation and fires are NASA’s latest published images. The other three are the first frame of an animation, not a verified latest observation.",
   "Four pages make up the site: this home page, the musical remix, the layer explorer, and the photo of the day. Open them from the menu at the top or from Open a page. The musical remix stays silent until you press Play remix.",
   "You can search the maps, read what each one shows, and move with Previous and Next. Start voice, then say next, previous, photo, a map name, or page overview. Say stop speaking to quiet the voice, or stop listening to turn the microphone off.",
-  "Immersive listening can place sound around you. Headphones are recommended. Use the direction slider, or say turn left, turn right, recenter, or test tones. The camera stays off unless you turn it on, and that picture stays on this computer.",
+  "3D listening opens the musical map. Explore its regions with W/A/S/D or arrow keys, choose one field or all of them, and select Play remix when you are ready.",
 ];
 
 const COMMAND_NAMES = [
@@ -286,10 +286,10 @@ export default function GuidePage() {
         openOverview();
         return OVERVIEW.join("\n");
       },
-      "turn left": () => (audio ? audio.nudgeHeading(-15, { announce: "none" }) : "Immersive listening is not available."),
-      "turn right": () => (audio ? audio.nudgeHeading(15, { announce: "none" }) : "Immersive listening is not available."),
-      recenter: () => (audio ? audio.recenter({ announce: "none" }) : "Immersive listening is not available."),
-      "test tones": () => (audio ? audio.startTestTones() : "Immersive listening is not available."),
+      "turn left": () => goToView("music", "map-navigation"),
+      "turn right": () => goToView("music", "map-navigation"),
+      recenter: () => goToView("music", "map-navigation"),
+      "test tones": () => goToView("music", "map-navigation"),
     };
     const result = actions[best.name] ? actions[best.name]() : goTo(best.name);
     if (typeof result === "string") speak(result);
@@ -410,7 +410,7 @@ export default function GuidePage() {
           <h3 className="destinations-group">On this page</h3>
           <ul className="destinations" role="list">
             <li><a className="destination" href="#maps"><strong>The five maps</strong><span>Each NASA Earth view, described in words, with what it does in the remix.</span></a></li>
-            <li><a className="destination" href="#immersive"><strong>3D listening</strong><span>Place sound around you with the slider, your keyboard, or your head.</span></a></li>
+            <li><a className="destination" href={hrefFor("music") + "#map-navigation"} onClick={(event) => { event.preventDefault(); goToView("music", "map-navigation"); }}><strong>3D listening</strong><span>Open the musical map. Move between regions and let your selected field shape the music.</span></a></li>
             <li><a className="destination" href="#move"><strong>Keyboard and voice help</strong><span>Every key and voice command for each page, in one list.</span></a></li>
           </ul>
         </section>
@@ -455,52 +455,10 @@ export default function GuidePage() {
         </section>
 
         <section className="band" id="immersive" aria-labelledby="immersive-title">
-          <div className="section-head">
-            <p className="eyebrow">Spatial sound</p>
-            <h2 id="immersive-title" tabIndex={-1}>Immersive listening</h2>
-            <p>Sound can sit on a globe around your head. Longitude 0 starts straight ahead, east is to your right, and north is up.</p>
-            <p className="headphones-note">Headphones recommended.</p>
-          </div>
-          <div className="listen-grid">
-            <div className="tile tile-direction">
-              <h3>Listening direction</h3>
-              <p id="heading-readout">Facing the prime meridian, straight ahead.</p>
-              <div className="range-field">
-                <label className="field-label" htmlFor="heading-slider">Direction</label>
-                <input id="heading-slider" type="range" min="-180" max="180" step="1" defaultValue="0" aria-describedby="heading-help" />
-                <div className="direction-scale" aria-hidden="true"><span>180° west</span><span>Forward</span><span>180° east</span></div>
-                <p id="heading-help" className="field-note">From 180 degrees west to 180 degrees east. Left and right arrow keys turn only while this slider is focused, not from the rest of the page.</p>
-              </div>
-              <div className="panel-row" role="group" aria-label="Listening direction buttons">
-                <button type="button" className="button button-quiet" id="turn-left">Turn left</button>
-                <button type="button" className="button button-quiet" id="turn-right">Turn right</button>
-                <button type="button" className="button button-secondary" id="recenter-heading">Recenter</button>
-              </div>
-              <div className="range-field">
-                <label className="field-label" htmlFor="master-volume">Overall volume</label>
-                <input id="master-volume" type="range" min="0" max="100" step="1" defaultValue="70" aria-describedby="volume-help" />
-                <p id="volume-help" className="field-note">Master volume for every spatial sound, from silent to full.</p>
-              </div>
-            </div>
-            <div className="tile">
-              <h3>Turn with your head</h3>
-              <div className="panel-row">
-                <button type="button" className="button button-secondary" id="head-tracking-toggle" aria-pressed="false" aria-describedby="camera-privacy">Use camera to turn with your head</button>
-              </div>
-              <p id="camera-privacy" className="field-note">Optional, and off until you turn it on. Head tracking stays on this computer. The camera picture is used only to see which way your head is turned. It is not recorded, stored, or sent anywhere. The tracking model is downloaded once when you turn this on. If your device is set to reduce motion, the preview is hidden and tracking can still run.</p>
-              <p id="camera-status" className="voice-hint">Camera is off. Use the slider, arrow keys, or Turn left and Turn right.</p>
-              <div className="camera-preview" id="camera-preview" hidden>
-                <video id="head-camera" className="head-camera" width="320" height="240" autoPlay muted playsInline aria-hidden="true" />
-              </div>
-            </div>
-            <div className="tile">
-              <h3>Check your headphones</h3>
-              <div className="panel-row">
-                <button type="button" className="button button-secondary" id="play-test-tones" aria-pressed="false">Play test tones</button>
-                <button type="button" className="button button-quiet" id="stop-test-tones">Stop test tones</button>
-              </div>
-              <p className="field-note">Four soft pentatonic notes: in front, on your right, behind you, and on your left. Nothing plays until you press Play test tones. Stop test tones or Escape ends them.</p>
-            </div>
+          <div className="section-head"><p className="eyebrow">Spatial sound</p><h2 id="immersive-title" tabIndex={-1}>3D listening</h2>
+            <p>Move through twelve musical map regions and hear one shared recording respond to your chosen field.</p>
+            <a className="button button-primary" href={hrefFor('music') + '#map-navigation'} onClick={(event) => { event.preventDefault(); goToView('music', 'map-navigation'); }}>Open the listening map</a>
+            <p className="field-note">A first-visit guide shows you how to use W/A/S/D, arrow keys and region buttons. Nothing plays until you choose Play remix. Headphones are recommended. GPS or camera access is not requested for map exploration.</p>
           </div>
         </section>
 
@@ -589,7 +547,7 @@ export default function GuidePage() {
             <li>Text can be enlarged, and the layout reflows on narrow screens and at high zoom.</li>
             <li>Search results and section changes are announced to screen readers.</li>
             <li>The microphone turns on only after you press Start voice. Your speech is recognized on this computer by sherpa-onnx, an open-source keyword spotter that listens only for this site’s commands. It is not sent to an online service.</li>
-            <li>Immersive listening stays quiet until you press Play test tones or another sound is started. A text line shows which way you are facing. Headphones are recommended. The camera stays off until you ask, and the picture is processed on this computer.</li>
+      <li>3D listening opens the musical map in the same page. The first-visit guide explains the twelve-region keyboard controls. Nothing plays until you press Play remix.</li>
             <li>An opening animation plays when you arrive. Press Space, Escape, or Skip, or click the animation, and it fades away. It stays off when your device is set to reduce motion.</li>
             <li>Color blind colors, at the top of every page, switches the interface to blue, orange, and patterns.</li>
             <li>The musical remix stays silent until you press Play remix. What you hear is also written out in words, so the music can be followed without sound.</li>

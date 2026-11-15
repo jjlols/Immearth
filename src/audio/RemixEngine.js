@@ -1,3 +1,5 @@
+import { SpatialRenderer } from './spatialRenderer.js';
+
 const finite = (value, fallback) => Number.isFinite(value) ? value : fallback;
 const clampUnit = value => Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
 const FIRE_INTERVAL_SECONDS = 8.4;
@@ -28,6 +30,8 @@ export class RemixEngine {
     this.nextFrozenAt = 0;
     this.nextFireAt = 0;
     this.noxFilterFrequency = 16000;
+    this.spatial = new SpatialRenderer();
+    this.spatialEnabled = false;
     this.lastSourceRate = 1;
     this.isRunning = false;
     this.muted = false;
@@ -48,6 +52,7 @@ export class RemixEngine {
       temperatureRate: this.targets.get(this.original?.playbackRate) ?? 1,
       carbonPadGain: this.targets.get(this.gates.get('carbon_monoxide')?.gain.gain) ?? 0,
       noxFrequency: this.targets.get(this.color?.frequency) ?? this.color?.frequency.value ?? null,
+      spatial: this.spatial.getDiagnostics(),
       activeIds: [...this.models.keys()].filter(id => this.audible(id)),
       activeAccentCount: this.accents.size,
       contextState: this.ctx?.state,
@@ -69,7 +74,7 @@ export class RemixEngine {
     this.limiter.attack.value = 0.01;
     this.limiter.release.value = 0.2;
     this.master.gain.value = 0;
-    this.master.connect(this.limiter);
+    this.spatial.attach(this.ctx, this.master, this.limiter);
     if (typeof this.ctx.createAnalyser === 'function') {
       this.analyser = this.ctx.createAnalyser();
       this.analyser.fftSize = 2048;
@@ -113,15 +118,20 @@ export class RemixEngine {
   async fetchBuffer() {
     if (this.buffer) return this.buffer;
     if (!this.loading) {
-      this.loading = (async () => {
+      const request = this.playRequest;
+      const context = this.ctx;
+      const load = (async () => {
         const response = await fetch(this.sourceUrl);
         if (!response.ok) throw new Error(`The original track could not load (HTTP ${response.status}). Playback remains off.`);
         const bytes = await response.arrayBuffer();
-        const buffer = await this.ctx.decodeAudioData(bytes);
+        const buffer = await context.decodeAudioData(bytes);
         if (!(buffer.duration > 0)) throw new Error('The recording decoded to an empty buffer. Playback remains off.');
+        if (request !== this.playRequest || this.ctx !== context) return null;
         this.buffer = buffer;
         return buffer;
-      })().finally(() => { this.loading = null; });
+      })();
+      this.loading = load;
+      load.finally(() => { if (this.loading === load) this.loading = null; }).catch(() => {});
     }
     return this.loading;
   }
@@ -185,6 +195,36 @@ export class RemixEngine {
   }
   setSelected(id) { this.selection = id; this.refresh(); }
   setMode(mode) { this.mode = mode === 'composition' ? 'composition' : 'solo'; this.refresh(); }
+  /** Opt-in only; does not construct/resume an AudioContext or start playback. */
+  setSpatialEnabled(enabled) {
+    this.spatialEnabled = Boolean(enabled);
+    this.spatial.setEnabled(this.spatialEnabled);
+    if (this.ctx && !this.spatial.panner) {
+      throw new Error('Spatial sound requires Web Audio PannerNode support; the original stereo mix remains available.');
+    }
+    this.onChange?.(this);
+    return this.spatial.getDiagnostics();
+  }
+  setSpatialSourcePosition(position) {
+    const result = this.spatial.setSourcePosition(position);
+    this.onChange?.(this);
+    return result;
+  }
+  setSpatialListenerPosition(position) {
+    const result = this.spatial.setListenerPosition(position);
+    this.onChange?.(this);
+    return result;
+  }
+  setSpatialListenerOrientation(forward, up) {
+    const result = this.spatial.setListenerOrientation(forward, up);
+    this.onChange?.(this);
+    return result;
+  }
+  setSpatialDistanceModel(settings) {
+    const result = this.spatial.setDistanceModel(settings);
+    this.onChange?.(this);
+    return result;
+  }
   setVisibility(id, visible) {
     if (visible) this.hidden.delete(id);
     else this.hidden.add(id);
@@ -325,12 +365,40 @@ export class RemixEngine {
     if (!this.analyser || !this.ctx) return null;
     const samples = new Float32Array(this.analyser.fftSize);
     this.analyser.getFloatTimeDomainData(samples);
-    let peak = 0, sum = 0;
-    for (const sample of samples) {
-      peak = Math.max(peak, Math.abs(sample));
-      sum += sample * sample;
+    const measure = values => {
+      let peak = 0, sum = 0;
+      for (const sample of values) {
+        peak = Math.max(peak, Math.abs(sample));
+        sum += sample * sample;
+      }
+      return { rms: Math.sqrt(sum / values.length), peak };
+    };
+    const overall = measure(samples);
+    const channels = [measure(samples)];
+    if (typeof this.ctx.createChannelSplitter === 'function' && typeof this.ctx.createAnalyser === 'function') {
+      try {
+        if (!this.stereoMeter) {
+          this.stereoMeter = { splitter: this.ctx.createChannelSplitter(2), analysers: [] };
+          for (let channel = 0; channel < 2; channel++) {
+            const analyser = this.ctx.createAnalyser();
+            analyser.fftSize = this.analyser.fftSize;
+            analyser.smoothingTimeConstant = this.analyser.smoothingTimeConstant;
+            this.stereoMeter.splitter.connect(analyser, channel);
+            this.stereoMeter.analysers.push(analyser);
+          }
+          // Meter-only splitter outputs do not connect to the audio destination.
+          this.analyser.connect(this.stereoMeter.splitter);
+        }
+        for (let channel = 0; channel < 2; channel++) {
+          const channelSamples = new Float32Array(this.stereoMeter.analysers[channel].fftSize);
+          this.stereoMeter.analysers[channel].getFloatTimeDomainData(channelSamples);
+          channels[channel] = measure(channelSamples);
+        }
+      } catch {
+        // Overall analyser remains compatible; stereo fields honestly unavailable.
+      }
     }
-    return { rms: Math.sqrt(sum / samples.length), peak, contextState: this.ctx.state };
+    return { ...overall, channels, spatial: this.spatial.getDiagnostics(), contextState: this.ctx.state };
   }
 
   stopSources() {
@@ -391,14 +459,20 @@ export class RemixEngine {
 
   async dispose() {
     await this.reset();
+    // Cut any pending decode's publication before disconnecting the shared graph.
+    this.playRequest++;
+    this.spatial.dispose();
     this.master?.disconnect();
     this.limiter?.disconnect();
     this.analyser?.disconnect();
+    this.stereoMeter?.splitter.disconnect();
+    this.stereoMeter?.analysers.forEach(analyser => analyser.disconnect());
     if (this.ctx && this.ctx.state !== 'closed') await this.ctx.close();
     this.ctx = null;
     this.master = null;
     this.limiter = null;
     this.analyser = null;
+    this.stereoMeter = null;
     this.buffer = null;
     this.loading = null;
     this.onChange = null;

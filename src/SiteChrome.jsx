@@ -7,28 +7,8 @@ const NAV = [
   { view: "music", label: "Musical remix" },
   { view: "layers", label: "Layer explorer" },
   { view: "photo", label: "Photo of the day" },
+  { view: "music", label: "How to use the map", hash: "map-navigation" },
   { view: "home", label: "Help", hash: "move" },
-];
-
-const FOOTER_GROUPS = [
-  {
-    title: "Pages",
-    links: [
-      { view: "home", label: "Earth Jukebox home" },
-      { view: "music", label: "Play the musical remix" },
-      { view: "layers", label: "Stack maps in the layer explorer" },
-      { view: "photo", label: "Add the photo of the day" },
-    ],
-  },
-  {
-    title: "On the home page",
-    links: [
-      { view: "home", label: "The five maps", hash: "maps" },
-      { view: "home", label: "3D listening", hash: "immersive" },
-      { view: "home", label: "Keyboard and voice help", hash: "move" },
-      { view: "home", label: "Accessibility", hash: "access" },
-    ],
-  },
 ];
 
 function linkProps({ view, hash }) {
@@ -84,16 +64,6 @@ export default function SiteChrome({ current, part = "both" }) {
               <p>A NASA Space Apps Challenge project. Not an official NASA website.</p>
               <p>Music: “Deliberate Thought” by Kevin MacLeod, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0 (opens in a new tab)</a>.</p>
             </div>
-            {FOOTER_GROUPS.map((group) => (
-              <nav key={group.title} aria-label={group.title}>
-                <p className="footer-heading">{group.title}</p>
-                <ul>
-                  {group.links.map((item) => (
-                    <li key={item.label}><a {...linkProps(item)}>{item.label}</a></li>
-                  ))}
-                </ul>
-              </nav>
-            ))}
           </div>
         </footer>
       )}

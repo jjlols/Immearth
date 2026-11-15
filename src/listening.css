@@ -1,0 +1,26 @@
+.masthead .brand-main{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.masthead{min-height:10px;border:0;padding:0}
+.intro-block{margin-top:24px;align-items:center;background:#fff;border:0;border-radius:14px;box-shadow:0 8px 35px #0b3d910d}
+.intro-block h1{font-size:58px;color:#16345b;line-height:1.08}
+.intro-block .lede{color:#5f6f7f;font:17px/1.65 Arial,'Segoe UI',sans-serif}
+.intro-block .eyebrow{font-size:12px;letter-spacing:.13em}
+.music-console{background:#f6f9fc;border:1px solid #c5d7ea;padding:22px;gap:20px;box-shadow:0 4px 28px #1744870d}
+.track-copy h2{color:#174a7c;font:400 28px Georgia,serif}
+.track-detail{font-size:13px;color:#5f6f7f}
+.main-action{border-color:#0b3d91;background:#0b3d91;border-radius:8px;font-weight:600}
+.main-action:hover{background:#092c6a}
+.secondary-action{border-radius:8px}
+.workspace-title h2,.panel-heading h2,.instrument-guide h2,.region-study h3{color:#24466a;font-family:Georgia,serif;font-weight:400}
+.map-frame{border-color:#839cc1;border-radius:10px}
+.explorer-panel,.instrument-guide,.region-study{border-color:#c5d7ea;border-radius:10px;background:#fff;color:#344f69}
+.map-options,.mode-explainer,.region-study p{color:#61758b;font-size:13px;font-weight:400;line-height:1.65}
+.metric-text strong{color:#21527b}.metric-text small{color:#60778d}.source-card{border-color:#d1ddec}.reset-composition{color:#183f6b}
+.masthead .brand-main{font-size:13px;font-weight:400;margin:0}
+.value-provision{background:#eff5fc;border-radius:8px;padding:16px;color:#294869;line-height:1.6}
+.license-paper{border-top:1px solid #cfdfef;color:#546e8c;line-height:1.75}
+.hearing-caption{font-size:12px;color:#576d85;line-height:1.65}.progress-wrap{display:flex;align-items:center;gap:9px}.progress-rail{flex:1}.progress-percent{font-size:10px;color:#60738a}.source-license{font-size:10px}
+.region-study .current-region{font-size:12px}.regional-grid button{border-color:#b8ccde}.regional-grid button[aria-pressed=true]{border-color:#0b3d91;outline:2px solid #0b3d91;outline-offset:2px}
+.notes-footer{display:none}.map-navigation{padding:30px 0 14px}.map-navigation h2{color:#365c87;font-family:Georgia,serif;font-size:32px;font-weight:400}.map-navigation .eyebrow{letter-spacing:.16em;color:#71859a;font:11px sans-serif}
+@media (max-width:1000px){.workspace-shared{grid-template-columns:1fr}.source-controllers{grid-template-columns:1fr 1fr}.music-console{grid-template-columns:1fr}.listening-tutorial{width:calc(100% - 28px);padding:23px}.intro-block .map-help-nav{margin-top:14px}.intro-block h1{font-size:40px}}
+@media(max-width:650px){.source-controllers{grid-template-columns:1fr}.intro-block{padding:22px}.map-help-nav a,.map-help-nav button{font-size:13px}.intro-block .lede{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.listening-tutorial{transition:none}.progress-rail>span{transition:none}}

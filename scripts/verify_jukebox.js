@@ -34,7 +34,12 @@ const region = () => page.locator('[data-exploration-region]').getAttribute('dat
 const engine = expression => page.evaluate(expression);
 
 try {
- await page.goto(`${origin}?view=music`, { waitUntil: 'networkidle' });
+ const musicUrl = new URL(origin);
+ musicUrl.searchParams.set('view', 'music');
+ await page.goto(musicUrl.href, { waitUntil: 'networkidle' });
+ if (await page.locator('dialog.listening-tutorial[open]').count()) {
+  await page.getByRole('button', { name: 'Start exploring', exact: true }).click();
+ }
  await page.waitForSelector('[data-source-card]');
  await page.waitForFunction(() => !document.querySelector('.music-console .main-action')?.disabled);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
@@ -75,6 +80,31 @@ try {
  assert.deepEqual(requests, [200], 'one successful source request per decoded track');
  assert.ok(initial.signals.peak > 0, 'post-chain waveform must contain nonzero audio');
  assert.ok(initial.signals.rms > 0, 'post-chain RMS must contain nonzero audio');
+ const spatialBefore = await engine(() => {
+  const e = window.__JUKEBOX_AUDIO_REF__.current;
+  const fetches = window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length;
+  const before = document.activeElement;
+  e.setSpatialEnabled(true);
+  e.setSpatialSourcePosition({ x: 0, y: 0, z: 0 });
+  return { source: e.original === window.__AUDIO_AUDIT__.originalSource, fetches,
+   position: e.spatial.getDiagnostics().direction.directional, selected: e.playableParameters.spatial.enabled,
+   unchangedFocus: document.activeElement === before };
+ });
+ assert.equal(spatialBefore.source, true);
+ assert.equal(spatialBefore.fetches, 1);
+ assert.equal(spatialBefore.position, false, 'co-located sources have no inferred direction');
+ assert.equal(spatialBefore.selected, true);
+ await page.waitForTimeout(300);
+ await engine(() => { const e = window.__JUKEBOX_AUDIO_REF__.current;
+  e.setSpatialListenerPosition({ x: 0, y: 0, z: 0 });
+  e.setSpatialListenerOrientation({ x: 0, y: 1, z: 0 }, { x: 0, y: 0, z: 1 });
+  e.setSpatialSourcePosition({ x: 2, y: 0, z: 0 });
+ });
+ await page.waitForTimeout(600);
+ await engine(() => window.__JUKEBOX_AUDIO_REF__.current.setSpatialEnabled(false));
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'source').length), 1);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
 
  await page.evaluate(() => document.activeElement?.blur());
  assert.equal(await region(), 0);
@@ -140,6 +170,33 @@ try {
  await page.getByRole('button', { name: /Solo \/ Explore/ }).click();
  await page.getByRole('button', { name: 'Explore Nitrogen oxides musical mapping' }).click();
  assert.deepEqual(await engine(() => [...window.__JUKEBOX_AUDIO_REF__.current.models.keys()].filter(id => window.__JUKEBOX_AUDIO_REF__.current.audible(id))), ['nitrogen_oxides']);
+ const spatial = await engine(() => {
+  const e = window.__JUKEBOX_AUDIO_REF__.current;
+  let count = window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length;
+  e.setSpatialEnabled(true);
+  e.setSpatialSourcePosition({ x: 2, y: 0.15, z: 0.1 });
+  return { settings: e.spatial.getDiagnostics(), fetchesBefore: count, source: e.original };
+ });
+ await page.waitForTimeout(1300);
+ const spatialSignals = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.getOutputMetrics());
+ assert.ok(spatialSignals.channels.length >= 2);
+ assert.ok(spatialSignals.channels[0].rms > 0 && spatialSignals.channels[1].rms > 0);
+ assert.ok(spatialSignals.channels.every(channel => Number.isFinite(channel.peak) && channel.peak > 0));
+ assert.deepEqual(await engine(() => [...window.__JUKEBOX_AUDIO_REF__.current.models.keys()].filter(id => window.__JUKEBOX_AUDIO_REF__.current.audible(id))), ['nitrogen_oxides']);
+ await engine(() => { window.__JUKEBOX_AUDIO_REF__.current.spatial.reset();
+  window.__JUKEBOX_AUDIO_REF__.current.setSpatialSourcePosition({ x: -2, y: 0.15, z: 0.1 });
+  window.__JUKEBOX_AUDIO_REF__.current.setSpatialEnabled(true); });
+ await page.waitForTimeout(1300);
+ const spatialLeftSignals = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.getOutputMetrics());
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), spatial.fetchesBefore);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'source').length), 1);
+ assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'oscillator').length), 0);
+ await engine(() => window.__JUKEBOX_AUDIO_REF__.current.setSpatialEnabled(false));
+ await page.getByRole('button', { name: 'Mute', exact: true }).click();
+ await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.getOutputMetrics().channels.every(channel => channel.rms < 0.0001));
+ const muteSpatial = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.getOutputMetrics());
+ await page.getByRole('button', { name: 'Unmute', exact: true }).click();
+ await page.waitForTimeout(250);
 
  await page.getByRole('button', { name: 'Pause', exact: true }).click();
  await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'suspended');
@@ -159,7 +216,12 @@ try {
  await page.getByRole('button', { name: 'Unmute', exact: true }).click();
 
  const failedPage = await browser.newPage();
- await failedPage.goto(`${origin}?view=music`, { waitUntil: 'networkidle' });
+ const failureUrl = new URL(origin);
+ failureUrl.searchParams.set('view', 'music');
+ await failedPage.goto(failureUrl.href, { waitUntil: 'networkidle' });
+ if (await failedPage.locator('dialog.listening-tutorial[open]').count()) {
+  await failedPage.getByRole('button', { name: 'Start exploring', exact: true }).click();
+ }
  await failedPage.route('**/audio/deliberate-thought.mp3', route => route.fulfill({ status: 503, body: 'unavailable' }));
  await failedPage.getByRole('button', { name: 'Play remix', exact: true }).click();
  await failedPage.getByRole('alert').waitFor();
@@ -178,9 +240,9 @@ try {
  assert.ok(responsive.scroll <= responsive.viewport);
  assert.equal(responsive.transport, true);
  assert.deepEqual(errors, []);
- console.log(JSON.stringify({ status: 'passed', origin, mp3Requests: requests, initial, live, sustained, responsive,
+ console.log(JSON.stringify({ status: 'passed', origin, mp3Requests: requests, initial, live, sustained, spatial, spatialSignals, spatialLeftSignals, muteSpatial, responsive,
   contextCount: 1, decodedBuffers: 1, resetReplayUsesOriginalDecode: true,
-  caveat: 'Headless analyser verifies generated post-chain signals, not subjective audibility through physical speakers. Check OS/browser/output volume before changing source gain.' }, null, 2));
+  caveat: 'Headless analysers measure final-channel stereo RMS/peak, not subjective audibility or binaural localization. Manual headphone listening remains unverified. Check OS/browser/output volume before changing source gain.' }, null, 2));
 } finally {
  await browser.close();
 }

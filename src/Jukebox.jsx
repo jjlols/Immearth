@@ -5,8 +5,9 @@ import SpatialOriginMarker from './components/SpatialOriginMarker.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
 import {explorerPosition,useExplorer} from './hooks/useExplorer.js';
-import SpaceWash, { SPACE_PHOTOS } from './SpaceWash.jsx';
 import SiteChrome from './SiteChrome.jsx';
+import ListeningTutorial from './components/ListeningTutorial.jsx';
+import './listening.css';
 
 function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex}){
  return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration">
@@ -160,8 +161,8 @@ export default function Jukebox(){
  <a className="skip-link" href="#music-title">Skip to the music player</a><a className="skip-link" href="#map-controls">Skip to fields</a><a className="skip-link" href="#learning">Skip to learning guide</a>
  <SiteChrome current="music" part="header" />
  <div className="jukebox-shell">
- <header className="masthead"><span className="brand-main" id="music-title" tabIndex={-1}>Musical remix. Press Play remix to start. W, A, S, D or the arrow keys move between 12 regions.</span><button className="mobile-toggle" type="button" aria-expanded={mobileMenu} onClick={()=>setMobileMenu(!mobileMenu)}>{mobileMenu?'Close transport':'Music'}</button></header>
- <section className="intro-block has-space"><SpaceWash photo={SPACE_PHOTOS.marble} /><div><p className="small-caps">A QUIET MUSICAL INTERPRETATION OF THE WORLD</p><h1>One planet.<br/><em>Five voices.</em></h1></div><p className="intro-aside">Bring the unseen into the foreground.<br/>Follow a single field, or meet the ensemble.</p></section>
+ <header className="masthead"><h1 className="brand-main" id="music-title" tabIndex={-1}>Listening map. Music begins only when you press Play remix.</h1></header>
+ <section className="intro-block"><div><p className="eyebrow">Earth Information Center / 3D listening</p><h1>Hear your place.<br/><em>Feel the world.</em></h1></div><p className="intro-aside">Choose one map or combine eligible layers in the shared recording. Explore its regions with your keyboard.</p></section>
  <section className={`${mobileMenu?'music-shortcut':''} music-console`} aria-label="Music controls">
   <div className="score-badge" aria-hidden="true"><span>∿</span></div>
   <div className="track-copy"><p className="small-caps">SOUNDS LIKE A THOUGHT, UNFOLDING</p><h2>Deliberate Thought<span>Kevin MacLeod · 69 BPM</span></h2>
@@ -203,23 +204,20 @@ export default function Jukebox(){
    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>↻ Reset layers</button></div>
   </aside>
  </div>
+ <section className="map-navigation" id="map-navigation" aria-labelledby="map-navigation-title">
+ <p className="eyebrow">Map navigation</p><h2 id="map-navigation-title" tabIndex={-1}>Move. Select. Listen.</h2>
+ <div className="map-navigation-grid"><p><strong>Move:</strong> use W/A/S/D or arrow keys with the page background focused, or choose a numbered region button. Home returns to region 1.</p><p><strong>Listen:</strong> Solo focuses one field; Composition combines all eligible visible maps. Hidden maps cannot sound.</p></div>
+ </section>
  <section className="learning-floor" id="learning">
- <section className="instrument-guide" aria-labelledby="voice-title"><div className="guide-label"><p className="small-caps">FIELD STUDY / MUSICAL VOCABULARY</p><span className={`listen-indicator ${playState==='playing'?'playing-dotted':''}`} title={playState==='playing'?'Audio is active':'No sound playing'}>{playState==='playing'?'AUDIO ACTIVE':'SILENT BY CHOICE'}</span></div>
- <h2 id="voice-title">{currentLayer.label}<span className="voice-kind"> / {INSTRUMENT_INFO[currentLayer.id]?.kind||'source mapping'}</span></h2>
- <p className="voice-description">{INSTRUMENT_INFO[currentLayer.id]?.explanation ||'You’re listening to a constrained recursive source composition. The map explains what each voice is and the limits of it.'}</p>
- <div className="value-provision"><span className="estimate-label">ESTIMATED PALETTE EVIDENCE</span><strong>{describeFeature(focus,currentFeature)}</strong></div>
- <div className="mapping-section"><h3>How this voice is derived</h3><p>{INSTRUMENT_INFO[currentLayer.id]?.caveat ||'Review the palette input accounts.'}</p></div>
- <div className="provenance"><span>RGB ≠ direct science.</span><p>Labels-to-values are supplied by previous reviewed palette <em>estimates</em>. Every musical adjustment maps from those closest legitimate classes, not luminance, not geolocation. Raw-data adapters can replace mapping later. Wrong hues, text, boundaries or disconnected pixels remain unclassified—not invented numbers.</p></div>
- </section>
- <RegionStudy layerLabel={currentLayer.label} regions={featureById||[]} selected={currentIndex} onSelect={chooseExplorerRegion} announcement={regionStatus(currentIndex,currentLayer.label,describeFeature(focus,currentFeature))}/>
- </section>
- <section className="function-explainer" id="method"><span className="imagined-icon" aria-hidden="true">↺</span><div><h2>Hear what the data has to say—not guess what it cannot.</h2><p>The soundtrack’s role is to support guided curiosity. High on a <em>specific scientific scale</em> does not mean higher pitch automatically. NOₓ follows log₁₀ ranks while CO uses nonuniform palette anchors. Precipitation respects separate liquid/frozen groupings and fire strength respects FRP units. Temperature T2M is set in Celsius with the short-caption 3m vs detailed 2m note kept. Raw times are independent from music elapsed time.</p></div></section>
- <details id="attribution" className="license-paper"><summary>Music attribution and scientific uncertainty</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0, opens in a new tab)</a>. The local recording is decoded once per engine lifetime. Generic filters, pad-gain branches and limited synthesized voices are modifications of the approved recording, not official stems. Attribution is preserved in the interface and project license files.</p>
+ <section className="instrument-guide"><p className="small-caps">In focus</p><h2 id="voice-title">{currentLayer.label}</h2><div className="value-provision">{describeFeature(focus,currentFeature)}</div>
+ <details className="mapping-section"><summary>How this field modifies the recording</summary><p>{INSTRUMENT_INFO[currentLayer.id]?.explanation||''}</p><p>{INSTRUMENT_INFO[currentLayer.id]?.caveat||''}</p><p>Estimated palette labels are not calibrated NASA numeric measurements.</p></details></section>
+ <RegionStudy layerLabel={currentLayer.label} regions={featureById||[]} selected={currentIndex} onSelect={chooseExplorerRegion} announcement={regionStatus(currentIndex,currentLayer.label,describeFeature(focus,currentFeature))}/></section>
+ <details id="attribution" className="license-paper"><summary>Music attribution and scientific uncertainty</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0, opens in a new tab)</a>. The local recording is decoded once per engine lifetime. Generic filters, playback-rate changes and gain envelopes modify the original recording; no oscillator or generated guide tone exists. No official stems are claimed. Attribution is preserved in the interface and project license files.</p>
  <p>NASA palette stations support semantic tools not medical/population statements. The same source aspect ratio is not identical geographically verified projection or acquisition time. Continuous global fields drawn as a colored image can be inspected as whole pixels (maps) and reduced to bounded classifications (music). This is an interpretive educational listening aid, not physical truth sonification or a weather warning service. Scientific data must come from verified underlying measurement input for any absolute calibration.</p>
  <p>Navigation and map inspection stay silent before Play. Source values remain nearest-palette estimates with the recorded uncertainty. See README.md and LICENSES.md for full implementation and verification notes. DeepSpace deployment is not configured or claimed.</p></div></details>
  <footer className="notes-footer"><span>NASA Scientific Visualization Studio · Natural Earth geography · Kevin MacLeod</span><span>Built with React and Web Audio, respectfully at 69 BPM.</span></footer>
  </div>
- <SiteChrome current="music" part="footer" />
+ <ListeningTutorial /><SiteChrome current="music" part="footer" />
  </>;
 }
 
@@ -236,20 +234,20 @@ function regionStatus(selected,layerLabel,featureSentence){
 }
 function voiceAction(id,model){
  if(id==='precipitation'){
-  const bits=[];
-  if(model.densities?.rain)bits.push('limited rain-like droplets');
-  if(model.densities?.frozen)bits.push('separate frozen droplets');
-  return bits.join(' and ')||'no droplet density';
+  const sounds=[];
+  if(model.densities?.rain)sounds.push('stronger brief music swells');
+  if(model.densities?.frozen)sounds.push('quieter low-frequency swells');
+  return sounds.join(' and ')|| 'silent tuned drops';
  }
- if(id==='active_fires')return 'an occasional accent from estimated fire radiative power';
- if(id==='carbon_monoxide')return 'a filtered pad following the estimated carbon monoxide tier';
- if(id==='nitrogen_oxides')return 'one sustained note from the estimated nitrogen oxides range';
+ if(id==='active_fires')return 'spaced, brief music accents responding to estimated fire power';
+ if(id==='carbon_monoxide')return 'more low-frequency recording volume for higher estimated CO tiers';
+ if(id==='nitrogen_oxides')return 'brighter recording for higher estimated NOx, using its logarithmic scale';
  if(id==='near_surface_temperature'){
-  if(model.playbackRate>1.05)return 'the shared recording faster, from a warmer estimated palette';
-  if(model.playbackRate<0.95)return 'the shared recording slower, from a colder estimated palette';
-  return 'the shared recording near its original speed';
+  if(model.playbackRate>1.05)return 'a faster recording in warmer estimated regions';
+  if(model.playbackRate<0.95)return 'a slower recording in colder estimated regions';
+  return 'nearly the original music speed';
  }
- return 'an estimated palette voice';
+ return 'an estimated musical mapping';
 }
 function hearingCaption({playState,muted,mode,focusId,layers,models,visible}){
  const considered=mode==='solo'?layers.filter(layer=>layer.id===focusId):layers;

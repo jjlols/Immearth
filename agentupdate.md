@@ -11,6 +11,39 @@ Last updated: 2026-11-14 (audio work in progress, **not pushed or deployed**).
   without an explicit written handoff here.
 - Separate overlays worktree remains untouched.
 
+## Spatial renderer feature branch — 2026-11-15
+
+- Spatial agent owns `src/audio/spatialRenderer.js`, thin integration in
+  `src/audio/RemixEngine.js`, new `test-js/spatial-renderer.test.js`, targeted
+  additions to `test-js/musical-sonification.test.js` and
+  `test-js/spatial-origin.test.js`, audio assertions in
+  `scripts/verify_jukebox.js`, `README.md` spatial documentation, and this log.
+  Base is `02961d2` on local `feature/spatial-audio-renderer`; existing
+  frontend/component/style drafts and overlays worktree are not owned or reset.
+- Contract: one existing shared-recording mix bus -> exactly one switchable
+  renderer output (bypassed by default) -> existing analyser/destination. The
+  browser's generic HRTF `PannerNode`, not CIPIC or measured HRIR convolution,
+  is the only proposed spatializer. No soundtrack, AudioContext, decoded buffer,
+  buffer source or audio clock is added. No network/dataset dependencies.
+- Artistic local source/listener coordinates only: right/east = +x,
+  forward/north = +y, up = +z, in metres. Default listener is local (0,0,0),
+  which corresponds to the reserved Vancouver reference but is not geolocation.
+  Raster cells, screen positions and latitude/longitude do not convert to audio
+  coordinates. Inverse distance is bounded; no propagation-delay restart or
+  extra envelope is applied. Module import and renderer settings never create a
+  context, fetch the MP3, start a source, or resume suspended audio.
+- Frontend integration request (not concurrently edited here): if exposing the
+  feature, add an opt-in Spatial sound On / Bypass control in the existing music
+  transport and headphone recommendation. Explain that placement is a synthetic
+  local-meters remix choice, not measured geography. Call
+  `engine.setSpatialEnabled(boolean)` and optionally
+  `engine.setSpatialSourcePosition({x,y,z})`; audio must still begin only at
+  Play remix. A synthetic same-recording direction test is an optional later UI,
+  not a new oscillator. Default UI/API remains bypassed until explicit opt-in.
+- Tests/results will be filled from actual runs below. Headphone localization
+  and subjective HRTF quality remain unverified by this agent/listen needed;
+  offline/analyser checks are numeric signals only. No push/deploy requested.
+
 ## Current audio contract (preserved)
 
 Use one `new RemixEngine()` retained through playback. Set field models and
@@ -167,3 +200,34 @@ changes and no surviving local branch. Existing main-worktree audio/docs/test
 drafts are untouched. Please continue against the fetched teammate commit and
 your current audio contract, especially the no-oscillator changes above. This
 resolves the ownership handoff; audio/UI communication can continue here.
+
+## Spatial-audio implementation prompt — pending feature agent
+
+User supplied `/Users/TheRealGoo/Downloads/message.txt` and requested a spatial
+implementer agent. I wrote **`SPATIAL_AUDIO_AGENT_PROMPT.md`** at repository root
+with the exact feature branch, coordination and delivery task. That agent should
+implement a small `src/audio/` spatial module and thin `RemixEngine` integration
+only: one existing recording/context/clock, not a new soundtrack binding. Model
++ right = +x, forward/north = +y, up = +z in listener-local metres; listener
+origin `(0,0,0)` allowed as artistic user choice linked to Vancouver reference.
+No automatic raw lat/lon/3x4 grid -> hard pan, pitch/time, no GPS request.
+
+Audio agent and frontend agent coordinates to preserve: audio graph starts from
+existing Recording→color/dry+branch filter gates→master→limiter/analyser/destination.
+Add HRTF Panner output routing or source-specific spatial placement intentionally
+with no parallel dry copies. Initial master bypass optional opt-in must be requested
+and documented; default nonspatial baseline remains unchanged until caller enables.
+Data/auxiliary voice capture and legacy `window.earthAudio` remain separate.
+
+Required observables/API: retain playableParameters, getOutputMetrics, isRunning,
+original/gates/accents and test hook. `PannerNode` panning, listener transforms and
+distance gain need finite input, no coincident jitter, bounded reference-distance
+policy and teardown. Frontend partner is not to be concurrently rewritten: request
+necessary stereo toggle, headphone guidance, honest synthetic art-vs-science labels.
+Per-ear RMS/peak meaningful directional evidence required; a mono analyser of a
+positive signal alone is not binaural verification. Preserve no-context/consent,
+resume state zero-on-hidden/mute, single buffer/source and no createOscillator.
+Use detailed commands and contract in prompt, append actual results and file scope
+here rather than claiming all-HRTF-speakers/heard verification prematurely.
+
+No code for spatial audio was implemented by this preparation task. No push/deploy.
