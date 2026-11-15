@@ -19,7 +19,13 @@ await page.addInitScript(() => {
  class AuditedContext extends Original {
   constructor(...args) { super(...args); window.__AUDIO_AUDIT__.contexts.push(this); }
   decodeAudioData(...args) { window.__AUDIO_AUDIT__.calls.push('decode'); return super.decodeAudioData(...args); }
-  createBufferSource(...args) { window.__AUDIO_AUDIT__.calls.push('source'); return super.createBufferSource(...args); }
+  createBufferSource(...args) {
+   window.__AUDIO_AUDIT__.calls.push('source');
+   const source = super.createBufferSource(...args);
+   window.__AUDIO_AUDIT__.originalSource ||= source;
+   return source;
+  }
+  createOscillator(...args) { window.__AUDIO_AUDIT__.calls.push('oscillator'); throw new Error('The MP3-only remix must not create an oscillator.'); }
  }
  window.AudioContext = AuditedContext;
  window.webkitAudioContext = AuditedContext;
@@ -30,6 +36,7 @@ const engine = expression => page.evaluate(expression);
 try {
  await page.goto(origin, { waitUntil: 'networkidle' });
  await page.waitForSelector('[data-source-card]');
+ await page.waitForFunction(() => !document.querySelector('.music-console .main-action')?.disabled);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
  await page.keyboard.press('d');
  assert.equal(await region(), 1);
@@ -52,15 +59,7 @@ try {
  await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 0);
  await page.getByRole('button', { name: 'Show future spatial audio origin, Vancouver, BC' }).click();
- await page.route('**/audio/deliberate-thought.mp3', route => route.fulfill({ status: 503, body: 'unavailable' }));
  await page.getByRole('button', { name: 'Play remix', exact: true }).click();
- await page.getByRole('alert').waitFor();
- await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current?.ctx?.state === 'suspended');
- assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.isRunning), false);
- assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts[0].state), 'suspended');
- await page.unroute('**/audio/deliberate-thought.mp3');
- await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
- await page.getByRole('button', { name: 'Retry', exact: true }).dblclick();
  await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0]?.state === 'running');
  await page.waitForTimeout(1200);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
@@ -73,7 +72,7 @@ try {
  });
  assert.ok(initial.duration > 170);
  assert.equal(initial.state, 'running');
- assert.deepEqual(requests, [503, 200], 'failed Play must precede one successful source request');
+ assert.deepEqual(requests, [200], 'one successful source request per decoded track');
  assert.ok(initial.signals.peak > 0, 'post-chain waveform must contain nonzero audio');
  assert.ok(initial.signals.rms > 0, 'post-chain RMS must contain nonzero audio');
 
@@ -87,6 +86,7 @@ try {
  assert.equal(await region(), 4);
  await page.keyboard.press('w');
  assert.equal(await region(), 0);
+ await page.evaluate(() => document.activeElement?.blur());
  await page.keyboard.press('ArrowUp');
  assert.equal(await region(), 0);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
@@ -115,9 +115,24 @@ try {
  });
  assert.ok(live.rateTarget >= 0.83 && live.rateTarget <= 1.22);
  assert.ok(live.carbonGainTarget > 0);
- assert.ok(live.noxHzTarget >= 100 && live.noxHzTarget <= 1500);
+ assert.ok(live.noxHzTarget >= 1200 && live.noxHzTarget <= 16000);
  assert.ok(live.accents <= 8);
  assert.ok(live.metrics.peak > 0);
+ // Long enough for a second precipitation schedule, with no generated source.
+ await page.waitForTimeout(8500);
+ const sustained = await engine(() => {
+  const e = window.__JUKEBOX_AUDIO_REF__.current;
+  return { originalSource: e.original === window.__AUDIO_AUDIT__.originalSource,
+   sources: window.__AUDIO_AUDIT__.calls.filter(call => call === 'source').length,
+   oscillators: window.__AUDIO_AUDIT__.calls.filter(call => call === 'oscillator').length,
+   rainTarget: e.gates.get('rain').gain.gain.value, fireTarget: e.gates.get('active_fires').gain.gain.value,
+   metrics: e.getOutputMetrics() };
+ });
+ assert.ok(sustained.originalSource);
+ assert.equal(sustained.sources, 1, 'envelopes must not spawn independent buffer sources');
+ assert.equal(sustained.oscillators, 0);
+ assert.ok(sustained.rainTarget <= 0.085 && sustained.fireTarget <= 0.085);
+ assert.ok(sustained.metrics.peak > 0);
  await page.getByLabel('Show Temperature on map and enable its musical layer').uncheck();
  assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.playableParameters.temperatureRate), 1);
  await page.getByLabel('Show Carbon monoxide on map and enable its musical layer').uncheck();
@@ -132,14 +147,30 @@ try {
  await page.getByRole('button', { name: 'Reset music playback' }).click();
  assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.original), null);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts[0].state), 'suspended');
+ await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value <= 0.001);
  const measuredMaster = await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value);
  await page.getByRole('button', { name: 'Play remix', exact: true }).click();
  await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'running');
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.calls.filter(call => call === 'decode').length), 1);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts.length), 1);
+ if (measuredMaster > 0) await page.waitForFunction(expected => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value >= expected * 0.95, measuredMaster);
  assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value), measuredMaster);
  await page.getByRole('button', { name: 'Mute', exact: true }).click();
  await page.getByRole('button', { name: 'Unmute', exact: true }).click();
+
+ const failedPage = await browser.newPage();
+ await failedPage.goto(origin, { waitUntil: 'networkidle' });
+ await failedPage.route('**/audio/deliberate-thought.mp3', route => route.fulfill({ status: 503, body: 'unavailable' }));
+ await failedPage.getByRole('button', { name: 'Play remix', exact: true }).click();
+ await failedPage.getByRole('alert').waitFor();
+ await failedPage.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current?.ctx?.state === 'suspended');
+ assert.equal(await failedPage.evaluate(() => window.__JUKEBOX_AUDIO_REF__.current.isRunning), false);
+ await failedPage.unroute('**/audio/deliberate-thought.mp3');
+ await failedPage.getByRole('button', { name: 'Dismiss', exact: true }).click();
+ await failedPage.getByRole('button', { name: 'Retry', exact: true }).click();
+ await failedPage.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current?.ctx?.state === 'running');
+ await failedPage.getByRole('button', { name: 'Pause', exact: true }).click();
+ await failedPage.close();
 
  await page.setViewportSize({ width: 390, height: 844 });
  const responsive = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, viewport: innerWidth,
@@ -147,7 +178,7 @@ try {
  assert.ok(responsive.scroll <= responsive.viewport);
  assert.equal(responsive.transport, true);
  assert.deepEqual(errors, []);
- console.log(JSON.stringify({ status: 'passed', origin, mp3Requests: requests, initial, live, responsive,
+ console.log(JSON.stringify({ status: 'passed', origin, mp3Requests: requests, initial, live, sustained, responsive,
   contextCount: 1, decodedBuffers: 1, resetReplayUsesOriginalDecode: true,
   caveat: 'Headless analyser verifies generated post-chain signals, not subjective audibility through physical speakers. Check OS/browser/output volume before changing source gain.' }, null, 2));
 } finally {

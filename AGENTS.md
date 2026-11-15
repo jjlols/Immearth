@@ -55,8 +55,13 @@ Visibility-hidden or focus-ineligible voices cannot sound. Preserve the conserva
 last-known-good dry gain 0.085, master default 0.22 and cap 0.24. Before volume changes,
 measure source/output RMS and peak; never blindly boost gain and never claim listening
 from only UI, network or tests. Maximum eight bounded active accents; FRP rests are
-approximately eight seconds or longer, NOₓ one sustained gliding note, and precipitation
-separate limited rain/frozen droplet scheduling.
+at least 8.4 seconds; rain/frozen use separate presence-based schedules.
+**No oscillator, generated guide note or independently restarted MP3 snippet is
+permitted.** Temperature changes original playback rate 0.83…1.22; CO drives a
+low-frequency branch gain; NOₓ log-rank drives only a low-pass filter (1200…16000 Hz);
+precipitation/fire regime gentle filtered gain envelopes on the one synchronized MP3.
+Audio instrumentation tests must assert these source/filter properties rather than
+reintroducing removed legacy oscillator fields.
 
 The exploration grid is **3 rows × 4 columns**, shared by WASD/arrows and region buttons.
 W/up=north, A/left=west, S/down=south, D/right=east; clamp edges, Home=region index 0

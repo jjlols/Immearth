@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { featureModel, coTier, coPadGain, pitchNOx, logRank, temperaturePlaybackRate, precipitationDensities } from '../src/audio/musicMappings.js';
+import { featureModel, coTier, coPadGain, logRank, temperaturePlaybackRate, precipitationDensities } from '../src/audio/musicMappings.js';
 import { RemixEngine } from '../src/audio/RemixEngine.js';
 
 function createParams() {
@@ -11,7 +11,7 @@ function createParams() {
   exponentialRampToValueAtTime(v) { this.value = v; return this; } };
 }
 class ParamNode { connect(node) { this.connect_type = node; return node; } disconnect() { this.closed = true; } }
-class MockOscillator extends ParamNode {
+class MockBufferSource extends ParamNode {
  constructor() { super(); this.frequency = createParams(); this.type = 'sine'; this.started = 0; this.ended = 0; }
  start() { this.started++; }
  stop() { this.ended++; this.onended?.(); }
@@ -19,10 +19,10 @@ class MockOscillator extends ParamNode {
 class MockContext {
  constructor() { this.state = 'suspended'; this.currentTime = 100; MockContext.instances++; }
  createGain() { const node = new ParamNode(); node.gain = createParams(); return node; }
- createOscillator() { const osc = new MockOscillator(); (this.oscillators ||= []).push(osc); return osc; }
+ createOscillator() { throw new Error('Remix must never synthesize a tone.'); }
  createBiquadFilter() { const node = new ParamNode(); node.frequency = createParams(); node.Q = createParams(); return node; }
  createDynamicsCompressor() { const node = new ParamNode(); for (const key of ['threshold', 'knee', 'ratio', 'attack', 'release']) node[key] = createParams(); return node; }
- createBufferSource() { const node = new MockOscillator(); node.loop = false; node.playbackRate = createParams(); (this.sources ||= []).push(node); return node; }
+ createBufferSource() { const node = new MockBufferSource(); node.loop = false; node.playbackRate = createParams(); (this.sources ||= []).push(node); return node; }
  get destination() { return {}; }
  async resume() { this.state = 'running'; }
  async suspend() { this.state = 'suspended'; }
@@ -71,29 +71,39 @@ test('CO uses actual nonuniform anchor gains, with no obsolete 65 ppbv sampling 
  assert.equal(coPadGain(undefined), 0);
 });
 
-test('NOₓ uses log rank with a bounded finite legato note rather than endless repeated chirps', async () => {
- assert.ok(pitchNOx(0.001) < pitchNOx(0.01));
- assert.ok(pitchNOx(0.01) < pitchNOx(10));
- assert.ok(pitchNOx(10) <= 1500);
+test('NOₓ log rank filters the existing music, with no oscillators or repeated chirps', async () => {
+ assert.ok(featureModel('nitrogen_oxides', model(0.001)).rank < featureModel('nitrogen_oxides', model(0.01)).rank);
+ assert.ok(featureModel('nitrogen_oxides', model(0.01)).rank < featureModel('nitrogen_oxides', model(10)).rank);
+ assert.equal(featureModel('nitrogen_oxides', model(NaN)).silent, true);
  assert.equal(logRank(0.01), 0.25);
  const engine = await playingEngine({ nitrogen_oxides: featureModel('nitrogen_oxides', model(0.001)) });
- await engine.tick();
- const guide = engine.noxVoice;
- assert.equal(guide.oscillator.started, 1);
- engine.ctx.currentTime += 2.0;
- engine.tick();
- assert.equal(engine.noxVoice, guide);
- assert.equal(engine.ctx.oscillators.length, 1);
- const low = guide.oscillator.frequency.value;
+ assert.equal(engine.playableParameters.noxFrequency, 1200);
+ const source = engine.original;
+ const low = source.playbackRate.value;
  engine.setModel({ nitrogen_oxides: featureModel('nitrogen_oxides', model(10)) }, { mode: 'composition' });
- assert.ok(guide.oscillator.frequency.value > low);
- assert.ok(guide.expires - engine.currentTime < 4);
- engine.ctx.currentTime = guide.expires + 0.1;
- engine.tick();
- assert.equal(engine.noxVoice, null);
+ assert.equal(engine.playableParameters.noxFrequency, 16000);
+ assert.equal(engine.original, source);
+ assert.equal(source.playbackRate.value, low, 'NOx filtering must not alter playback rate');
+ assert.equal(engine.ctx.sources.length, 1);
+ assert.equal(engine.accents.size, 0);
  engine.setVisibility('nitrogen_oxides', false);
  assert.equal(engine.audible('nitrogen_oxides'), false);
- assert.equal(engine.noxVoice, null);
+ assert.equal(engine.playableParameters.noxFrequency, 16000);
+ await engine.dispose();
+});
+
+test('CO and NOx are switched off by layer visibility without adding a source', async () => {
+ const engine = await playingEngine({
+  carbon_monoxide: featureModel('carbon_monoxide', model(500)),
+  nitrogen_oxides: featureModel('nitrogen_oxides', model(10)),
+ });
+ assert.ok(engine.playableParameters.carbonPadGain > 0);
+ engine.setVisibility('carbon_monoxide', false);
+ assert.equal(engine.playableParameters.carbonPadGain, 0);
+ assert.equal(engine.playableParameters.noxFrequency, 16000);
+ engine.setVisibility('nitrogen_oxides', false);
+ assert.equal(engine.playableParameters.noxFrequency, 16000);
+ assert.equal(engine.ctx.sources.length, 1);
  await engine.dispose();
 });
 
@@ -113,11 +123,16 @@ test('FRP has sparse finite accents and rejects inactive visibility without sche
  const engine = await playingEngine({ active_fires: fire });
  engine.tick();
  assert.equal(engine.accents.size, 1);
+ assert.equal(engine.ctx.sources.length, 1, 'fire envelope must not restart the MP3');
+ assert.equal(engine.gates.get('active_fires').gain.gain.value, 0, 'release ends at silence');
  const next = engine.nextFireAt;
  assert.ok(next - engine.currentTime >= 8);
  engine.ctx.currentTime += 1;
  engine.tick();
  assert.equal(engine.accents.size, 1);
+ engine.ctx.currentTime += 2;
+ engine.tick();
+ assert.equal(engine.nextFireAt, next, 'a sparse fire must not retrigger each tick');
  engine.setVisibility('active_fires', false);
  assert.equal(engine.accents.size, 0);
  engine.ctx.currentTime = next + 1;
@@ -132,7 +147,7 @@ test('one explicit Play creates one context and one decoded buffer; reset/replay
  const before = MockContext.instances;
  const engine = new RemixEngine({ contextClass: MockContext });
  assert.equal(engine.ctx, null);
- engine.setModel({ nitrogen_oxides: featureModel('nitrogen_oxides', model(0.01)), precipitation: { classified_count: 3, density: 2, rain: 2, frozen: 0 } });
+ engine.setModel({ nitrogen_oxides: featureModel('nitrogen_oxides', model(0.01)), precipitation: { classified_count: 3, densities: {rain: 2, frozen: 0}, strength: .2 } });
  assert.equal(MockContext.instances, before);
  globalThis.fetch = okFetch;
  await engine.play();
@@ -143,8 +158,9 @@ test('one explicit Play creates one context and one decoded buffer; reset/replay
  await engine.play();
  assert.equal(engine.ctx.decodeCount, 1);
  assert.equal(engine.ctx.sources.length, 1);
- for (let i = 0; i < 200; i++) engine.accent('precipitation', 440, 0.03);
+ for (let i = 0; i < 200; i++) engine.shapeRecording('rain', 0.05);
  assert.ok(engine.accents.size <= 8);
+ assert.equal(engine.ctx.sources.length, 1);
  engine.setVolume(12);
  assert.ok(engine.master.gain.value <= 0.24);
  engine.setMute(true);
@@ -155,10 +171,11 @@ test('one explicit Play creates one context and one decoded buffer; reset/replay
  assert.equal(engine.timer, null);
  await engine.play();
  assert.equal(engine.ctx.sources.length, 1);
+ assert.notEqual(engine.timer, null, 'pause must be resumable');
  await engine.reset();
  assert.equal(engine.original, null);
  assert.equal(engine.accents.size, 0);
- assert.equal(engine.noxVoice, null);
+ assert.equal(engine.gates.size, 0);
  assert.equal(engine.ctx.state, 'suspended');
  await engine.play();
  assert.equal(MockContext.instances, before + 1);
@@ -166,6 +183,25 @@ test('one explicit Play creates one context and one decoded buffer; reset/replay
  assert.equal(engine.ctx.sources.length, 2);
  await engine.dispose();
  assert.equal(engine.ctx, null);
+});
+
+test('only the recording supplies samples; no-data and independent rain/frozen controls stay silent', async () => {
+ const engine = await playingEngine({ precipitation: featureModel('precipitation', {
+  rain_count: 2, snow_count: 14, max_value: 5, classified_count: 16,
+ }) });
+ assert.equal(engine.accents.size, 2);
+ assert.equal(engine.ctx.sources.length, 1);
+ const nextRain = engine.nextDropletAt, nextFrozen = engine.nextFrozenAt;
+ engine.tick();
+ assert.equal(engine.accents.size, 2);
+ assert.equal(engine.nextDropletAt, nextRain);
+ assert.equal(engine.nextFrozenAt, nextFrozen);
+ assert.ok(nextRain > engine.currentTime && nextFrozen > engine.currentTime);
+ engine.setModel({ precipitation: featureModel('precipitation', { classified_count: 0, status: 'silent' }) }, { mode: 'composition' });
+ assert.equal(engine.accents.size, 0);
+ assert.equal(engine.gates.get('rain').gain.gain.value, 0);
+ assert.equal(engine.gates.get('frozen').gain.gain.value, 0);
+ await engine.dispose();
 });
 
 test('context stays suspended while a play load is pending, and load failures never fabricate playback', async () => {

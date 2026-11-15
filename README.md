@@ -35,6 +35,13 @@ Vite production targets static paths (`base: "./"`). Needed runtime things in
 and `scales/features.json`. Non-runtime scientific pipelines can regenerate
 further needs separately where configured.
 
+## What you hear
+
+All five controls process the **already playing recording’s samples**. There are
+no oscillators, synthesized drones, guide notes or short, restarted MP3 clips.
+One buffer source runs through bounded filters/gain envelopes, a limiter and the
+master volume. Filter branch names do not imply isolated official stems.
+
 ## What you see and do
 
 There are **five metric cards**, each has the same visual/map and sound priority:
@@ -74,10 +81,10 @@ not coordinates, geographic scans, fire counts or a geolocation request.
 
 | Field | What you see | What you may hear | What its estimate means / can’t mean |
 |---|---|---|---|
-| **Precipitation (P)** | Original liquid-rain and frozen NASA source colors over the map. | Separate, limited droplet densities for rain and frozen estimated classes. Higher bins make modest clusters, not constant tones. | Separate estimated discrete mm/hour palettes (0.1–50, with ambiguous overflow). No match, gray/no-data or overflow stays unquantified/silent; no combined gradient. |
-| **Active fires (F)** | Original VIIRS fire-source colors. | Infrequent finite soft sine/mallet accents after rests of approximately eight seconds or more; estimated strength changes the accent modestly. | Estimated **0,2,4,6,8 MW FRP**, not fire counts, alarms or incidents per second. Hidden/unclassified fields create no accents. |
+| **Precipitation (P)** | Original liquid-rain and frozen NASA source colors over the map. | Separate limited swells within the playing music: more matched rain presence means more frequent slightly stronger filtered swells. Frozen presence produces its own slower, quiet low-frequency swell—both use the same MP3 samples. | Separate estimated discrete mm/hour palettes (0.1–50, with ambiguous overflow). No match, gray/no-data or overflow stays unquantified/silent; no combined gradient. |
+| **Active fires (F)** | Original VIIRS fire-source colors. | After rests of at least 8.4 seconds, a gentle filtered accent appears within the existing recording. Higher estimated FRP makes that swell modestly stronger and more open, with no independent tone. | Estimated **0,2,4,6,8 MW FRP**, not fire counts, alarms or incidents per second. Hidden/unclassified fields create no accents. |
 | **Carbon monoxide (CO)** | The full near-surface carbon-monoxide field, **not CO₂**. | Five clearly distinct generic pad-volume tiers on a filtered branch of the same recording: low/sparse to controlled strongest presence. | Estimated nonuniform **40,100,130,200,500 ppbv** anchors; no extra linear/65 ppbv threshold. No official stems were obtained. |
-| **Nitrogen oxides (NOₓ)** | Full original near-surface model colors. | One sustained, gently gliding guide note. Higher estimated NOₓ raises a bounded log₁₀-derived register; navigation changes it only after Play. | Estimated **0.001–10 ppbv** labels. Neither linear concentration nor latitude/longitude becomes pitch. |
+| **Nitrogen oxides (NOₓ)** | Full original near-surface model colors. | Higher estimated NOₓ opens a gentle low-pass filter from **1,200 Hz to 16,000 Hz**: low values retain mostly the music’s low frequencies (darker); high values restore brighter treble. This is a low-to-high change in the recording’s spectrum, not a pitch, buzz or guide note. With no eligible NOₓ voice, the music returns to full spectrum. | Estimated **0.001–10 ppbv** labels are converted using **log₁₀** before filter rank, never linear concentration or latitude/longitude. |
 | **Temperature (T)** | Full original GEOS-FP near-surface temperature colors. | Warmer means faster shared music: estimated −40…+40 °C maps to **0.83×–1.22×**. Hidden, absent or inaudible temperature returns speed to 1×. | Playback rate inherently changes pitch too; this is not temperature as altitude. Estimated T2M labels retain NASA’s short-caption **3 m** versus detailed-caption **2 m** discrepancy. |
 
 Values in guide are **estimated from colors against approximate reviewed raster
@@ -166,7 +173,7 @@ License & attribution: <https://creativecommons.org/licenses/by/4.0/>.
 
 69 BPM and approximately 2:57 tracks as provided by the user, local `public/audio/…mp3`.
 No official stems were identified. Program applies data-responsive generic filters,
-slow playback gain change and limited computed accents—not a claimed official
+playback-rate changes, generic filters and gain envelopes on the original samples—not a claimed official
 extracted choir, advertised faithful transcribed musical notes, or NASA endorsement.
 See `LICENSES.md` + `public/attribution.json` for local network source hash and terms.
 
@@ -198,10 +205,13 @@ no context on raw load/navigation, one context/one MP3 decode, buffer duration,
 transport, post-chain signal, Solo/Composition, layer hiding, shared WASD/Home grid
 selection, accessible native controls, Vancouver inertness and 390 px overflow.
 
-Recorded post-chain measurements in that headless audit were approximately
-**RMS 0.0141 / peak 0.0244** initially and **RMS 0.0147 / peak 0.0239** in Composition;
-Browser-decoded duration was **177.391 seconds**. These verify generated output at the
-analyser, **not subjective audibility through physical speakers or headphones**.
+These tests also run a sustained rain/fire scheduling interval and assert
+**zero oscillators** and **one continuous recording source**; a separate simulated
+503 tab covers MP3 failure recovery. The latest sampled post-chain waveform had
+**RMS 0.0046 / peak 0.0126** initially and **RMS 0.0044 / peak 0.0194** later in
+Composition; browser-decoded duration was **177.391 seconds**. Short analysis
+windows naturally vary with the source recording. These verify generated output
+at the analyser, **not subjective audibility through physical speakers or headphones**.
 No gain increase was made; background dry gain remains 0.085 and master defaults 0.22.
 
 

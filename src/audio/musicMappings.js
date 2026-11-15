@@ -8,7 +8,7 @@ export const TRACK = Object.freeze({
   artist: 'Kevin MacLeod',
   licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
 });
-export const CO_PAD_GAINS = Object.freeze([0.008, 0.025, 0.05, 0.085, 0.13]);
+export const CO_PAD_GAINS = Object.freeze([0.008, 0.025, 0.05, 0.075, 0.10]);
 export const clamp = (value, min = 0, max = 1) =>
   Number.isFinite(value) ? Math.max(min, Math.min(max, value)) : min;
 export const median = features => Number(features?.median);
@@ -17,8 +17,6 @@ export function logRank(value, min = 0.001, max = 10) {
   if (!Number.isFinite(value) || value <= 0) return 0;
   return clamp((Math.log10(value) - Math.log10(min)) / (Math.log10(max) - Math.log10(min)));
 }
-export const frequency = midi => 440 * 2 ** ((midi - 69) / 12);
-
 export function temperatureRank(value) {
   return Number.isFinite(value) ? clamp((value + 40) / 80) : null;
 }
@@ -40,15 +38,7 @@ export function coPadGain(value) {
   return Number.isFinite(value) ? CO_PAD_GAINS[coTier(value)] : 0;
 }
 
-/** A bounded D-minor pentatonic register; log10 happens before note selection. */
-export function pitchNOx(value) {
-  if (!Number.isFinite(value) || value <= 0) return null;
-  const scale = [0, 3, 5, 7, 10];
-  const step = Math.round(logRank(value) * 9);
-  return frequency(50 + scale[step % scale.length] + 12 * Math.floor(step / scale.length));
-}
-
-/** Return separate droplet densities so rain and frozen scales are never merged. */
+/** Keep liquid/frozen classes separate rather than invent one shared rate scale. */
 export function precipitationDensities({ rain_count = 0, snow_count = 0, max_value } = {}) {
   if (!Number.isFinite(max_value) || max_value > 20) return { rain: 0, frozen: 0 };
   const density = count => count > 0 ? Math.max(1, Math.min(8, Math.round(Math.log2(count + 1)))) : 0;
@@ -84,8 +74,8 @@ export function featureModel(id, features) {
     return { id, kind: 'pad', ...(!Number.isFinite(value) ? { silent: true } : { tier: coTier(value), padGain: coPadGain(value), rank: clamp((value - 40) / 460) }), classified_count: features.classified_count };
   }
   if (id === 'nitrogen_oxides') {
-    const value = median(features), hz = pitchNOx(value);
-    return { id, kind: 'guide-note', ...(!Number.isFinite(hz) ? { silent: true } : { rank: logRank(value), frequency: hz }), classified_count: features.classified_count };
+    const value = median(features);
+    return { id, kind: 'filter-register', ...(!Number.isFinite(value) || value <= 0 ? { silent: true } : { rank: logRank(value) }), classified_count: features.classified_count };
   }
   if (id === 'near_surface_temperature') {
     const value = median(features);
@@ -96,13 +86,13 @@ export function featureModel(id, features) {
 
 export const INSTRUMENT_INFO = Object.freeze({
   precipitation: {
-    kind: 'Separate rain and frozen droplets',
-    explanation: 'Liquid-rain and frozen-palette matches have separate densities. Higher matched bins create limited clusters of soft droplets; near silence and unmatched colors stay silent.',
+    kind: 'Rain / frozen waveform swells',
+    explanation: 'Broader matched rain presence creates more frequent, gently filtered swells in the playing music. Frozen-class presence has a separate, slower low-frequency swell; neither creates a new sound source.',
     caveat: 'Estimated discrete mm/hour classes (0.1–50). The overflow and no-data/gray cases never receive an invented upper value.',
   },
   active_fires: {
-    kind: 'Infrequent fire-strength accents',
-    explanation: 'A soft finite mallet/sine accent occurs only after long rests (at least about eight seconds). Its strength follows estimated fire radiative power (FRP).',
+    kind: 'Infrequent source-waveform accents',
+    explanation: 'After long rests (at least about eight and a half seconds), a filtered swell of the same recording becomes modestly stronger and more open as estimated FRP rises.',
     caveat: 'Estimated 0–8 MW anchors. Accents are not fire counts, alarms, detections per second, or a report of current danger.',
   },
   carbon_monoxide: {
@@ -111,9 +101,9 @@ export const INSTRUMENT_INFO = Object.freeze({
     caveat: 'Nonuniform 40,100,130,200,500 ppbv estimated anchors. This is carbon monoxide, not CO₂; the filter branch is not an official synth or choir stem.',
   },
   nitrogen_oxides: {
-    kind: 'One sustained gliding guide note',
-    explanation: 'A single sustained note glides smoothly to a higher bounded musical register as the log₁₀-derived NOₓ estimate rises. Navigation changes its pitch; it does not start audio.',
-    caveat: 'Estimated 0.001–10 ppbv labels are log₁₀ mapped before note selection. Concentration and latitude/longitude are never directly converted to pitch.',
+    kind: 'Log-register filtered waveform',
+    explanation: 'Higher estimated NOₓ opens a low-pass filter on the recording from 1,200 Hz to 16,000 Hz: lower values retain mostly the recording’s low frequencies (darker); higher values restore brighter treble. This high/low spectral-register change comes only from MP3 samples, not a buzz, beep or generated tone.',
+    caveat: 'Estimated 0.001–10 ppbv labels are log₁₀ mapped before filter rank. Concentration and latitude/longitude never directly control pitch.',
   },
   near_surface_temperature: {
     kind: 'Warmer = faster shared recording',
@@ -129,10 +119,10 @@ export function describeFeature(id, features) {
   if (!features || !(features.classified_count > 0) || features.status === 'silent') {
     return 'No confident nearest-palette matches. The selected voice remains silent rather than inventing an observation.';
   }
-  if (id === 'carbon_monoxide') return `Estimated CO palette range: ${value(features.q20)}–${value(features.q80)} ppbv → generic pad gain (nonuniform anchors).`;
-  if (id === 'nitrogen_oxides') return `Estimated NOₓ palette range: ${value(features.q20)}–${value(features.q80)} ppbv → log₁₀-derived guide-note register.`;
+  if (id === 'carbon_monoxide') return `Estimated CO palette range: ${value(features.q20)}–${value(features.q80)} ppbv → low-frequency music-mix volume (nonuniform anchors).`;
+  if (id === 'nitrogen_oxides') return `Estimated NOₓ palette range: ${value(features.q20)}–${value(features.q80)} ppbv → log₁₀-derived waveform-register.`;
   if (id === 'near_surface_temperature') return `Estimated near-surface palette range: ${value(features.q20)}–${value(features.q80)} °C → shared music speed. T2M; captions differ on 3 m versus 2 m.`;
-  if (id === 'active_fires') return `Estimated FRP palette median: ${value(features.median)} MW → sparse accent strength, never an incident count.`;
-  if (id === 'precipitation') return `Liquid classes: ${features.rain_count || 0}; frozen classes: ${features.snow_count || 0} → separate limited droplet densities. Gray, unknown and overflow remain uncertain/silent.`;
+  if (id === 'active_fires') return `Estimated FRP palette median: ${value(features.median)} MW → sparse original-music accent strength, never an incident count.`;
+  if (id === 'precipitation') return `Liquid classes: ${features.rain_count || 0}; frozen classes: ${features.snow_count || 0} → separate filtered waveform swell densities. Gray, unknown and overflow remain uncertain/silent.`;
   return 'Estimated nearest-palette characteristics, not calibrated numeric observations.';
 }
