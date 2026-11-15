@@ -309,17 +309,14 @@ export default function GuidePage() {
   }, []);
 
   useEffect(() => {
-    let stopIntro = () => {};
     let stopAudio = () => {};
     let cancel = false;
-    Promise.all([import("../../site/intro.js"), import("../../site/spatial-audio.js")]).then(([intro, audio]) => {
+    import("../../site/spatial-audio.js").then((audio) => {
       if (cancel) return;
-      stopIntro = intro.startIntro() || (() => {});
       stopAudio = audio.installSpatialAudio();
     });
     return () => {
       cancel = true;
-      stopIntro();
       stopAudio();
     };
   }, []);
@@ -358,11 +355,6 @@ export default function GuidePage() {
   return (
     <>
       <style>{guideCss}</style>
-      <div className="intro-overlay" id="intro">
-        <canvas id="intro-canvas" aria-hidden="true" />
-        <p className="visually-hidden" role="status">Opening animation. Press Space, Escape, or Skip, or click the animation, to enter the site.</p>
-        <button type="button" className="intro-skip" id="intro-skip">Skip</button>
-      </div>
       <a className="skip-link" href="#overview-title">Skip to content</a>
       <SiteChrome current="home" part="header" />
       <div id="status" className="visually-hidden" role="status">{status}</div>

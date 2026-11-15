@@ -1,0 +1,60 @@
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: transparent;
+  opacity: 1;
+  transition: opacity 0.65s ease;
+}
+
+.intro-overlay.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-overlay canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.intro-overlay .intro-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.intro-skip {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  min-height: 44px;
+  padding: 0.4rem 0.95rem;
+  font: 600 0.78rem/1 "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d7ebff;
+  background: transparent;
+  border: 1px solid rgba(158, 206, 255, 0.55);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.intro-skip:hover {
+  border-color: #d7ebff;
+}
+
+.intro-skip:focus-visible {
+  outline: 3px solid #d7ebff;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay {
+    display: none;
+  }
+}

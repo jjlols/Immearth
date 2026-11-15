@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import IntroOverlay from "./IntroOverlay.jsx";
 import Jukebox from "./Jukebox.jsx";
 import GuidePage from "./guide/GuidePage.jsx";
 import PhotoPage from "./guide/PhotoPage.jsx";
@@ -7,6 +8,7 @@ import { viewFromLocation } from "./navigation.js";
 
 export default function App() {
   const [view, setView] = useState(viewFromLocation);
+  const [firstView] = useState(view);
 
   useEffect(() => {
     const sync = () => setView(viewFromLocation());
@@ -16,6 +18,7 @@ export default function App() {
 
   return (
     <>
+      <IntroOverlay view={firstView} />
       {view === "home" && <GuidePage />}
       {view === "music" && <Jukebox />}
       {view === "layers" && <LayerExplorer />}

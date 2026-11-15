@@ -1,4 +1,4 @@
-export function startIntro() {
+export function startIntro({ sound = true, focusAfter = "#overview-title" } = {}) {
   const intro = document.querySelector("#intro");
   if (!intro) return;
 
@@ -12,7 +12,10 @@ export function startIntro() {
   const canvas = document.querySelector("#intro-canvas");
   const skip = document.querySelector("#intro-skip");
   const ctx2d = canvas.getContext("2d");
-  const held = [document.querySelector(".site-header"), document.querySelector("main"), document.querySelector(".site-footer")];
+  const root = document.querySelector("#root");
+  const held = root
+    ? [...root.children].filter((el) => el !== intro && !el.contains(intro))
+    : [document.querySelector(".site-header"), document.querySelector("main"), document.querySelector(".site-footer")];
   held.forEach((el) => {
     if (el) el.inert = true;
   });
@@ -114,6 +117,7 @@ export function startIntro() {
   }
 
   function unlock() {
+    if (!sound) return null;
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return null;
     if (!audio) audio = new Ctx();
@@ -177,7 +181,11 @@ export function startIntro() {
     intro.classList.add("is-leaving");
     window.setTimeout(() => {
       if (intro.isConnected) intro.remove();
-      if (focusPage) document.querySelector("#overview-title").focus();
+      const target = focusPage && document.querySelector(focusAfter);
+      if (target) {
+        if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+        target.focus();
+      }
     }, 680);
   }
 
