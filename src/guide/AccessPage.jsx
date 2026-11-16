@@ -38,7 +38,7 @@ export default function AccessPage() {
                 <li><kbd>Esc</kbd> <span>Close the page overview.</span></li>
               </ul>
               <p>The menu at the top of every page has Home, Live Map, Earth data, and Accessibility &amp; help.</p>
-              <p>On Earth data, the page opens on black space and a globe. The Show menu chooses which map is on the globe. About opens the written description and the NASA page for that map, including precipitation and active fires. Turn left and Turn right are buttons. The globe picture is optional.</p>
+              <p>On Earth data, the page opens on black space and a globe. The Show menu chooses which map is on the globe. A written sentence under Show names that map and says whether land and coasts are on. About opens the written description and the NASA page for that map, including precipitation and active fires. Help explains the keyboard. Skip to the layer menu jumps past the globe buttons. Turn left and Turn right are buttons. The globe picture is optional.</p>
               <p>Dark mode and Color blind colors are at the top of every page. Your choices are remembered on this browser. NASA map pictures keep their published colors either way.</p>
             </div>
             <div className="tile">

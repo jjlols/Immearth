@@ -62,7 +62,10 @@ export default function LiveTour() {
     setShow(false);
   }
 
+  const spoken = `Tour. Step ${step + 1} of ${TOUR_STEPS.length}. ${current.title}. ${current.body}`;
   return (
+    <>
+    <p className="sr-only" role="status">{spoken}</p>
     <div
       ref={cardRef}
       className="live-tour"
@@ -70,13 +73,14 @@ export default function LiveTour() {
       role="dialog"
       aria-modal="false"
       aria-labelledby="tour-title"
+      aria-describedby="tour-body"
       style={box ? { top: box.top, left: box.left, "--tour-arrow": `${box.arrow}px` } : { visibility: "hidden" }}
     >
       <span className="live-tour-arrow" aria-hidden="true" />
       <p className="live-tour-badge">Tour</p>
       <p className="live-tour-count">Step {step + 1} of {TOUR_STEPS.length}</p>
       <h2 id="tour-title">{current.title}</h2>
-      <p>{current.body}</p>
+      <p id="tour-body">{current.body}</p>
       <div className="live-tour-actions">
         <button type="button" className="live-tour-back" onClick={() => go(step - 1)} disabled={step === 0}>Back</button>
         {last
@@ -84,5 +88,6 @@ export default function LiveTour() {
           : <button type="button" id="tour-next" className="live-tour-next" onClick={() => go(step + 1)}>Next</button>}
       </div>
     </div>
+    </>
   );
 }

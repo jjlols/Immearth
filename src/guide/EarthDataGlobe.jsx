@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import LayerGlobe from "../components/LayerGlobe.jsx";
 import { OPACITY_DEFAULTS } from "../layerOptions.js";
+import { linkTo } from "../navigation.js";
 import { MAPS } from "./maps.js";
 
 const LAYERS = MAPS.map((map) => ({ id: map.fieldId, label: map.label }));
@@ -35,12 +36,11 @@ export default function EarthDataGlobe({ focus, onFocus, detailsFor, onDetails }
         <LayerGlobe layers={LAYERS} settings={settings} focus={selected.fieldId} onlySelected showGeography={showGeography} />
         <aside className="layer-panel" aria-label="Layers">
           <p className="layer-kicker">Layers</p>
-          <label className="layer-field">
-            <span>Show</span>
-            <select value={selected.fieldId} onChange={(event) => onFocus(event.target.value)}>
-              {MAPS.map((map) => <option key={map.fieldId} value={map.fieldId}>{map.label}</option>)}
-            </select>
-          </label>
+          <label className="layer-field" htmlFor="layer-show">Show</label>
+          <select id="layer-show" aria-describedby="layer-now" value={selected.fieldId} onChange={(event) => onFocus(event.target.value)}>
+            {MAPS.map((map) => <option key={map.fieldId} value={map.fieldId}>{map.label}</option>)}
+          </select>
+          <p id="layer-now" className="layer-now" aria-live="polite">{selected.label}. {selected.text} {showGeography ? "Land and coasts are on." : "Land and coasts are off."}</p>
           <div className="layer-actions">
             <button
               id={buttonId}
@@ -58,6 +58,12 @@ export default function EarthDataGlobe({ focus, onFocus, detailsFor, onDetails }
               <span>Land and coasts</span>
             </label>
           </div>
+          <details className="layer-help">
+            <summary>Help</summary>
+            <p>The sentence above is the same information as the picture. The picture is optional.</p>
+            <p>Tab reaches Show, About, Land and coasts, Help, and Turn left and Turn right. On Show, Up and Down change the map. Enter opens About, which includes the NASA page and says when that link opens in a new tab. Dragging the globe is optional.</p>
+            <p><a {...linkTo("access")}>Accessibility and help</a></p>
+          </details>
           <div id={panelId} role="region" aria-labelledby={buttonId} hidden={!open} className="data-globe-about">
             <p>{selected.text}</p>
             <p>{selected.planned}</p>

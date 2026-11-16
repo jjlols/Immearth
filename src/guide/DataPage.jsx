@@ -21,6 +21,7 @@ export default function DataPage() {
   return (
     <div className="site-page">
       <a className="skip-link" href="#data-title">Skip to content</a>
+      <a className="skip-link" href="#layer-show">Skip to the layer menu</a>
       <SiteChrome current="data" part="header" />
       <ListenSpeak />
       <div className="visually-hidden" role="status">{status}</div>

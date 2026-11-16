@@ -43,7 +43,7 @@ function useMapPointer(onChooseRegion){
 function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex,onChooseRegion}){
  const pointer=useMapPointer(onChooseRegion);
  const hover=pointer.hover;
- return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration. Click or tap a region to move there." {...pointer.handlers}>
+ return <div className="geographic-canvas" role="group" aria-label="Earth map. Click or tap a place to move there. The place you are on is read out in words." {...pointer.handlers}>
  {showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
  {layers.filter(layer=>settings[layer.id]?.visible!==false).map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
  {hover!==null&&<div className="region-hover" data-hover-region={hover} aria-hidden="true" style={{left:`${(hover%EXPLORER_COLUMNS)/EXPLORER_COLUMNS*100}%`,top:`${Math.floor(hover/EXPLORER_COLUMNS)/EXPLORER_ROWS*100}%`,width:`${100/EXPLORER_COLUMNS}%`,height:`${100/EXPLORER_ROWS}%`}}><span>{hover+1}</span></div>}
@@ -96,7 +96,7 @@ export default function Jukebox(){
  const currentLayer=layers.find(l=>l.id===focus)||layers[0]||LAYER_OPTIONS[0];
  const currentIndex=travel.previewing?travel.regionIndex:explorerIndex;
  const currentFeature=featureById?.[currentIndex];
- const regionStatus=`${regionWords(explorerIndex)}. ${currentLayer.label}: ${describeFeature(currentLayer.id,features?.[currentLayer.id]?.[explorerIndex])}`;
+ const regionStatus=`${regionWords(explorerIndex)}. ${currentLayer.label} is chosen.`;
 
  /* Load local data side-effects only. Music not fetched here, let alone starts. */
  useEffect(()=>{
@@ -184,15 +184,6 @@ export default function Jukebox(){
  <div className="jukebox-shell live-page">
  <h1 className="live-title" id="music-title" tabIndex={-1}>Live Map</h1>
  <LiveTour />
- <section className="live-how" aria-labelledby="how-title">
-  <h2 id="how-title">How it works</h2>
-  <p className="live-how-short">Press Play remix, then turn maps on or off. W A S D, the arrow buttons, or a click on the map move through 48 regions.</p>
-  <ol>
-   <li><strong>Play</strong><span>Press Play remix. Music stays off until then.</span></li>
-   <li><strong>Mix</strong><span>Turn a map on to include it. Turn it off to leave it out.</span></li>
-   <li><strong>Move</strong><span>W A S D, the arrow buttons, or a click or tap on the map steps through 48 regions.</span></li>
-  </ol>
- </section>
  <section className="music-console live-transport" id="music-player" tabIndex={-1} aria-label="Music controls">
   <div className="transport-buttons">
    <button type="button" className="main-action" onClick={togglePlayback} disabled={loading||playState==='loading'}>{playState==='playing'?'Pause':playState==='paused'?'Resume':playState==='loading'?'Loading…':playState==='unavailable'?'Retry':'Play remix'}<span aria-hidden="true">{playState==='playing'?'❚❚':'▶'}</span></button>
@@ -216,19 +207,19 @@ export default function Jukebox(){
    <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} onChooseRegion={chooseExplorer} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
    <div className="map-move-row">
     <div className="map-move" role="group" aria-label="Move between regions">
-     <button type="button" className="map-move-north" aria-label="Move north" onClick={()=>moveExplorerRegion('w')}><span aria-hidden="true">↑</span></button>
-     <button type="button" className="map-move-west" aria-label="Move west" onClick={()=>moveExplorerRegion('a')}><span aria-hidden="true">←</span></button>
-     <button type="button" className="map-move-south" aria-label="Move south" onClick={()=>moveExplorerRegion('s')}><span aria-hidden="true">↓</span></button>
-     <button type="button" className="map-move-east" aria-label="Move east" onClick={()=>moveExplorerRegion('d')}><span aria-hidden="true">→</span></button>
+     <button type="button" className="map-move-north" aria-label="Move north" onClick={()=>moveExplorerRegion('w')}><span aria-hidden="true">↑ </span>North</button>
+     <button type="button" className="map-move-west" aria-label="Move west" onClick={()=>moveExplorerRegion('a')}><span aria-hidden="true">← </span>West</button>
+     <button type="button" className="map-move-south" aria-label="Move south" onClick={()=>moveExplorerRegion('s')}><span aria-hidden="true">↓ </span>South</button>
+     <button type="button" className="map-move-east" aria-label="Move east" onClick={()=>moveExplorerRegion('d')}><span aria-hidden="true">→ </span>East</button>
     </div>
-    <p className="current-region" role="status" aria-live="polite">{regionStatus} <span className="current-region-hint">Use W, A, S and D, the arrow buttons, or click the map to move.</span></p>
+    <p className="current-region" role="status" aria-live="polite">{regionStatus}</p>
    </div>
   </main>
   <div className="live-toolbar">
    <aside className="explorer-panel" id="map-controls" aria-label="Map layers">
     <HeadDirectionControl travelOnRecenter={headTravelOnRecenter} onTravelOnRecenterChange={setHeadTravelOnRecenter} engineRef={engine} onReady={callback=>{headSyncRef.current=callback;}} headInfluence={headInfluence} onDirection={onHeadDirection} onHeadInfluenceChange={onHeadInfluence}/>
     <div className="map-options"><label><input type="checkbox" checked={showGeography} onChange={e=>setShowGeography(e.target.checked)}/> Show land and coasts</label><label><input type="checkbox" checked={onlySelected} onChange={e=>setOnlySelected(e.target.checked)}/> Selected map only</label>
-    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>↻ Reset layers</button></div>
+    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}><span aria-hidden="true">↻ </span>Reset layers</button></div>
     <div className="source-controllers" aria-label="Geographic layers and their visibility">
     {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} onSelect={selectMetric} onVisible={(id,visible)=>{setSettings(current=>({...current,[id]:{...current[id],visible}}));engine.current?.setVisibility(id,visible);}} onNavigate={navigateCards}/>)}
     </div>

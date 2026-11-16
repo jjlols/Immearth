@@ -183,8 +183,9 @@ html[data-theme=dark] .jukebox-shell .head-direction .head-start{background:tran
 .geographic-canvas .region-hover span{position:absolute;left:4px;top:3px;padding:0 .3rem;border-radius:4px;background:#000;color:#fff;font:700 .75rem/1.4 system-ui,sans-serif}
 .jukebox-shell .map-move-row{display:flex;align-items:center;gap:.75rem;margin-top:.45rem}
 .jukebox-shell .map-move-row .current-region{margin:0;flex:1 1 auto;min-width:0}
-.jukebox-shell .map-move{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,44px);gap:2px;flex:0 0 auto}
-.jukebox-shell .map-move button{min-width:44px;min-height:44px;padding:0;border:1px solid #8eabcb;border-radius:8px;background:#fff;color:#0a2447;font-weight:700;font-size:1.05rem}
+.jukebox-shell .map-move{display:grid;grid-template-columns:repeat(3,minmax(5.4rem,auto));grid-template-areas:". north ." "west south east";gap:.35rem;flex:0 0 auto}
+.jukebox-shell .map-move button{min-width:44px;min-height:44px;padding:.35rem .55rem;border:1px solid #8eabcb;border-radius:8px;background:#fff;color:#0a2447;font-weight:700;font-size:.95rem}
+.live-page :focus-visible{outline:3px solid var(--focus,#0b3d91);outline-offset:3px}
 .jukebox-shell .map-move .map-move-north{grid-column:2;grid-row:1}
 .jukebox-shell .map-move .map-move-west{grid-column:1;grid-row:2}
 .jukebox-shell .map-move .map-move-south{grid-column:2;grid-row:2}

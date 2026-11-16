@@ -281,7 +281,7 @@ export default function LayerGlobe({ layers, settings, focus, onlySelected, show
 
   return (
     <div className="globe-stage">
-      <div ref={mountRef} className="globe-canvas" />
+      <div ref={mountRef} className="globe-canvas" aria-hidden="true" />
       <p className="globe-note">Turn left and Turn right turn the globe. Dragging the picture is optional.</p>
       <div className="globe-turn">
         <button type="button" onClick={() => turnRef.current(-0.5)}>Turn left</button>

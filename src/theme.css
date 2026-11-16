@@ -941,8 +941,8 @@ kbd {
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.layer-field { display: flex; flex-direction: column; gap: 0.35rem; color: #fff; font-weight: 700; }
-.layer-field select {
+.layer-field { color: #fff; font-weight: 700; }
+.layer-panel select {
   width: 100%;
   min-height: 48px;
   padding: 0 0.75rem;
@@ -970,6 +970,19 @@ kbd {
 .layer-about:hover { color: #fff; }
 .layer-land { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 44px; color: #fff; font-weight: 700; }
 .layer-land input { width: 1.25rem; height: 1.25rem; }
+.layer-now { margin: 0; color: #d6e8ff; }
+.layer-help { color: #d6e8ff; }
+.layer-help summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: #b9d7ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.layer-help summary:hover { color: #fff; }
+.layer-help p { margin: 0 0 0.55rem; }
+.layer-help a { color: #b9d7ff; font-weight: 700; }
 .data-globe-about { margin: 0; padding-top: 0.15rem; }
 .data-globe-about p { margin: 0 0 0.55rem; color: #e7f2fc; }
 .data-globe-about a { font-weight: 700; color: #b9d7ff; }
