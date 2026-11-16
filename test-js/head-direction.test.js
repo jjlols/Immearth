@@ -5,7 +5,6 @@ import {
  relativePoseFromMatrix, relativeCalibrationSession, createHeadDirectionState,
  classifyCalibrated, manualOrientation, sanitizeOrientation,
 } from '../src/lib/headDirection.js';
-import {PreviewTravelController} from '../src/lib/headPreviewController.js';
 
 // Synthetic projection boundary only. No actual camera image or subject evidence.
 function matrix(yawDegrees = 0, pitchDegrees = 0) {
@@ -24,8 +23,8 @@ function matrix(yawDegrees = 0, pitchDegrees = 0) {
 }
 const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-6, `${a} != ${b}`);
 for (const [label, yaw, pitch] of [
- ['forward', 0, 0], ['right', 30, 0], ['left', -30, 0],
- ['up', 0, 30], ['down', 0, -30],
+ ['forward', 0, 0], ['right', 20, 0], ['left', -20, 0],
+ ['up', 0, 20], ['down', 0, -20],
 ]) {
  test(`${label} face-forward screen-space angle mapping`, () => {
   const actual = poseFromMatrix(matrix(yaw, pitch));
@@ -58,23 +57,23 @@ test('finite shape/infinite/missing vectors rejected instead of invented head po
 });
 test('classification boundaries preserve uncertain and per-axis hysteresis', () => {
  for (const [pose, previous, expected] of [
-  [{ yaw: 30, pitch: 0 }, null, 'right'],
-  [{ yaw: -30, pitch: 0 }, null, 'left'],
-  [{ yaw: 0, pitch: 30 }, null, 'up'],
-  [{ yaw: 0, pitch: -30 }, null, 'down'],
-  [{ yaw: 7, pitch: 0 }, 'right', 'right'],
+  [{ yaw: 20, pitch: 0 }, null, 'right'],
+  [{ yaw: -20, pitch: 0 }, null, 'left'],
+  [{ yaw: 0, pitch: 20 }, null, 'up'],
+  [{ yaw: 0, pitch: -20 }, null, 'down'],
+  [{ yaw: 12, pitch: 0 }, 'right', 'right'],
+    [{ yaw: 7, pitch: 0 }, 'right', 'forward'],
+    [{ yaw: -12, pitch: 0 }, 'forward', 'forward'],
+    [{ yaw: 12, pitch: 0 }, 'uncertain', 'uncertain'],
   [{ yaw: 85, pitch: 0 }, null, 'uncertain'],
   [null, null, 'uncertain'],
  ]) assert.equal(classifyCalibrated(pose, previous), expected);
 });
 test('missing face uses short retained vector grace and then neutral without engine', () => {
  const state = createHeadDirectionState();
- state.poseAt({yaw:0,pitch:0},0);
- state.poseAt({yaw:0,pitch:0},HEAD_DIRECTION_DEFAULTS.centerDwellMs);
- state.poseAt({yaw:30,pitch:0},HEAD_DIRECTION_DEFAULTS.centerDwellMs+1);
- assert.equal(state.poseAt({yaw:30,pitch:0},HEAD_DIRECTION_DEFAULTS.centerDwellMs+HEAD_DIRECTION_DEFAULTS.directionDwellMs+1).direction,'right');
- assert.equal(state.poseAt(null, 500).direction, 'right', 'accepted sustained direction remains during face-loss grace');
- assert.equal(state.poseAt(null, 500).holding, true);
+ assert.equal(state.poseAt({ yaw: 20, pitch: 0 }, 0).direction, 'right');
+ assert.equal(state.poseAt({ yaw: 20, pitch: 0 }, HEAD_DIRECTION_DEFAULTS.directionDwellMs).direction, 'right');
+ assert.equal(state.poseAt(null, 500).direction, 'right');
  assert.equal(state.poseAt(null, 1400).orientation.forward.y, 1);
  assert.equal(state.stop().orientation.forward.y, 1);
 });
@@ -94,81 +93,96 @@ for (const label of DIRECTIONS.filter(name => name !== 'uncertain')) {
 test('lost face can reacquire directional pose and vector after same dwell', () => {
   const session = relativeCalibrationSession();
   session.frame({ facialTransformationMatrixes: [matrix(0)] }, 0);
-  session.frame({ facialTransformationMatrixes: [matrix(30)] }, 200);
-  assert.equal(session.frame({ facialTransformationMatrixes: [matrix(30)] }, 600).direction, 'right');
+  session.frame({ facialTransformationMatrixes: [matrix(25)] }, 200);
+  assert.equal(session.frame({ facialTransformationMatrixes: [matrix(25)] }, 600).direction, 'right');
   assert.equal(session.frame({ facialTransformationMatrixes: [] }, 700).direction, 'right');
   assert.equal(session.frame({ facialTransformationMatrixes: [] }, 1600).orientation.forward.y, 1);
-  session.frame({ facialTransformationMatrixes: [matrix(30)] }, 1700);
-  assert.ok(session.frame({ facialTransformationMatrixes: [matrix(30)] }, 2200).orientation.forward.x > .3);
+  session.frame({ facialTransformationMatrixes: [matrix(25)] }, 1700);
+  assert.ok(session.frame({ facialTransformationMatrixes: [matrix(25)] }, 2200).orientation.forward.x > .3);
   assert.equal(session.stop().direction,'uncertain');
 });
 
 test('sustained face after uncertain and pending dwell never overrides stable audio labels',()=>{
  const state=createHeadDirectionState();
  assert.equal(state.poseAt(null,0).direction,'uncertain');
- assert.equal(state.poseAt({yaw:30,pitch:0},200).direction,'uncertain');
- assert.equal(state.poseAt({yaw:30,pitch:0},600).direction,'right');
- assert.equal(state.poseAt({yaw:30,pitch:0},900).direction,'right');
+ assert.equal(state.poseAt({yaw:25,pitch:0},200).direction,'right');
+ assert.equal(state.poseAt({yaw:25,pitch:0},600).direction,'right');
+ assert.equal(state.poseAt({yaw:25,pitch:0},900).direction,'right');
 });
 
 
-test('horizontal direction changes bypass a center classification after the deliberate hold',()=>{
+test('horizontal direction changes bypass a center classification and update vector immediately',()=>{
  const session=relativeCalibrationSession();
  session.frame({facialTransformationMatrixes:[matrix(0)]},0);
- session.frame({facialTransformationMatrixes:[matrix(30)]},100);
- assert.equal(session.frame({facialTransformationMatrixes:[matrix(30)]},500).direction,'right');
- session.frame({facialTransformationMatrixes:[matrix(-30)]},700);
- const changed=session.frame({facialTransformationMatrixes:[matrix(-30)]},1000);
+ session.frame({facialTransformationMatrixes:[matrix(25)]},100);
+ assert.equal(session.frame({facialTransformationMatrixes:[matrix(25)]},500).direction,'right');
+ session.frame({facialTransformationMatrixes:[matrix(-25)]},700);
+ const changed=session.frame({facialTransformationMatrixes:[matrix(-25)]},1100);
  assert.equal(changed.direction,'left');
  assert.ok(changed.orientation.forward.x<0,'right-to-left does not require forward or a stale orientation');
 
 });
 
-test('direction is deliberate while centering remains deliberate', () => {
+test('a look the other way right after a look must be held; other changes stay fast', () => {
+ const {oppositeDwellMs,centerDwellMs}=HEAD_DIRECTION_DEFAULTS;
  const state=createHeadDirectionState();
- state.poseAt({yaw:30,pitch:0},0);
- assert.equal(state.poseAt({yaw:30,pitch:0},HEAD_DIRECTION_DEFAULTS.directionDwellMs).direction,'right');
- state.poseAt({yaw:-30,pitch:0},550);
- assert.equal(state.poseAt({yaw:-30,pitch:0},800).direction,'left');
- state.poseAt({yaw:0,pitch:0},1000);
- assert.equal(state.poseAt({yaw:0,pitch:0},1150).direction,'forward');
+ assert.equal(state.poseAt({yaw:25,pitch:0},0).direction,'right');
+ assert.equal(state.poseAt({yaw:-25,pitch:0},50).direction,'right','a swing past front is not a look left yet');
+ assert.equal(state.poseAt({yaw:-25,pitch:0},50+oppositeDwellMs).direction,'left','a held look left counts');
+ assert.equal(state.poseAt({yaw:0,pitch:25},400).direction,'up','a look on the other axis is immediate');
+ assert.equal(state.poseAt({yaw:0,pitch:0},410).direction,'up');
+ assert.equal(state.poseAt({yaw:0,pitch:0},410+centerDwellMs).direction,'forward');
 });
 
-test('deliberate verification timing reflects required sustained looks',()=>{
- assert.equal(HEAD_DIRECTION_DEFAULTS.directionDwellMs,250);
- assert.ok(HEAD_DIRECTION_DEFAULTS.centerDwellMs<=160);
+test('current low-latency budgets have no redundant direction hold',()=>{
+ assert.equal(HEAD_DIRECTION_DEFAULTS.directionDwellMs,0);
+ assert.ok(HEAD_DIRECTION_DEFAULTS.centerDwellMs<=120);
  assert.ok(HEAD_DIRECTION_DEFAULTS.sampleIntervalMs<=50);
  assert.ok(HEAD_DIRECTION_DEFAULTS.minimumPublishMs<=100);
  const state=createHeadDirectionState();
- assert.equal(state.poseAt({yaw:20,pitch:0},0).direction,'uncertain');
- state.poseAt({yaw:30,pitch:0},200); assert.equal(state.poseAt({yaw:30,pitch:0},450).direction,'right');
- assert.equal(state.poseAt({yaw:0,pitch:0},700).direction,'right');
- assert.equal(state.poseAt({yaw:0,pitch:0},700+HEAD_DIRECTION_DEFAULTS.centerDwellMs).direction,'forward');
+ assert.equal(state.poseAt({yaw:22,pitch:0},0).direction,'right');
+ assert.equal(state.poseAt({yaw:0,pitch:0},1).direction,'right');
+ assert.equal(state.poseAt({yaw:0,pitch:0},HEAD_DIRECTION_DEFAULTS.centerDwellMs+1).direction,'forward');
 });
 
-test("lateral change preserves held direction until full new-direction and center holds",()=>{
- const state=createHeadDirectionState();
- state.poseAt({yaw:30,pitch:0},700);
- state.poseAt({yaw:30,pitch:0},950);
- assert.equal(state.poseAt({yaw:-30,pitch:0},1000).direction,'right');
- assert.equal(state.poseAt({yaw:-30,pitch:0},1250).direction,'left');
- assert.equal(state.poseAt({yaw:0,pitch:0},1400).direction,'left');
- assert.equal(state.poseAt({yaw:0,pitch:0},1550).direction,'forward');
+/** Feeds yaw samples 33 ms apart through the classifier and the travel controller, as the hooks do. */
+async function travelFor(yaws, start = 19) {
+  const { PreviewTravelController } = await import('../src/lib/headPreviewController.js');
+  const state = createHeadDirectionState();
+  const travel = new PreviewTravelController(start);
+  const commits = [];
+  travel.onCommit = (index) => commits.push(index);
+  let published = null;
+  yaws.forEach((yaw, i) => {
+    const now = 1000 + i * 33;
+    const { direction } = state.poseAt({ yaw, pitch: 0 }, now);
+    if (direction === published) return;
+    published = direction;
+    travel.onDirection({ direction, now, source: 'head' });
+  });
+  return { commits, pending: travel.pendingPreview };
+}
+const ramp = (a, b, n) => Array.from({ length: n }, (_, i) => a + ((b - a) * (i + 1)) / n);
+const hold = (v, n) => Array(n).fill(v);
+const turnRight = [...hold(0, 5), ...ramp(0, 32, 8), ...hold(32, 10)];
+
+test('turning right and back moves one step east however the head comes back', async () => {
+  for (const [name, back] of [
+    ['clean', [...ramp(32, 0, 8), ...hold(0, 10)]],
+    ['rests 8 degrees right', [...ramp(32, 8, 8), ...hold(8, 10)]],
+    ['swings 12 degrees past front', [...ramp(32, -12, 7), ...ramp(-12, 0, 4), ...hold(0, 10)]],
+    ['swings 18 degrees past front, fast', [...ramp(32, -18, 4), ...ramp(-18, 0, 5), ...hold(0, 15)]],
+    ['comes back, then overshoots 18 degrees', [...ramp(32, 0, 8), ...hold(0, 4), ...ramp(0, -18, 3), ...hold(-18, 3), ...ramp(-18, 0, 4), ...hold(0, 15)]],
+  ]) {
+    const { commits, pending } = await travelFor([...turnRight, ...back]);
+    assert.deepEqual(commits, [20], name);
+    assert.equal(pending, null, name);
+  }
 });
 
-test('short glances do not generate committed directional travel under the actual calibrated session',()=>{
- const session=relativeCalibrationSession(), commit=new PreviewTravelController(0), history=[];
- function process(yaw,time) {
-   const matrix={rows:4,columns:4,data:[1,0,0,0,0,1,0,0,-Math.sin(yaw*Math.PI/180),0,Math.cos(yaw*Math.PI/180),0,0,0,0,1]};
-   const direction=session.frame({facialTransformationMatrixes:[matrix]},time).direction;
-   history.push(direction);
-   if(direction==='uncertain')commit.cancel();
-   else if(direction==='forward')commit.cancel();
-   else if(commit.pendingPreview?.direction!==direction)commit.preview(direction,time);
-   return direction;
- }
- process(0,0);
- for(const [yaw,t] of [[20,200],[0,350],[30,600],[30,900],[0,1150],[0,1300]])process(yaw,t);
- assert.equal(commit.committedIndex,0);
- assert.deepEqual(history,['forward','uncertain','uncertain','uncertain','right','right','forward']);
+test('quick flicks move next, next, next; a held look the other way still moves back', async () => {
+  const flick = [...ramp(0, 32, 6), ...hold(32, 4), ...ramp(32, 0, 6), ...hold(0, 4)];
+  assert.deepEqual((await travelFor([...hold(0, 5), ...flick, ...flick, ...flick])).commits, [20, 21, 22]);
+  const lookLeft = [...ramp(0, -32, 6), ...hold(-32, 20), ...ramp(-32, 0, 6), ...hold(0, 10)];
+  assert.deepEqual((await travelFor([...hold(0, 5), ...flick, ...lookLeft])).commits, [20, 19]);
 });

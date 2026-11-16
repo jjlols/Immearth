@@ -94,3 +94,34 @@ test('invalid timing and direction cannot silently create a commit', () => {
   controller.preview('right', 2000);
   assert.equal(controller.recenter(1999), null);
 });
+
+test('onDirection reports each step and moves only on a prompt head return', () => {
+  const controller = new PreviewTravelController(19);
+  const commits = [];
+  controller.onCommit = index => commits.push(index);
+  assert.deepEqual(controller.onDirection({ direction: 'right', now: 100, source: 'head' }),
+    { action: 'preview', direction: 'right', from: 19, to: 20, blocked: false });
+  assert.deepEqual(controller.onDirection({ direction: 'right', now: 150, source: 'head' }), { action: 'none' });
+  assert.deepEqual(controller.onDirection({ direction: 'forward', now: 600, source: 'head' }),
+    { action: 'move', direction: 'right', to: 20, elapsedMs: 500 });
+  controller.onDirection({ direction: 'left', now: 1000, source: 'head' });
+  assert.deepEqual(controller.onDirection({ direction: 'forward', now: 1001 + PREVIEW_RETURN_WINDOW_MS, source: 'head' }),
+    { action: 'late', direction: 'left', to: 19, elapsedMs: PREVIEW_RETURN_WINDOW_MS + 1 });
+  controller.onDirection({ direction: 'up', now: 5000, source: 'head' });
+  assert.equal(controller.onDirection({ direction: 'uncertain', now: 5100, source: 'head' }).action, 'cancel');
+  assert.deepEqual(commits, [20]);
+});
+
+test('Calibrate front, a camera reset or a state sync ends a look without moving', () => {
+  for (const source of ['calibrate', 'reset', 'sync', 'modal']) {
+    const controller = new PreviewTravelController(19);
+    const commits = [];
+    controller.onCommit = index => commits.push(index);
+    controller.onDirection({ direction: 'right', now: 0, source: 'head' });
+    assert.deepEqual(controller.onDirection({ direction: 'forward', now: 100, source }),
+      { action: 'cancel', direction: 'right', to: 20, reason: `forward/${source}` }, source);
+    assert.deepEqual(commits, [], source);
+    assert.equal(controller.committedIndex, 19, source);
+    assert.equal(controller.pendingPreview, null, source);
+  }
+});

@@ -2,14 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { LAYER_OPTIONS, OPACITY_DEFAULTS } from "./layerOptions.js";
 import { RemixEngine } from "./audio/RemixEngine.js";
 import { featureModel, TRACK } from "./audio/musicMappings.js";
-import { explorerPosition } from "./hooks/useExplorer.js";
+import { regionAtPoint, EXPLORER_SIZE } from "./hooks/useExplorer.js";
+import { VANCOUVER_DISPLAY } from "./lib/spatialOrigin.js";
 import { linkTo } from "./navigation.js";
 import { IconSpeaker } from "./Icons.jsx";
 import SpatialOriginMarker from "./components/SpatialOriginMarker.jsx";
 import "./styles-origin.css";
 
-/* The home preview keeps the listener on the first region. It does not follow keys or clicks. */
-const FIXED_REGION = 0;
+/* The home preview keeps the listener at Vancouver. The basemap is drawn equirectangular
+ * (build_geographic_overlays.py), so the pin uses Vancouver's longitude and latitude, and the
+ * music reads the grid cell that holds it. It does not follow keys or clicks. */
+const PLACE = { left: `${VANCOUVER_DISPLAY.leftPercent}%`, top: `${VANCOUVER_DISPLAY.topPercent}%` };
+const FIXED_REGION = regionAtPoint(VANCOUVER_DISPLAY.xProportion, VANCOUVER_DISPLAY.yProportion, 1, 1);
+const PLACE_WORDS = `Vancouver, region ${FIXED_REGION + 1} of ${EXPLORER_SIZE}`;
 
 function MapField({ layer }) {
   const ref = useRef(null);
@@ -55,7 +60,6 @@ export default function HomeLivePreview() {
   const wantPlay = useRef(true);
   const [playState, setPlayState] = useState("waiting");
   const [audioError, setAudioError] = useState(null);
-  const place = explorerPosition(FIXED_REGION);
 
   useEffect(() => {
     let cancelled = false;
@@ -200,20 +204,20 @@ export default function HomeLivePreview() {
       </div>
       <div className="home-live-card">
         <div className="map-frame">
-          <div className="geographic-canvas" role="img" aria-label="World map with your place fixed on region 1 of 48. Location cannot be changed here.">
+          <div className="geographic-canvas" role="img" aria-label={`World map with your place fixed at ${PLACE_WORDS}. Location cannot be changed here.`}>
             <img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="" />
             {LAYER_OPTIONS.map((layer, order) => <MapField key={layer.id} layer={{ ...layer, order }} />)}
-            <div className="home-place-pin" style={place} aria-hidden="true">
+            <div className="home-place-pin" style={PLACE} aria-hidden="true">
               <span className="home-place-dot" />
               <span className="home-place-line" />
-              <span className="home-place-label">You are here</span>
+              <span className="home-place-label">You are here: Vancouver</span>
             </div>
             <SpatialOriginMarker />
             <span className="map-longitude west">180° W</span>
             <span className="map-longitude east">180° E</span>
           </div>
         </div>
-        <p className="home-place">You are here, region 1 of 48. This page does not move your place.</p>
+        <p className="home-place">You are here: {PLACE_WORDS}. This page does not move your place.</p>
         <div className="home-live-actions">
           <button type="button" className="main-action" aria-pressed={playState === "playing"} onClick={togglePlayback}>
             {playLabel}<span aria-hidden="true">{playState === "playing" ? "❚❚" : "▶"}</span>

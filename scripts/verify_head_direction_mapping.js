@@ -7,10 +7,10 @@
 import assert from 'node:assert/strict';
 import {
   openHeadPage, origin, POSES, POSITIONS, RETURN_WINDOW_MS,
-  expectedNative, orientationForPose, assertClose, enableHeadTravel,
+  expectedNative, orientationForPose, assertClose,
 } from './lib/headHarness.js';
 
-const { browser, page, errors, ...h } = await openHeadPage();
+const { browser, page, errors, ...h } = await openHeadPage({ legacyTravelOnRecenter: true });
 try {
   assert.equal(await h.status(), 'off');
   assert.equal(await h.marker(), '0');
@@ -20,7 +20,6 @@ try {
     'no AudioContext and no camera request before Play / Enable camera');
 
   await h.enableCamera();
-  await enableHeadTravel(page);
   assert.equal((await h.spy()).gum, 1);
   // Before Play a look still previews (the marker follows it) but creates no audio;
   // losing the face cancels it, so the committed region is unchanged.

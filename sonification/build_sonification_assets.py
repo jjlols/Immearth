@@ -22,7 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_GRID = (6, 8)
 # NASA's transparent IMERG rain layer (SVS 4285 imergert_alpha), written to public/
 # by build_geographic_overlays.py and prepare_jukebox_assets.py. Alpha marks rain.
-RAIN_SOURCE = ROOT / 'public/assets/precipitation.png'
+# The downloaded NASA layer that build_geographic_overlays.py writes first, not the served
+# copy (prepare_jukebox_assets.py updates that last), so a refresh never pairs new rain with old features.
+RAIN_SOURCE = ROOT / 'overlay/inputs/precipitation-source.png'
 
 
 def raster_name(source):

@@ -7,10 +7,11 @@
  * Not a human-camera or listening claim.
  */
 import assert from 'node:assert/strict';
-import { openHeadPage, origin, POSES, POSITIONS, RETURN_WINDOW_MS } from './lib/headHarness.js';
-import {enableHeadTravel} from './lib/headHarness.js';
+import { readFile } from 'node:fs/promises';
+import { openHeadPage, origin, POSES, POSITIONS, RETURN_WINDOW_MS  } from './lib/headHarness.js';
+import { replayHeadLog } from '../src/lib/headReplay.js';
 
-const { browser, page, errors, ...h } = await openHeadPage({ viewport: { width: 1280, height: 720 } });
+const { browser, page, errors, ...h } = await openHeadPage({ viewport: { width: 1280, height: 840 }, legacyTravelOnRecenter: true });
 try {
   const measure = () => page.evaluate(() => {
     const engine = window.__JUKEBOX_AUDIO_REF__.current;
@@ -34,7 +35,6 @@ try {
   };
 
   await h.enableCamera();
-  await enableHeadTravel(page);
   await h.play();
   await h.press('d', 'd', 'd', 'd', 'd');
   await h.waitMarker('5');
@@ -133,6 +133,40 @@ try {
   await h.frames();
   assert.equal(await h.marker(), '47');
 
+  // Jerry's report: a quick swing past front on the way back is part of the return,
+  // never a look the other way, and an overshoot after the return does not undo the move.
+  // Each swing is held 18 degrees left for about 120 ms, under the 300 ms a look the
+  // other way needs right after a look.
+  await h.press('Home', 's', 'd');
+  await h.waitMarker('9');
+  await h.look('right');
+  await h.waitMarker('10');
+  await h.setPose({ yaw: -18, pitch: 0 });
+  await page.waitForTimeout(120);
+  await h.look('forward');
+  await h.setPose({ yaw: -18, pitch: 0 });
+  await page.waitForTimeout(120);
+  await h.setPose(POSES.forward);
+  await h.waitSource(POSITIONS.forward);
+  await h.frames(12);
+  assert.equal(await h.marker(), '10', 'a swing past front moves east, never west, and an overshoot after it does not undo the move');
+
+  // The head log a tester saves replays to the same decisions (scripts/replay_head_log.mjs).
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Save head log', exact: true }).click(),
+  ]);
+  const saved = JSON.parse(await readFile(await download.path(), 'utf8'));
+  assert.equal(saved.format, 'immearth-head-log');
+  assert.ok(saved.entries.some(entry => entry.kind === 'frame' && Number.isFinite(entry.yaw)), 'frames carry head angles');
+  const replay = replayHeadLog(saved);
+  console.log('LOG_TRAVEL_ARGS',JSON.stringify(replay.logged));
+  console.log('REPLAY_READ',JSON.stringify(replay.summary));
+  assert.ok(replay.logged.filter(decision => decision.action === 'move').length >= 3, 'the log has the head moves');
+  assert.equal(replay.firstDifference, -1, 'the saved log replays to the same travel decisions');
+  const headLog = { entries: saved.entries.length, moves: replay.summary.logged.move, frames: replay.summary.frames };
+  if (!replay.logged.some(d=>d.action==='move') || replay.firstDifference!==-1) console.log('HEAD_REQUESTED_REPLAY_DIFF',JSON.stringify({travelLog: replay.logged, readResult: replay.summary, firstDifference: replay.firstDifference, rows: replay.rows.slice(0,40), session: saved.entries.filter(e=>e.kind==='session'), sourceSet: saved.config },null,2));
+
   const audio = (await measure()).audio;
   assert.deepEqual(audio, { contexts: 1, sources: 1, decodes: 1, oscillators: 0 });
   const camera = await h.spy();
@@ -140,7 +174,7 @@ try {
   assert.equal(camera.stops, 1);
   assert.equal(camera.closes, 1);
   assert.deepEqual(errors, []);
-  console.log(JSON.stringify({ status: 'passed', origin, synthetic: true, start, right, direct, audio }, null, 2));
+  console.log(JSON.stringify({ status: 'passed', origin, synthetic: true, start, right, direct, headLog, audio }, null, 2));
 } finally {
   await browser.close();
 }

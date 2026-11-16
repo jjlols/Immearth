@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { openHeadPage, origin, POSITIONS } from './lib/headHarness.js';
 import {enableHeadTravel} from './lib/headHarness.js';
 
-const { browser, page, errors, ...h } = await openHeadPage();
+const { browser, page, errors, ...h } = await openHeadPage({ legacyTravelOnRecenter: true });
 try {
   assert.equal((await h.spy()).gum, 0, 'no camera request before Enable camera');
   try { await h.enableCamera(); await enableHeadTravel(page); } catch (error) {
@@ -28,7 +28,9 @@ try {
   assert.equal((await h.spy()).contexts, 0, 'no AudioContext before explicit Play');
 
   await h.play();
-  // Calibrate front from an offset head: 12 degrees right is neither forward nor right.
+  // Calibrate front from an offset head. Back in view at 12 degrees right after a lost face is
+  // neither forward nor right (from forward, 12 degrees would stay forward).
+  await h.loseFace();
   await h.look('uncertain', { yaw: 12, pitch: 0 });
   await page.getByRole('button', { name: 'Calibrate front', exact: true }).click();
   await h.waitDirection('forward');
