@@ -4,23 +4,22 @@ import {RemixEngine} from './audio/RemixEngine.js';
 import HeadDirectionControl from './components/HeadDirectionControl.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
-import {explorerPosition,useExplorer,EXPLORER_SIZE,EXPLORER_COLUMNS,EXPLORER_ROWS,regionAtPoint,regionWords} from './hooks/useExplorer.js';
+import {explorerPosition,useExplorer,EXPLORER_SIZE,regionAtPoint,regionWords} from './hooks/useExplorer.js';
 import useHeadPreviewTravel from './hooks/useHeadPreviewTravel.js';
 import LiveTour from './components/LiveTour.jsx';
 import SiteChrome from './SiteChrome.jsx';
 import ListenSpeak from './guide/ListenSpeak.jsx';
 import './listening.css';
 
-/* A tap or click picks the grid cell under it with the same choose() the keys use.
- * Hover only highlights a cell and shows its number. Only a primary pointer that
- * barely moved counts as a tap, so scrolling, wheel, pinch and two-finger swipes
- * stay with the browser. Nothing here touches audio. */
+/* A tap or click picks the grid cell under it with the same choose() the keys use, and
+ * hands over the spot (0..1 across and down) so the marker can sit where the user pointed.
+ * The music still reads the whole cell. Only a primary pointer that barely moved counts as
+ * a tap, so scrolling, wheel, pinch and two-finger swipes stay with the browser.
+ * Nothing here touches audio. */
 const TAP_SLOP_PX=10;
 function useMapPointer(onChooseRegion){
- const [hover,setHover]=useState(null);
  const press=useRef(null);
- const cellAt=event=>{const rect=event.currentTarget.getBoundingClientRect();return regionAtPoint(event.clientX-rect.left,event.clientY-rect.top,rect.width,rect.height);};
- return {hover,handlers:{
+ return {handlers:{
   onPointerDown:event=>{
    if(!event.isPrimary||(event.pointerType==='mouse'&&event.button!==0)){press.current=null;return;}
    press.current={id:event.pointerId,x:event.clientX,y:event.clientY};
@@ -28,26 +27,26 @@ function useMapPointer(onChooseRegion){
   onPointerMove:event=>{
    const start=press.current;
    if(start&&start.id===event.pointerId&&Math.hypot(event.clientX-start.x,event.clientY-start.y)>TAP_SLOP_PX)press.current=null;
-   if(event.pointerType==='mouse'||event.pointerType==='pen')setHover(cellAt(event));
   },
   onPointerUp:event=>{
    const start=press.current;press.current=null;
    if(!start||start.id!==event.pointerId||Math.hypot(event.clientX-start.x,event.clientY-start.y)>TAP_SLOP_PX)return;
-   const index=cellAt(event);if(index!==null)onChooseRegion(index);
+   const rect=event.currentTarget.getBoundingClientRect();
+   const x=event.clientX-rect.left,y=event.clientY-rect.top;
+   const index=regionAtPoint(x,y,rect.width,rect.height);
+   if(index!==null)onChooseRegion(index,{x:Math.min(1,Math.max(0,x/rect.width)),y:Math.min(1,Math.max(0,y/rect.height))});
   },
   onPointerCancel:()=>{press.current=null;},
-  onPointerLeave:()=>{setHover(null);},
  }};
 }
 
-function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex,onChooseRegion}){
+function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex,markerPoint,onChooseRegion}){
  const pointer=useMapPointer(onChooseRegion);
- const hover=pointer.hover;
- return <div className="geographic-canvas" role="group" aria-label="Earth map. Click or tap a place to move there. The place you are on is read out in words." {...pointer.handlers}>
- {showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
+ const markerStyle=markerPoint?{left:`${markerPoint.x*100}%`,top:`${markerPoint.y*100}%`}:explorerPosition(explorerIndex);
+ return <div className="geographic-canvas" id="map-navigation" tabIndex={-1} role="group" aria-label="Earth map. Click or tap a place to move there, or press W, A, S or D. Your place is read out in words." {...pointer.handlers}>
+{showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
  {layers.filter(layer=>settings[layer.id]?.visible!==false).map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
- {hover!==null&&<div className="region-hover" data-hover-region={hover} aria-hidden="true" style={{left:`${(hover%EXPLORER_COLUMNS)/EXPLORER_COLUMNS*100}%`,top:`${Math.floor(hover/EXPLORER_COLUMNS)/EXPLORER_ROWS*100}%`,width:`${100/EXPLORER_COLUMNS}%`,height:`${100/EXPLORER_ROWS}%`}}><span>{hover+1}</span></div>}
- <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span className="target-ring"/><span className="target-cross"/></div>
+ <div className="exploration-marker" data-exploration-region={explorerIndex} style={markerStyle} aria-hidden="true"><span className="target-ring"/><span className="target-cross"/></div>
  {loading&&<div className="loading-scrim" role="status">Loading geography and palette features…</div>}
  <span className="map-longitude west">180° W</span><span className="map-longitude east">180° E</span>
  <span className="map-hemisphere">Equatorial viewing plane <span>•</span> source projections remain provisional</span>
@@ -90,7 +89,12 @@ export default function Jukebox(){
  const layers=useMemo(()=>dataLayers(manifest?.layers),[manifest]);
  const featureById=features?.[focus];
 
+ /* The spot of the last click or tap, kept only while its cell is still the current region. */
+ const [clickPoint,setClickPoint]=useState(null);
  const chooseExplorer=useCallback(index=>{chooseExplorerRegion(index);},[chooseExplorerRegion]);
+ const chooseByPointer=useCallback((index,point)=>{setClickPoint({index,...point});chooseExplorerRegion(index);},[chooseExplorerRegion]);
+ /* Keys, voice or head travel moved to another cell: forget the old spot (React's adjust-state-on-change pattern). */
+ if(clickPoint&&clickPoint.index!==explorerIndex)setClickPoint(null);
  const travel=useHeadPreviewTravel({index:explorerIndex,choose:chooseExplorer,enabled:spatialEnabled && headInfluence,travelOnRecenter:headTravelOnRecenter,engineRef:engine});
 
  const currentLayer=layers.find(l=>l.id===focus)||layers[0]||LAYER_OPTIONS[0];
@@ -204,26 +208,28 @@ export default function Jukebox(){
  {loadError&&<div role="alert" className="app-alert">{loadError}<span> Existing geographic work is unchanged.</span></div>}
  <div className="workspace-shared live-board">
   <main className="map-workspace">
-   <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} onChooseRegion={chooseExplorer} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
-   <div className="map-move-row">
-    <div className="map-move" role="group" aria-label="Move between regions">
-     <button type="button" className="map-move-north" aria-label="Move north" onClick={()=>moveExplorerRegion('w')}><span aria-hidden="true">↑ </span>North</button>
-     <button type="button" className="map-move-west" aria-label="Move west" onClick={()=>moveExplorerRegion('a')}><span aria-hidden="true">← </span>West</button>
-     <button type="button" className="map-move-south" aria-label="Move south" onClick={()=>moveExplorerRegion('s')}><span aria-hidden="true">↓ </span>South</button>
-     <button type="button" className="map-move-east" aria-label="Move east" onClick={()=>moveExplorerRegion('d')}><span aria-hidden="true">→ </span>East</button>
-    </div>
-    <p className="current-region" role="status" aria-live="polite">{regionStatus}</p>
+   <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} markerPoint={clickPoint&&clickPoint.index===travel.regionIndex&&clickPoint.index===explorerIndex?clickPoint:null} onChooseRegion={chooseByPointer} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
+   {/* Screen readers hear each region change; sighted users see the marker move. The step buttons are
+       for screen readers whose keys never reach the page (NVDA/JAWS browse mode, phones): hidden on
+       screen and skipped by Tab, so the bar Jerry removed stays gone for everyone else. */}
+   <div className="map-move sr-only" role="group" aria-label="Move between regions">
+    <button type="button" tabIndex={-1} aria-label="Move north" onClick={()=>moveExplorerRegion('w')}/>
+    <button type="button" tabIndex={-1} aria-label="Move west" onClick={()=>moveExplorerRegion('a')}/>
+    <button type="button" tabIndex={-1} aria-label="Move south" onClick={()=>moveExplorerRegion('s')}/>
+    <button type="button" tabIndex={-1} aria-label="Move east" onClick={()=>moveExplorerRegion('d')}/>
    </div>
+   <p className="current-region sr-only" role="status" aria-live="polite">{regionStatus} <span className="current-region-hint">Use W, A, S and D or the arrow keys, or click the map to move.</span></p>
   </main>
   <div className="live-toolbar">
    <aside className="explorer-panel" id="map-controls" aria-label="Map layers">
-    <HeadDirectionControl travelOnRecenter={headTravelOnRecenter} onTravelOnRecenterChange={setHeadTravelOnRecenter} engineRef={engine} onReady={callback=>{headSyncRef.current=callback;}} headInfluence={headInfluence} onDirection={onHeadDirection} onHeadInfluenceChange={onHeadInfluence}/>
-    <div className="map-options"><label><input type="checkbox" checked={showGeography} onChange={e=>setShowGeography(e.target.checked)}/> Show land and coasts</label><label><input type="checkbox" checked={onlySelected} onChange={e=>setOnlySelected(e.target.checked)}/> Selected map only</label>
-    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}><span aria-hidden="true">↻ </span>Reset layers</button></div>
+
     <div className="source-controllers" aria-label="Geographic layers and their visibility">
     {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} onSelect={selectMetric} onVisible={(id,visible)=>{setSettings(current=>({...current,[id]:{...current[id],visible}}));engine.current?.setVisibility(id,visible);}} onNavigate={navigateCards}/>)}
     </div>
-    <div className="interaction-modes" role="group" aria-label="What you hear"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>One map</strong><span className="sr-only"> Solo / Explore</span></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>All maps</strong><span className="sr-only"> Ensemble</span></button></div>
+    <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Ensemble</strong></button></div>
+    <div className="map-options"><label><input type="checkbox" checked={showGeography} onChange={e=>setShowGeography(e.target.checked)}/> Show land and coasts</label><label><input type="checkbox" checked={onlySelected} onChange={e=>setOnlySelected(e.target.checked)}/> Selected map only</label>
+    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>↻ Reset layers</button></div>
+    <HeadDirectionControl travelOnRecenter={headTravelOnRecenter} onTravelOnRecenterChange={setHeadTravelOnRecenter} engineRef={engine} onReady={callback=>{headSyncRef.current=callback;}} headInfluence={headInfluence} onDirection={onHeadDirection} onHeadInfluenceChange={onHeadInfluence}/>
    </aside>
   </div>
  </div>
@@ -238,8 +244,8 @@ export default function Jukebox(){
  <p>NASA palette stations support semantic tools not medical/population statements. The same source aspect ratio is not identical geographically verified projection or acquisition time. Continuous global fields drawn as a colored image can be inspected as whole pixels (maps) and reduced to bounded classifications (music). This is an interpretive educational listening aid, not physical truth sonification or a weather warning service. Scientific data must come from verified underlying measurement input for any absolute calibration.</p>
  <p>Navigation and map inspection stay silent before Play. Source values remain nearest-palette estimates with the recorded uncertainty. See README.md and LICENSES.md for full implementation and verification notes. DeepSpace deployment is not configured or claimed.</p></div></details>
  <footer className="sr-only"><span>NASA Scientific Visualization Studio · Natural Earth geography · Kevin MacLeod</span><span>Built with React and Web Audio, respectfully at 69 BPM.</span></footer>
- <SiteChrome current="music" part="footer" />
  </div>
+ <SiteChrome current="music" part="footer" />
  </>;
 }
 

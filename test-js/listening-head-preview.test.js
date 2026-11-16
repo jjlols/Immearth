@@ -9,13 +9,14 @@ function harness(options = {}) {
  const travelOnRecenter = options.travelOnRecenter === true;
  const movements=[],positions=[];
  const engineRef={current:{spatial:{setSourcePosition(value){positions.push(value);}}}};
- const {result,rerender,unmount}=renderHook(props=>useHeadPreviewTravel({index:0,choose:index=>movements.push(index),enabled:true,engineRef,travelOnRecenter, ...props}),{initialProps:{...options}});
+ const {result,rerender,unmount}=renderHook(props=>useHeadPreviewTravel({index:0,choose:index=>movements.push(index),enabled:true,engineRef,...props}),{initialProps:{...options}});
  look('right');assert.equal(positions.at(-1).x,2);assert.deepEqual(movements,[],"directional preview must not move the grid");
  look('forward');
  assert.deepEqual(movements,travelOnRecenter?[1]:[],travelOnRecenter?"explicit opt-in makes one step":"normal listening cannot commit a step on recenter");
  assert.equal(positions.at(-1).x,0,'forward listener hears current region centered');
- assert.equal(result.current.previewing,false,'Committed display remains the current region');
+ assert.equal(result.current?.previewing,false,'Committed display returns normally');
  assert.equal(result.current.regionIndex,0);
+ assert.equal(result.current.previewing,false, travelOnRecenter?'explicitly returned to committed row':'listening returns to baseline');
  return {result,rerender,unmount,movements,positions};
  function look(direction){act(()=>{result.current.onDirectionChange({direction,now:performance.now()});});}
 }

@@ -131,37 +131,50 @@ future coordinate origin is inside the listener's head at Vancouver, local
 **0,0,0**, once a traceable model exists. On the current map the marker sits at
 about x≈15.8%, y≈22.6%; that may change with calibrated geodata inputs.
 
-### Look to listen; optional return-to-travel mode
+### Hold to preview, return to travel
 
-**Listening Only is the default for camera directions.** Press Play, Enable
-camera, and look left/right/up/down to hear a neighboring region’s remix through
-the same MP3. A **25° sustained look for 250 ms** avoids heading drift and short
-accidental gestures, but changes only the temporary preview—not the committed region.
+Enable **Spatial sound**, then **Head travel**, and explicitly press Play. Hold
+left/right/up/down to preview the adjacent west/east/north/south region through
+the shared MP3, using that region’s existing estimated palette model. The amber
+map marker remains on its committed region while you look. Return to center
+within 1500 ms to commit exactly one step. Back within 10° of front ends the look, and a
+swing past front on the way back still counts as the return: a look the other way that
+starts during a look, or within 600 ms after one, counts only once held for 300 ms.
+Quick flicks move one step each. A front from Calibrate front, a camera reset or a state
+sync ends a look without moving. Settled direction intents are
+published without an extra 360 ms hold, and unchanging frames avoid redundant UI work. Recognition
+remains local MediaPipe and time-scale of model frames varies hardware; shallow thresholds remain. after that window, recenter simply
+cancels the preview. A new direction immediately replaces the preview from the
+same committed region, including when Forward is not crossed. Repeated events
+from one held direction never recursively move across the grid, and
+a blocked edge cannot manufacture movement. Stop tracking, an expired lost-face
+grace period, disabling either opt-in, and direct keyboard/grid selection cancel
+the transient preview.
 
-Returning to a stable front pose ends the preview after **150 ms**. The original
-region plays centered again and **head movement cannot navigate the map by itself**.
-Keyboard WASD/arrows and region buttons remain independent navigation controls.
+#### Head log for testers
 
-**Return with head movement** is a separate default-off option. When explicitly
-enabled, a prompt recenter within the original 1500 ms can commit exactly one
-clamped grid move using the committed region as reference. Longer looks merely
-cancel; neither repeated poses nor blocked edges can manufacture or chain movement.
-Stop camera, expired lost-face grace, disabling camera movements, or direct keyboard
-selection cancels pending previews rather than forcing a move. Geographic position
-is not scientific quantity, pitch or a claim of real geographic binaural projection.
+Once the camera has been on, **Save head log** (beside Calibrate front) saves a JSON
+file with every camera frame as calibrated head angles, every published direction and
+every travel decision. It holds numbers and labels only, never a camera image, and it
+stays in the page until you save it. It keeps the newest 30,000 entries, about 15 minutes;
+after a longer session the file still starts with the region, the head-travel switch and
+the camera state that the dropped part ended with, so the replay starts in the right place.
+Send the file with a note of what you did. `node scripts/replay_head_log.mjs <file>`
+replays it through the current code and prints what the saved run did next to what
+this code does; `--set oppositeDwellMs=200` tries another setting on the same motion.
 
 The centered source uses listener-local `(0,0,0)` and the direct stereo bypass.
 A preview uses the existing panner at a fixed artistic ±2 m direction offset.
 No additional recording, context, clock, oscillator or separately synthesized
 sound is created. A short 60 ms output envelope changes direction without
 disconnecting the recording or rebuilding the panner; recognition sensitivity
-and map-remix behavior stay unchanged. The camera is opt-in and processed locally, while the manual
-direction controls test the same interaction without camera permission. Browser
-tests use manual input or synthetic face matrices, not a human head-pose test.
+and map-remix behavior stay unchanged. The camera is opt-in and processed locally.
+Browser tests feed synthetic face matrices through Chromium's fake camera; they
+are not a human head-pose test.
 
-Run `npm run test:head-preview`, `npm run test:head-direction`, and
-`node scripts/verify_head_lifecycle.js` against `http://127.0.0.1:8001/` (or set
-`JUKEBOX_URL`). Analyser and geometry checks do not establish physical headphone
+Run `npm run test:head-preview`, `npm run test:head-direction` (it includes the
+camera lifecycle check) and `npm run test:head-model` (the real MediaPipe model on
+Chromium's fake camera) against `http://127.0.0.1:8001/` (or set `JUKEBOX_URL`). Analyser and geometry checks do not establish physical headphone
 localization, real-face accuracy, or speaker audibility.
 
 See `src/lib/spatialOrigin.js` and `src/lib/VANCOUVER_ORIGIN.md` for documented structure.
@@ -238,7 +251,7 @@ server (`npm run dev -- --port PORT`):
 ```bash
 JUKEBOX_URL=http://127.0.0.1:PORT npm run test:browser    # audio lifecycle, Home and Live Map
 JUKEBOX_URL=http://127.0.0.1:PORT npm run test:visibility # map layer checkboxes
-JUKEBOX_URL=http://127.0.0.1:PORT npm run test:input      # mouse, touch and arrow buttons
+JUKEBOX_URL=http://127.0.0.1:PORT npm run test:input      # mouse, touch and keys
 JUKEBOX_URL=http://127.0.0.1:PORT npm run test:spatial    # dev server only
 JUKEBOX_URL=http://127.0.0.1:PORT npm run test:head-preview
 JUKEBOX_URL=http://127.0.0.1:PORT npm run test:head-direction

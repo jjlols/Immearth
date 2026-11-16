@@ -3,18 +3,25 @@ import {
   CENTERED_SOURCE_POSITION,
   PreviewTravelController,
 } from '../lib/headPreviewController.js';
+import { headLog } from '../lib/headLog.js';
 
 /**
  * Head looks select only temporary musical features. useExplorer remains the
  * sole owner of the map marker and has the final say on its committed index.
+ * Every travel decision and committed region goes to the head log.
  */
 export default function useHeadPreviewTravel({ index, choose, enabled = false, travelOnRecenter = false, engineRef }) {
   const controllerRef = useRef(null);
   const chooseRef = useRef(choose);
   chooseRef.current = choose;
+  // The region a head return just chose, so the log can tell it from a keyboard or map move.
+  const headMoveRef = useRef(null);
   if (!controllerRef.current) {
     controllerRef.current = new PreviewTravelController(index);
-    controllerRef.current.onCommit = next => chooseRef.current(next);
+    controllerRef.current.onCommit = next => {
+      headMoveRef.current = next;
+      chooseRef.current(next);
+    };
   }
   const controller = controllerRef.current;
   const [preview, setPreview] = useState(null);
@@ -28,36 +35,35 @@ export default function useHeadPreviewTravel({ index, choose, enabled = false, t
   }, [controller, engineRef]);
 
   useEffect(() => {
+    headLog.record('region', { index, cause: headMoveRef.current === index ? 'head' : 'other' });
+    headMoveRef.current = null;
     if (controller.pendingPreview) clear();
     controller.setCommittedIndex(index);
     setPreview(null);
   }, [controller, index, clear]);
 
   useEffect(() => {
+    headLog.record('session', { action: 'travel', enabled });
     clear();
   }, [enabled, travelOnRecenter, clear]);
 
   const onDirectionChange = useCallback(event => {
     if (!enabled) return;
-    const direction = event?.direction;
-    if (direction === 'forward' || direction === 'center' || direction === 'neutral') {
-      if (travelOnRecenter) controller.recenter(event.now ?? performance.now());
-      else controller.cancel();
-    } else if (['left', 'right', 'up', 'down'].includes(direction)) {
-      if (controller.pendingPreview?.direction !== direction) {
-        controller.preview(direction, event.now ?? performance.now());
-      }
-    } else {
-      // stop, uncertain, calibration loss, and disabled opt-in are cancellation,
-      // not a commit and never another input direction.
+    const now = event?.now ?? performance.now();
+    const source = event?.source ?? 'head';
+    if (!source) return;
+    let decision = { action: 'none' };
+    if (['forward', 'center', 'neutral'].includes(event.direction) && !travelOnRecenter) {
       controller.cancel();
+    } else {
+      decision = controller.onDirection({ direction: event.direction, now, source });
     }
+    if (decision.action !== 'none') headLog.record('travel', { t: now, source, ...decision });
     const pending = controller.pendingPreview;
     engineRef?.current?.spatial?.setSourcePosition(pending?.position ?? CENTERED_SOURCE_POSITION);
-    // Audio placement must follow an accepted head intent immediately; the
-    // following React paint remains committed selection/prose bookkeeping.
+    // Only an accepted directional pose moves audio; returning to a centered pose does not imply a commit.
     setPreview(pending ? { ...pending } : null);
-  }, [controller, enabled, travelOnRecenter, engineRef, clear]);
+  }, [controller, enabled, travelOnRecenter, engineRef]);
 
   return {
     regionIndex: preview ? preview.index : index,

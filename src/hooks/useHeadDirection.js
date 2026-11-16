@@ -1,15 +1,21 @@
 import React from 'react';
 import { relativeCalibrationSession, HEAD_DIRECTION_DEFAULTS } from '../lib/headDirection.js';
+import { frameEntry, headLog } from '../lib/headLog.js';
 
 const IDLE = { status: 'off', direction: 'uncertain', calibrated: false, error: null };
 const NEUTRAL = { forward: { x: 0, y: 1, z: 0 }, up: { x: 0, y: 0, z: 1 } };
+
+/** Every direction this hook publishes also goes to the head log. */
+function emit(notify, event) {
+  headLog.record('event', { t: event.now, direction: event.direction, source: event.source });
+  notify.current?.(event);
+}
 
 /** Optional local face direction. Never a camera-on-mount or transport start. */
 export default function useHeadDirection({
   engineRef, enabled = true, detectorLoader = defaultDetectorLoader, onReady, onDirection,
 }) {
   const [state, setState] = React.useState(IDLE);
-  const [manualDirection, setManualDirection] = React.useState(null);
   const [preview, setPreview] = React.useState(false);
   const videoRef = React.useRef(null);
   const session = React.useRef(null);
@@ -41,19 +47,21 @@ export default function useHeadDirection({
     }
     detectorState.current?.stop();
     detectorState.current = null;
-    notify.current?.({ direction: 'stop', now: performance.now(), source: 'stop' });
-    setManualDirection(null);
+    if (old || next.status === 'error') {
+      headLog.record('session', { action: next.status === 'error' ? 'camera-error' : 'camera-off', ...(next.error ? { detail: next.error } : {}) });
+    }
+    emit(notify, { direction: 'stop', now: performance.now(), source: 'stop' });
     setState(next);
     write(NEUTRAL);
   }, [write]);
 
   React.useEffect(() => {
     engine.current?.current?.setSpatialListenerOrientation(NEUTRAL.forward, NEUTRAL.up);
-    if (detectorState.current) notify.current?.({
-      direction: enabled ? (manualDirection || detectorState.current.direction) : 'stop',
+    if (detectorState.current) emit(notify, {
+      direction: enabled ? detectorState.current.direction : 'stop',
       now: performance.now(), source: 'modal',
     });
-  }, [enabled, manualDirection]);
+  }, [enabled]);
 
   // Cleanup belongs to component unmount only, not to a React effect identity
   // change while the camera is actively being used.
@@ -127,8 +135,9 @@ export default function useHeadDirection({
       current.detector = await detectorLoader();
       if (current.closed) return;
       detectorState.current = relativeCalibrationSession();
+      headLog.record('session', { action: 'camera-on' });
       setState({ status: 'active', direction: 'uncertain', calibrated: false, error: null });
-      for (const track of current.stream.getTracks()) track.addEventListener('ended', () => fail(new Error('The camera ended. Use manual controls or Enable camera to retry.')), { once: true });
+      for (const track of current.stream.getTracks()) track.addEventListener('ended', () => fail(new Error('The camera ended. Press Enable camera to try again.')), { once: true });
       const sample = time => {
         current.frame = 0;
         if (current.closed || document.hidden) return;
@@ -138,9 +147,13 @@ export default function useHeadDirection({
           try {
             const timestamp = nextVideoTimestamp(current, video);
             const result = current.detector.detectForVideo(video, timestamp);
-            const output = detectorState.current.frame(result, performance.now());
+            // One clock reading for the classifier, the log and the event, so a saved
+            // log replays exactly (scripts/replay_head_log.mjs).
+            const now = performance.now();
+            const output = detectorState.current.frame(result, now);
+            headLog.record('frame', frameEntry(now, result, output));
             if (current.publishedDirection !== output.direction) {
-              notify.current?.({ direction: output.direction, now: performance.now(), source: 'head' });
+              emit(notify, { direction: output.direction, now, source: 'head' });
             }
             if (current.publishedDirection !== output.direction || current.publishedCalibration !== output.calibrated) {
               setState({ status: 'active', direction: output.direction, calibrated: output.calibrated, error: null });
@@ -163,7 +176,7 @@ export default function useHeadDirection({
     if (!current?.detector) return false;
     const video = current.video;
     if (!video || video.readyState < 2) {
-      setState(old => ({ ...old, error: 'Wait for a live camera frame before calibrating forward.' }));
+      setState(old => ({ ...old, error: 'Wait for a live camera frame, then press Calibrate front.' }));
       return false;
     }
     try {
@@ -172,11 +185,13 @@ export default function useHeadDirection({
       current.lastVideoTime = video.currentTime;
       const result = current.detector.detectForVideo(video, timestamp);
       if (!detectorState.current?.calibrate(result)) {
-        setState(old => ({ ...old, error: 'Center one face in view and try Calibrate forward again.' }));
+        headLog.record('session', { action: 'calibrate-failed' });
+        setState(old => ({ ...old, error: 'Center one face in view and press Calibrate front again.' }));
         return false;
       }
+      headLog.record('session', { action: 'calibrated' });
       setState(old => ({ ...old, error: null, direction: 'forward', calibrated: true }));
-      notify.current?.({ direction: 'forward', now: performance.now(), source: 'calibrate' });
+      emit(notify, { direction: 'forward', now: performance.now(), source: 'calibrate' });
       write(NEUTRAL);
       return true;
     } catch (error) {
@@ -185,32 +200,23 @@ export default function useHeadDirection({
     }
   }, [stop, write]);
 
-  const manual = React.useCallback(label => {
-    if (!detectorState.current) detectorState.current = relativeCalibrationSession();
-    const value = detectorState.current.manual(label);
-    if (!value) return;
-    setManualDirection(label);
-    setState(old => ({ ...old, direction: label }));
-    notify.current?.({ direction: label, now: performance.now(), source: 'manual' });
-  }, []);
-
   const reset = React.useCallback(() => {
     detectorState.current?.recenter();
-    setManualDirection(null);
     setState(old => ({ ...old, direction: session.current ? 'uncertain' : 'forward' }));
-    notify.current?.({ direction: 'forward', now: performance.now(), source: 'reset' });
+    headLog.record('session', { action: 'reset' });
+    emit(notify, { direction: 'forward', now: performance.now(), source: 'reset' });
     if (!session.current) write(NEUTRAL);
   }, [write]);
 
   React.useEffect(() => {
     onReady?.(() => {
-      if (influenceEnabled.current && detectorState.current) notify.current?.({
+      if (influenceEnabled.current && detectorState.current) emit(notify, {
         direction: detectorState.current.direction, now: performance.now(), source: 'sync',
       });
     });
   }, [onReady]);
 
-  return { state, manualDirection, preview, setPreview, videoRef, start, stop: () => stop(), calibrate, recenter: reset, manual, clearManual: reset };
+  return { state, preview, setPreview, videoRef, start, stop: () => stop(), calibrate, recenter: reset };
 }
 
 export async function defaultDetectorLoader() {

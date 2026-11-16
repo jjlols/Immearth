@@ -3,11 +3,15 @@ export const DIRECTIONS = Object.freeze(['forward', 'up', 'left', 'right', 'down
 export const NEUTRAL_FORWARD = Object.freeze({ x: 0, y: 1, z: 0 });
 export const NEUTRAL_UP = Object.freeze({ x: 0, y: 0, z: 1 });
 export const HEAD_DIRECTION_DEFAULTS = Object.freeze({
-  forwardDegrees: 10, directionDegrees: 25, exitDegrees: 5, maximumDegrees: 75,
-  // Brief glances must not commit a directional preview/travel window. Require
-  // a deliberate hold, while keeping center transitions short and intentional.
-  directionDwellMs: 250,
-  centerDwellMs: 150,
+  forwardDegrees: 10, directionDegrees: 15, maximumDegrees: 75,
+  // Settled direction changes are fast; centering requires a deliberate small hold.
+  directionDwellMs: 0,
+  centerDwellMs: 80,
+  // A look the other way that starts during a look, or within oppositeWindowMs after
+  // one ended, is usually the head swinging past front on its way back. It becomes a
+  // look only when held for oppositeDwellMs, so a quick overshoot stays part of the return.
+  oppositeDwellMs: 300,
+  oppositeWindowMs: 600,
   lostGraceMs: 800,
   sampleIntervalMs: 32,
   minimumPublishMs: 55,
@@ -50,7 +54,7 @@ export function relativeCalibrationSession(options = {}) {
       const center = calibrationFromMatrix(matrix);
       if (center) {
         calibration = center;
-        last = { ...state.poseAt({ yaw: 0, pitch: 0 }, now), direction: 'forward', calibrated: true };
+        last = { ...state.poseAt({ yaw: 0, pitch: 0 }, now), direction: 'forward', calibrated: true, calibratedNow: true };
       } else last = { ...state.poseAt(null, now), calibrated: false };
     } else last = { ...state.poseAt(relativePoseFromMatrix(matrix, calibration), now), calibrated: true };
     last.calibrated = Boolean(calibration);
@@ -64,18 +68,15 @@ export function relativeCalibrationSession(options = {}) {
     return true;
   }
   function reset() { calibration = null; last = state.stop(); return last; }
-  function manual(direction) {
-    const result = state.manual(direction);
-    if (result) last = { ...result, calibrated: Boolean(calibration) };
-    return result;
-  }
   return {
-    frame, calibrate, stop: reset, recenter: reset, manual,
+    frame, calibrate, stop: reset, recenter: reset,
     orientation: () => last.orientation,
     get direction() { return last.direction; },
     get calibrated() { return calibration !== null; },
   };
 }
+
+const OPPOSITE = Object.freeze({ left: 'right', right: 'left', up: 'down', down: 'up' });
 
 export function createHeadDirectionState(options = {}) {
   const config = { ...HEAD_DIRECTION_DEFAULTS, ...options };
@@ -85,43 +86,54 @@ export function createHeadDirectionState(options = {}) {
   let missingSince = null;
   let lastOrientation = null;
   let lastPublish = -Infinity;
+  // The last look the head left, so a swing past front on the way back is not a new look.
+  let lastLook = null;
   const neutral = () => ({ forward: { ...NEUTRAL_FORWARD }, up: { ...NEUTRAL_UP } });
+  function settle(next, now) {
+    if (OPPOSITE[direction]) lastLook = { direction, endedAt: now };
+    direction = next;
+  }
+  // A candidate opposite to the current look, or to a look that ended shortly before
+  // the candidate began, is most likely the head swinging past front on its way back.
+  function swingsBack(next) {
+    const from = OPPOSITE[direction] ? direction
+      : lastLook && candidateSince - lastLook.endedAt <= config.oppositeWindowMs ? lastLook.direction : null;
+    return from !== null && OPPOSITE[from] === next;
+  }
   function poseAt(value, now) {
-    if (!finite(now)) return { direction: 'uncertain', orientation: neutral() };
+    if (!finite(now)) return { direction: 'uncertain', candidate: null, orientation: neutral() };
     const pose = validPose(value);
     if (!pose) {
       if (missingSince === null) missingSince = now;
       candidate = null;
-      if (now - missingSince < config.lostGraceMs) return { direction, orientation: lastOrientation || neutral(), holding: true };
-      direction = 'uncertain';
+      if (now - missingSince < config.lostGraceMs) return { direction, candidate, orientation: lastOrientation || neutral(), holding: true };
+      if (direction !== 'uncertain') settle('uncertain', now);
       lastOrientation = neutral();
-      return { direction, orientation: lastOrientation };
+      return { direction, candidate, orientation: lastOrientation };
     }
     missingSince = null;
-    const next = classifyCalibrated(pose, direction, config);
+    // Hysteresis follows the newest zone the head reached, so a pending return to
+    // front is not undone by a swing a few degrees past it.
+    const next = classifyCalibrated(pose, candidate ?? direction, config);
     if (next !== candidate) { candidate = next; candidateSince = now; }
-    const hold = next === 'forward' ? config.centerDwellMs : config.directionDwellMs;
-    if (direction !== next && now - candidateSince >= hold) direction = next;
-    if (direction === 'uncertain') return { direction, orientation: neutral() };
+    const hold = next === 'forward' ? config.centerDwellMs
+      : swingsBack(next) ? Math.max(config.directionDwellMs, config.oppositeDwellMs)
+        : config.directionDwellMs;
+    if (direction !== next && now - candidateSince >= hold) settle(next, now);
+    if (direction === 'uncertain') return { direction, candidate, orientation: neutral(), pose };
     const target = direction === 'forward' ? neutral() : orientationFromPose(pose);
     if (!lastOrientation || (now - lastPublish >= config.minimumPublishMs && angleBetween(lastOrientation.forward, target.forward) >= config.audioChangeDegrees)) {
       lastOrientation = target;
       lastPublish = now;
     }
-    return { direction, orientation: lastOrientation, pose };
-  }
-  function manual(label) {
-    const orientation = manualOrientation(label);
-    if (!orientation) return false;
-    lastOrientation = orientation;
-    return { direction: label, orientation: lastOrientation };
+    return { direction, candidate, orientation: lastOrientation, pose };
   }
   function stop() {
-    direction = 'uncertain'; candidate = null; candidateSince = null; missingSince = null;
+    direction = 'uncertain'; candidate = null; candidateSince = null; missingSince = null; lastLook = null;
     lastOrientation = neutral(); lastPublish = -Infinity;
     return { direction, orientation: lastOrientation };
   }
-  return { poseAt, manual, stop, orientation: () => lastOrientation || neutral() };
+  return { poseAt, stop, orientation: () => lastOrientation || neutral() };
 }
 
 function validPose(value) {
@@ -134,14 +146,17 @@ function angleBetween(a, b) {
 export function classifyCalibrated(value, previous = 'uncertain', options = {}) {
   const pose = validPose(value);
   if (!pose) return 'uncertain';
-  const { forwardDegrees, directionDegrees, exitDegrees, maximumDegrees } = { ...HEAD_DIRECTION_DEFAULTS, ...options };
+  const { forwardDegrees, directionDegrees, maximumDegrees } = { ...HEAD_DIRECTION_DEFAULTS, ...options };
   if (Math.abs(pose.yaw) > maximumDegrees || Math.abs(pose.pitch) > maximumDegrees) return 'uncertain';
-  if (['left', 'right'].includes(previous) && ((previous === 'right' && pose.yaw >= exitDegrees) || (previous === 'left' && pose.yaw <= -exitDegrees))) return previous;
-  if (['up', 'down'].includes(previous) && ((previous === 'up' && pose.pitch >= exitDegrees) || (previous === 'down' && pose.pitch <= -exitDegrees))) return previous;
+  // A look lasts until the head is back inside the front zone: a head that rests a
+  // few degrees off front is front, never still turned.
+  if ((previous === 'right' && pose.yaw > forwardDegrees) || (previous === 'left' && pose.yaw < -forwardDegrees)) return previous;
+  if ((previous === 'up' && pose.pitch > forwardDegrees) || (previous === 'down' && pose.pitch < -forwardDegrees)) return previous;
   if (Math.abs(pose.yaw) <= forwardDegrees && Math.abs(pose.pitch) <= forwardDegrees) return 'forward';
   if (Math.abs(pose.yaw) >= directionDegrees && Math.abs(pose.yaw) > Math.abs(pose.pitch)) return pose.yaw > 0 ? 'right' : 'left';
   if (Math.abs(pose.pitch) >= directionDegrees && Math.abs(pose.pitch) > Math.abs(pose.yaw)) return pose.pitch > 0 ? 'up' : 'down';
-  return 'uncertain';
+  // Between the front zone and a look the head keeps its last zone.
+  return previous === 'forward' ? 'forward' : 'uncertain';
 }
 export function orientationFromPose(value) {
   if (!validPose(value)) return null;

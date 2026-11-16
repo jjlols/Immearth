@@ -136,5 +136,21 @@ class Tests(ScaleTests):
                 self.assertEqual([(cell['region']['row'],cell['region']['column']) for cell in cells],[(row,column) for row in range(6) for column in range(8)])
 
 
+class RainOverflowTests(unittest.TestCase):
+    def test_overflow_pixels_are_counted_apart_and_never_mute_bounded_rain(self):
+        import json
+        from pathlib import Path
+        cells = json.loads((Path(__file__).resolve().parents[1] / 'public/scales/features.json').read_text())['categories']['precipitation']
+        cell = cells[15]
+        cell = cell.get('features', cell)
+        self.assertGreater(cell['overflow_count'], 0)
+        self.assertGreater(cell['rain_count'], 1000)
+        self.assertLess(cell['max_value'], 50)
+        for region in cells:
+            region = region.get('features', region)
+            if 'rain_count' in region:
+                self.assertEqual(region['rain_count'] + region['snow_count'] + region['overflow_count'], region['classified_count'])
+
+
 if __name__=='__main__':
     unittest.main()

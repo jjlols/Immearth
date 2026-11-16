@@ -116,6 +116,11 @@ export class RemixEngine {
       await this.ctx.suspend();
       return;
     }
+    // Never start a source without the decoded recording.
+    if (!this.original && !this.buffer) {
+      await this.ctx.suspend();
+      return;
+    }
     if (!this.original) this.remixRecording();
     this.isRunning = true;
     if (this.master) this.master.gain.value = 0;
@@ -136,7 +141,9 @@ export class RemixEngine {
         const bytes = await response.arrayBuffer();
         const buffer = await context.decodeAudioData(bytes);
         if (!(buffer.duration > 0)) throw new Error('The recording decoded to an empty buffer. Playback remains off.');
-        if (request !== this.playRequest || this.ctx !== context) return null;
+        // A later Play may be waiting on this same load, so keep the decode while the context
+        // is unchanged; play() checks its own request. dispose() replaces the context.
+        if (this.ctx !== context) return null;
         this.buffer = buffer;
         return buffer;
       })();

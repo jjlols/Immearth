@@ -18,7 +18,8 @@
     "test:visibility": "node tests/map-visibility-browser.mjs",
     "test:input": "node scripts/verify_map_input.js",
     "features": "python3 -m sonification.build_sonification_assets",
-    "test:head-direction": "node scripts/verify_head_direction_mapping.js && node scripts/verify_head_live_synthetic.js",
+    "test:head-direction": "node scripts/verify_head_direction_mapping.js && node scripts/verify_head_live_synthetic.js && node scripts/verify_head_lifecycle.js",
+    "test:head-model": "node scripts/check_head_calibration_live.mjs",
     "test:head-preview": "node scripts/test_head_preview.mjs",
     "test:listening": "node scripts/verify_listening_default.js"
   },

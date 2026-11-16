@@ -30,7 +30,7 @@ export const POSITIONS = Object.freeze({
 });
 /** The head preview controller's return window (src/lib/headPreviewController.js). */
 export const RETURN_WINDOW_MS = 1500;
-/** Explicitly enables the legacy return-to-travel gesture for regression coverage; production starts listen-only. */
+/** Enables legacy return-to-travel only after the camera UI exists, for regression scenarios. */
 export async function enableHeadTravel(page){ await page.getByLabel("Return with head movement",{exact:true}).check(); }
 
 function installSpies() {
@@ -75,7 +75,7 @@ function installSpies() {
   };
 }
 
-export async function openHeadPage({ viewport = { width: 390, height: 844 } } = {}) {
+export async function openHeadPage({ viewport = { width: 390, height: 844 }, legacyTravelOnRecenter = false } = {}) {
   const browser = await chromium.launch({
     headless: process.env.HEADED !== '1',
     args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'],
@@ -95,10 +95,10 @@ export async function openHeadPage({ viewport = { width: 390, height: 844 } } = 
   await page.bringToFront();
   if (await page.locator('#intro-skip').count()) await page.locator('#intro-skip').click();
   await page.locator('[data-exploration-region]').waitFor({ state: 'attached' });
-  return { browser, page, errors, ...helpers(page) };
+  return { browser, page, errors, ...helpers(page, { legacyTravelOnRecenter }) };
 }
 
-function helpers(page) {
+function helpers(page, { legacyTravelOnRecenter }) {
   const spy = () => page.evaluate(() => { const { timestamps, ...rest } = window.__HEAD_TEST__; return rest; });
   const diag = () => page.evaluate(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics());
   const marker = () => page.locator('[data-exploration-region]').getAttribute('data-exploration-region');
@@ -131,6 +131,7 @@ function helpers(page) {
   const enableCamera = async () => {
     await page.getByRole('button', { name: 'Enable camera', exact: true }).click();
     await page.waitForSelector('[data-head-test="active"]', { timeout: 10000 });
+    if (legacyTravelOnRecenter) await enableHeadTravel(page);
     // The first visible face is the initial front (relative calibration).
     await waitDirection('forward');
   };

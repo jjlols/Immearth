@@ -188,11 +188,18 @@ def region_features(category, rgba):
     matched_indices = data['indices'][accepted]
     kinds = tuple(entry['legend'] for entry in entries)
     if 'liquid' in kinds or 'frozen' in kinds:
-        liquid = [index for index, entry in enumerate(entries) if entry['legend'] == 'liquid']
-        frozen = [index for index, entry in enumerate(entries) if entry['legend'] == 'frozen']
+        # Overflow classes have no upper bound: count them apart and give them no value, so
+        # one overflow pixel never decides the music of a region full of bounded rain.
+        bounded = [entry['interval']['upper'] is not None for entry in entries]
+        liquid = [index for index, entry in enumerate(entries) if entry['legend'] == 'liquid' and bounded[index]]
+        frozen = [index for index, entry in enumerate(entries) if entry['legend'] == 'frozen' and bounded[index]]
+        overflow = [index for index, ok in enumerate(bounded) if not ok]
         summary['rain_count'] = int(np.isin(matched_indices, liquid).sum())
         summary['snow_count'] = int(np.isin(matched_indices, frozen).sum())
-        summary['max_value'] = float(data['values'][matched_indices].max())
+        summary['overflow_count'] = int(np.isin(matched_indices, overflow).sum())
+        bounded_values = data['values'][matched_indices[np.isin(matched_indices, liquid + frozen)]]
+        if bounded_values.size:
+            summary['max_value'] = float(bounded_values.max())
         return summary
     values = np.sort(data['values'][matched_indices])
     summary['median'] = float(values[len(values) // 2])

@@ -316,6 +316,24 @@ test('dispose invalidates a pending decode and cannot later publish or resume re
  assert.equal(engine.isRunning, false);
 });
 
+test('a second Play during the load plays the decoded recording, once', async () => {
+ const engine = new RemixEngine({ contextClass: MockContext });
+ let resolveFetch, fetches = 0;
+ globalThis.fetch = () => { fetches++; return new Promise(done => { resolveFetch = done; }); };
+ const first = engine.play();
+ await Promise.resolve();
+ await engine.pause();
+ const second = engine.play();
+ resolveFetch({ ok: true, arrayBuffer: async () => new ArrayBuffer(8) });
+ await Promise.all([first, second]);
+ assert.equal(fetches, 1);
+ assert.equal(engine.isRunning, true);
+ assert.ok(engine.buffer);
+ assert.equal(engine.ctx.sources.length, 1);
+ assert.equal(engine.original.buffer, engine.buffer);
+ await engine.dispose();
+});
+
 test('unsupported panners leave the approved recording playable and bypassed', async () => {
  const engine = await playingEngine({}, class extends MockContext { createPanner() { throw new Error('unsupported'); } });
  assert.equal(engine.ctx.sources.length, 1);
