@@ -22,8 +22,8 @@ export function placeTourCard(target, card, viewport, gap = 14) {
   const clampLeft = value => Math.max(margin, Math.min(value, maxLeft));
   const clampTop = value => Math.max(topLimit, Math.min(value, maxTop));
   const options = [
-    { side: "right", left: target.right + gap, top: target.top + (target.height - height) / 2 },
-    { side: "left", left: target.left - gap - width, top: target.top + (target.height - height) / 2 },
+    { side: "right", left: target.right + gap, top: target.top },
+    { side: "left", left: target.left - gap - width, top: target.top },
     { side: "below", left: target.left + (target.width - width) / 2, top: target.bottom + gap },
     { side: "above", left: target.left + (target.width - width) / 2, top: target.top - gap - height },
   ].map(option => {
