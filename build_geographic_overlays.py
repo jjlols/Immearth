@@ -68,9 +68,12 @@ def decode_fire(source:Path,color_source:Path)->Image.Image:
     return fire
 
 
-def prepare_marker_layers(config:dict,output:Path,force:bool=False)->dict:
+def prepare_marker_layers(config:dict,output:Path,force:bool=False,inputs:Path|None=None)->dict:
     del force
     output = Path(output).resolve()
+    # Downloaded build inputs (Natural Earth land, NASA's transparent rain PNG) are kept
+    # in overlay/inputs, never in the served site; only finished layers go to output.
+    inputs = Path(inputs) if inputs is not None else ROOT/'overlay'/'inputs'
     if output in (ROOT,(ROOT/'overlay').resolve(),(ROOT/'data').resolve()) or not output.is_relative_to(ROOT):raise RuntimeError('Output must stay in owned subdirectory')
     # Preview artifact must not retain removed peak-mask raster variants.
     for asset in output.glob('*_full.png'):
@@ -78,7 +81,7 @@ def prepare_marker_layers(config:dict,output:Path,force:bool=False)->dict:
     for source in output.glob('*-source.png'):
         source.unlink()
     output.mkdir(parents=True,exist_ok=True)
-    geojson=fetch_asset(config['basemap']['url'],output/'land-source.geojson')
+    geojson=fetch_asset(config['basemap']['url'],inputs/'natural-earth-land.geojson')
     w,h=config['basemap']['size'];draw_geography(json.loads(geojson.read_text()),w,h,config['basemap']).save(output/'basemap.png')
     manifest={'version':4,'basemap':{'url':'assets/basemap.png','width':w,'height':h,'source':config['basemap']['credit'],'license':config['basemap']['license']},'projection':config['projection'],'limitations':['Flat 2:1 source field aspect ratios are used for display; common longitude extent does not imply a verified identical geotransform.','Different scientific variables, palettes, spatial coverage and acquisition times cannot be merged numerically here. The map is exploratory composition.','Intact CO/NOx/temperature source fields retain their colors and pixel scope; uniform user-selectable opacity does not drop scientific subregions.'], 'layers':[]}
     for layer in config['layers']:
@@ -88,7 +91,7 @@ def prepare_marker_layers(config:dict,output:Path,force:bool=False)->dict:
                 source.load(); field=source.convert('RGBA');field.load()
             method='complete scientific RGB; no quantile or spatial clipping'
         elif kind=='transparent_png':
-            with Image.open(fetch_asset(layer['url'],output/f'{identity}-source.png')) as source:
+            with Image.open(fetch_asset(layer['url'],inputs/f'{identity}-source.png')) as source:
                 source.load()
                 if 'A' not in source.getbands():raise RuntimeError('NASA alpha required')
                 field=source.convert('RGBA');field.load()

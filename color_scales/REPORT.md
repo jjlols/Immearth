@@ -14,6 +14,22 @@ tables are supplied.
 | Nitrogen oxides | **Yes** | SVS 5154 `NOx_colorbar_plain.png`, reviewed ticks and 128 samples | **No — estimated from official raster ticks** | NO + NO2 near-surface GEOS-CF concentration. Labels are powers of ten: 10^-3 through 10^1 ppbv. log10 interpolation is estimated, not an official lookup table. |
 | Near-surface temperature | **Yes** | SVS 5147 `NearSurfaceTemperature_colorbar_plain.png`, ticks and 128 samples | **No — estimated from official raster ticks** | T2M, Celsius. Eight labels -40, -20, -10, 0, 10, 20, 30, 40 °C with very cold/hot extensions. Text conflict: short caption says 3m, longer description says 2m; 2m is used with warning. |
 
+## Precipitation block labels corrected (15 November 2026)
+
+The 14 November record labeled each rain/snow block one interval low. On both
+official bars the tick 0.1 sits at x=40, the left edge of the first colored run
+(x 40-75), and each later tick sits on the next run's left edge (0.2 at 76 ...
+50 at 400). So run 1 is 0.1-0.2 mm/hour, the yellow run (x 220-255) is 2-3
+mm/hour, the run after the 20 tick (x 364-399) is 20-50 mm/hour, and only the
+narrow arrow (x 403-416) is overflow at or above 50. The old record called the
+first run "below 0.1" and the 20-50 run "overflow". `nasa_extractors.py` now
+writes the bounds from that tick-at-left-edge reading, and the precipitation
+record was regenerated from the live SVS 4285 assets (unchanged SHA-256). On the
+frozen bar the 20-50 run and the arrow share one RGB (140, 20, 156); the record
+marks both with `rgb_shared_with_categories`, and the music library treats that
+color as one class of at least 20 mm/hour with no upper bound. The grey swatch
+keeps no assigned meaning. All values remain `estimated`.
+
 ## Verification hierarchy used
 
 1. NASA page titles/descriptions validate scientific quantity. The links to all

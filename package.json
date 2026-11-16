@@ -6,16 +6,21 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "test": "node --test test-js/*.test.js",
+    "test": "node --import ./test-js/dom-globals.mjs --test test-js/*.test.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test:browser": "node scripts/verify_jukebox.js",
     "test:origin-signal": "node scripts/verify_origin_signal.js",
     "test:spatial-smooth": "node scripts/verify_smooth_spatial_transitions.mjs",
     "test:spatial-transitions": "node scripts/verify_smooth_spatial_transitions.mjs",
     "test:spatial": "node scripts/verify_spatial_signal.js",
     "test:visibility": "node tests/map-visibility-browser.mjs",
+    "test:input": "node scripts/verify_map_input.js",
     "features": "python3 -m sonification.build_sonification_assets",
-    "test:head-direction": "node scripts/verify_direction_manual.js && node scripts/verify_head_live_synthetic.js",
-    "test:head-preview": "node scripts/test_head_preview.mjs"
+    "test:head-direction": "node scripts/verify_head_direction_mapping.js && node scripts/verify_head_live_synthetic.js",
+    "test:head-preview": "node scripts/test_head_preview.mjs",
+    "test:listening": "node scripts/verify_listening_default.js"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "1.2.3",
@@ -25,10 +30,15 @@
     "vite": "^7.1.9"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^5.0.2",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.13.0",
     "jsdom": "^27.0.1",
-    "playwright": "^1.58.2"
+    "playwright": "1.65.1",
+    "prettier": "3.9.10"
   }
 }

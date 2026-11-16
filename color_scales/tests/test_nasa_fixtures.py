@@ -31,6 +31,17 @@ class NasaFixtureTests(unittest.TestCase):
             self.assertEqual(len(legend["categories"]), 11)
             self.assertEqual(legend["categories"][-1]["upper_bound"], None)
             self.assertEqual(legend["units"], "mm/hour")
+            # Tick i (0.1 at x=40, 0.2 at x=76, ...) is the LEFT edge of run i.
+            bounds = [(c["lower_bound"], c["upper_bound"]) for c in legend["categories"]]
+            self.assertEqual(bounds, [(0.1, 0.2), (0.2, 0.3), (0.3, 0.5), (0.5, 1.0), (1.0, 2.0), (2.0, 3.0),
+                                      (3.0, 5.0), (5.0, 10.0), (10.0, 20.0), (20.0, 50.0), (50.0, None)])
+            self.assertEqual(legend["categories"][9]["description"], "between 20.0 and 50.0 mm/hour")
+        liquid, frozen = result["legends"]
+        self.assertEqual(tuple(liquid["categories"][5]["rgb"]), (255, 251, 0))  # yellow: 2-3 mm/hour
+        self.assertEqual(liquid["categories"][5]["description"], "between 2.0 and 3.0 mm/hour")
+        self.assertNotIn("rgb_shared_with_categories", liquid["categories"][9])
+        self.assertEqual(frozen["categories"][9]["rgb_shared_with_categories"], [10])
+        self.assertEqual(frozen["categories"][10]["rgb_shared_with_categories"], [9])
         self.assertFalse(result["numeric_interpolation_supported"])
 
     def test_modern_ticks_nonlinear_log_and_temperature_sequence(self):

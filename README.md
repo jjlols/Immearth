@@ -106,44 +106,49 @@ can then resume as allowed. No autoplay on launch, selecting metrics, region gui
 or Vancouver pin. **Pause** stops scheduling/suspends current context; resume via
 the same explicit listener. **Reset** stops track and scheduled source accents.
 
-- **Master volume** defaults to 0.32 at the user's request, capped at 0.50. The original waveform and dry-gain 0.085 remain unchanged. Before/after measurements and their limits are in `agentupdate.md`; analyser readings do not establish comfortable physical listening volume.
-- **Mute** receives all player pipeline including backing track; unmute restores it.
-- If too quiet, first check Mute and master slider, OS/browser output level/headphones
-  disconnected, app has MP3 source loading resolved, disabled source not active.
-  Adjust local playback volume comfortably while listening before proposing code changes. Some
-  internal image classes can remain silent comfortably, but the licensed backing
-  source always needs explicit user play.
+- **Master volume** defaults to 0.32 at the user's request, capped at 0.50. The original waveform and dry-gain 0.085 remain unchanged. Before/after measurements and their limits are in `docs/agents/agentupdate.md`; analyser readings do not establish comfortable physical listening volume.
+- **Mute** silences the whole output, backing track included; Unmute restores it.
+- If the music is too quiet, check these first: Mute and the master slider, the
+  OS and browser output level, that headphones are connected, that the MP3 loaded,
+  and that the layer you expect is turned on. Adjust the playback volume while
+  listening before proposing a code change. Some image classes are silent by
+  design, and the licensed recording always needs an explicit Play.
 
-The Vancouver origin is a reserved **metadata reference**, not a real listener GPS
-position or scientific source calculation. Optional local-rendered art uses an
-explicitly synthetic model described below; spatial audio remains opt-in. Source-patterned original isn't louder in higher
-scientific quantile nor evil spray-relevant sound of the pollutant chemicals.
-**Do not make the song gain high just because a fixture green button on screen.**
+The Vancouver origin is a reserved **metadata reference**: not the listener's GPS
+position and not a scientific source calculation. The optional local renderer uses
+an explicitly synthetic model, described below. (Earlier text said spatial audio
+is opt-in; since commit 9ef9338 the Live Map starts with spatial sound on.) A higher
+pollutant value does not make the original recording louder, and nothing imitates
+the sound of the chemicals. **Do not raise the song's gain because a test on screen
+turned green.**
 
 ## Spatial origin marker and independent local renderer
 
-Crosshair labeled **Vancouver, BC** (49.2827°N, 123.1207°W) serves as the user's
-user-instructed initiating geographic reference (not requested GPS). Lat/long of these data do not currently control
-time, pitch, rhythm, or automatic pan. Original intended future coordinate origin
-is inside listener head at Vancouver local **0,0,0** when traceable model available,
-not browser cross-shaped mystery. Current map displayed x≈15.8%, y≈22.6%; actual
-raster matches may change with calibrated geodata inputs.
+The crosshair labeled **Vancouver, BC** (49.2827°N, 123.1207°W) is the geographic
+reference the user chose; the site never requests GPS. The latitude and longitude
+of these data do not control time, pitch, rhythm or automatic pan. The intended
+future coordinate origin is inside the listener's head at Vancouver, local
+**0,0,0**, once a traceable model exists. On the current map the marker sits at
+about x≈15.8%, y≈22.6%; that may change with calibrated geodata inputs.
 
-### Hold to preview, return to travel
+### Look to listen; optional return-to-travel mode
 
-Enable **Spatial sound**, then **Head travel**, and explicitly press Play. Hold
-left/right/up/down to preview the adjacent west/east/north/south region through
-the shared MP3, using that region’s existing estimated palette model. The amber
-map marker remains on its committed region while you look. Return to center
-within 1500 ms to commit exactly one step; settled direction intents are
-published without an extra 360 ms hold, and unchanging frames avoid redundant UI work. Recognition
-remains local MediaPipe and time-scale of model frames varies hardware; shallow thresholds remain. after that window, recenter simply
-cancels the preview. A new direction immediately replaces the preview from the
-same committed region, including when Forward is not crossed. Repeated events
-from one held direction never recursively move across the grid, and
-a blocked edge cannot manufacture movement. Stop tracking, an expired lost-face
-grace period, disabling either opt-in, and direct keyboard/grid selection cancel
-the transient preview.
+**Listening Only is the default for camera directions.** Press Play, Enable
+camera, and look left/right/up/down to hear a neighboring region’s remix through
+the same MP3. A **25° sustained look for 250 ms** avoids heading drift and short
+accidental gestures, but changes only the temporary preview—not the committed region.
+
+Returning to a stable front pose ends the preview after **150 ms**. The original
+region plays centered again and **head movement cannot navigate the map by itself**.
+Keyboard WASD/arrows and region buttons remain independent navigation controls.
+
+**Return with head movement** is a separate default-off option. When explicitly
+enabled, a prompt recenter within the original 1500 ms can commit exactly one
+clamped grid move using the committed region as reference. Longer looks merely
+cancel; neither repeated poses nor blocked edges can manufacture or chain movement.
+Stop camera, expired lost-face grace, disabling camera movements, or direct keyboard
+selection cancels pending previews rather than forcing a move. Geographic position
+is not scientific quantity, pitch or a claim of real geographic binaural projection.
 
 The centered source uses listener-local `(0,0,0)` and the direct stereo bypass.
 A preview uses the existing panner at a fixed artistic ±2 m direction offset.
@@ -222,6 +227,21 @@ npm test
 npm run build
 PYTHONPATH=. .venv/bin/python -m pytest -q tests
 PYTHONPATH=. .venv/bin/python -m pytest -q color_scales/tests
+```
+
+Browser audits (Playwright, pinned in `package.json`; set `JUKEBOX_URL` to a local
+server). `test:browser`, `test:visibility` and `test:input` run against either a
+built `dist/` server or the Vite dev server. `test:spatial`, `test:head-preview`
+and `test:head-direction` load modules from `/src`, so they need the Vite dev
+server (`npm run dev -- --port PORT`):
+
+```bash
+JUKEBOX_URL=http://127.0.0.1:PORT npm run test:browser    # audio lifecycle, Home and Live Map
+JUKEBOX_URL=http://127.0.0.1:PORT npm run test:visibility # map layer checkboxes
+JUKEBOX_URL=http://127.0.0.1:PORT npm run test:input      # mouse, touch and arrow buttons
+JUKEBOX_URL=http://127.0.0.1:PORT npm run test:spatial    # dev server only
+JUKEBOX_URL=http://127.0.0.1:PORT npm run test:head-preview
+JUKEBOX_URL=http://127.0.0.1:PORT npm run test:head-direction
 ```
 
 Run isolated process for **scientific independent color_scales suite** because one

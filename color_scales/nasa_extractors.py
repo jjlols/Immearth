@@ -61,20 +61,27 @@ def precipitation(result: dict[str, Any], assets: list[dict], fetcher, output: P
             raise ValueError("precipitation palette geometry changed; review needed")
         categories = []
         for index, (_, _, color) in enumerate(runs):
-            # The OCR-reviewed bin values cover 0.1 through 50. NASA's raster
-            # doesn't formally establish <= vs <; document approximation.
-            if index == 0:
-                meaning = "below the first displayed 0.1 mm/hour boundary"
-            elif index == 10:
+            # The OCR-reviewed tick i sits on the LEFT edge of run i (0.1 at
+            # x=40, 0.2 at x=76, ..., 50 at x=400), so run i covers bins[i] to
+            # bins[i + 1] and the narrow arrow after the last tick is the
+            # overflow. The grey swatch left of 0.1 is not one of these runs.
+            # NASA's raster doesn't formally establish <= vs <; document approximation.
+            if index == 10:
                 meaning = "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)"
             else:
-                meaning = f"between {bins[index - 1]} and {bins[index]} mm/hour"
+                meaning = f"between {bins[index]} and {bins[index + 1]} mm/hour"
             categories.append({"category_index": index, "rgb": color, "description": meaning,
-                               "lower_bound": None if index == 0 else bins[index - 1],
-                               "lower_bound": None if index == 0 else bins[index - 1],
-                               "upper_bound": None if index in (0, 10) else bins[index],
+                               "lower_bound": bins[index],
+                               "upper_bound": None if index == 10 else bins[index + 1],
                                "left_tick_approximate": True, "right_tick_approximate": True,
                                "tick_is_at_bin_left_edge": True})
+        for index, category in enumerate(categories):
+            # NASA's snow bar draws the 20-50 block and the overflow arrow in one
+            # RGB, so a map pixel of that color cannot tell them apart.
+            shared = [other["category_index"] for other in categories
+                      if other is not category and tuple(other["rgb"]) == tuple(category["rgb"])]
+            if shared:
+                category["rgb_shared_with_categories"] = shared
         ticks = numeric_ticks(bins, [40 + 36 * i for i in range(11)], ("below scale", "overflow"))
         result["legends"].append({"name": kind, "units": "mm/hour", "scale_type": "logarithmic_bins_with_overflow",
                                   "source_asset_url": asset["url"], "source_asset_sha256": ASSET_SHA256[name],
@@ -93,6 +100,8 @@ def precipitation(result: dict[str, Any], assets: list[dict], fetcher, output: P
     result["limitations"] += [
         "NASA supplied ten regular rain/snow interval patches plus an overflow extension; interval boundary inclusivity is not encoded in official metadata.",
         "A separate grey swatch exists on the left and may indicate no rain/missing/other; no numeric meaning is assigned.",
+        "Each tick marks the left edge of its colored block: block 1 is 0.1-0.2 mm/hour and the block after the 20 tick is 20-50 mm/hour; only the arrow is overflow.",
+        "The frozen bar uses one RGB (140, 20, 156) for both the 20-50 mm/hour block and the overflow arrow; a pixel of that color is at least 20 mm/hour with no upper bound.",
         "Numeric bins were read and manually reviewed from official raster labels. No authoritative machine-readable mapping was found.",
     ]
 

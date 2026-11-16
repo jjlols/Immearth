@@ -8,7 +8,7 @@ import {
  * Head looks select only temporary musical features. useExplorer remains the
  * sole owner of the map marker and has the final say on its committed index.
  */
-export default function useHeadPreviewTravel({ index, choose, enabled = false, engineRef }) {
+export default function useHeadPreviewTravel({ index, choose, enabled = false, travelOnRecenter = false, engineRef }) {
   const controllerRef = useRef(null);
   const chooseRef = useRef(choose);
   chooseRef.current = choose;
@@ -35,13 +35,14 @@ export default function useHeadPreviewTravel({ index, choose, enabled = false, e
 
   useEffect(() => {
     clear();
-  }, [enabled, clear]);
+  }, [enabled, travelOnRecenter, clear]);
 
   const onDirectionChange = useCallback(event => {
     if (!enabled) return;
     const direction = event?.direction;
     if (direction === 'forward' || direction === 'center' || direction === 'neutral') {
-      controller.recenter(event.now ?? performance.now());
+      if (travelOnRecenter) controller.recenter(event.now ?? performance.now());
+      else controller.cancel();
     } else if (['left', 'right', 'up', 'down'].includes(direction)) {
       if (controller.pendingPreview?.direction !== direction) {
         controller.preview(direction, event.now ?? performance.now());
@@ -56,7 +57,7 @@ export default function useHeadPreviewTravel({ index, choose, enabled = false, e
     // Audio placement must follow an accepted head intent immediately; the
     // following React paint remains committed selection/prose bookkeeping.
     setPreview(pending ? { ...pending } : null);
-  }, [controller, enabled, engineRef, clear]);
+  }, [controller, enabled, travelOnRecenter, engineRef, clear]);
 
   return {
     regionIndex: preview ? preview.index : index,

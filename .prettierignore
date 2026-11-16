@@ -1,0 +1,14 @@
+dist/
+overlay-site/
+node_modules/
+public/
+data/
+color_scales/output/
+color_scales/source_evidence/
+docs/
+*.md
+package-lock.json
+.venv/
+overlay/inputs/
+*.geojson
+color_scales/

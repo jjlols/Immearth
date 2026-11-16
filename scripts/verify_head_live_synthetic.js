@@ -1,120 +1,90 @@
-/** Synthetic camera + detector integration; not a real-face or listening claim. */
+/**
+ * Synthetic camera + detector lifecycle: Enable camera, direction labels,
+ * Calibrate front, lost face and Stop camera. Not a real-face or listening claim.
+ */
 import assert from 'node:assert/strict';
-import { chromium } from 'playwright';
+import { openHeadPage, origin, POSITIONS } from './lib/headHarness.js';
+import {enableHeadTravel} from './lib/headHarness.js';
 
-const origin = process.env.JUKEBOX_URL || 'http://127.0.0.1:8001';
-const browser = await chromium.launch({ headless: process.env.HEADED !== "1", args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
+const { browser, page, errors, ...h } = await openHeadPage();
 try {
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-  const errors = [];
-  page.on('console', message => { if (message.type() === 'error') console.error('browser:', message.text()); });
-  page.on('pageerror', error => errors.push(error.message));
-  await page.addInitScript(() => {
-    Object.defineProperty(document, 'hidden', { configurable: true, get: () => false });
-    Object.defineProperty(document, 'hasFocus', { configurable: true, value: () => true });
-    window.__HEAD_TEST__ = { contexts: 0, closes: 0, calls: 0, gum: 0, stops: 0, timestamps: [] };
-    window.__HEAD_POSE__ = { yaw: 0, pitch: 0, missing: false };
-    window.DETECTOR = {
-      // Head degrees: positive yaw is the subject's right, positive pitch is up.
-      detectForVideo(video, timestamp) {
-        const spy = window.__HEAD_TEST__;
-        spy.calls++;
-        spy.timestamps.push(timestamp);
-        const { yaw, pitch, missing } = window.__HEAD_POSE__;
-        const y = yaw * Math.PI / 180;
-        const p = pitch * Math.PI / 180;
-        const forward = [-Math.sin(y) * Math.cos(p), Math.sin(p), Math.cos(y) * Math.cos(p)];
-        window.__HEAD_TEST__.lastPose = {yaw, pitch, missing};
-        return { facialTransformationMatrixes: missing ? [] : [{
-          rows: 4, columns: 4,
-          data: [1, 0, 0, 0, 0, 1, 0, 0, ...forward, 0, 0, 0, 0, 1],
-        }] };
-      },
-      close() { window.__HEAD_TEST__.closes++; },
-    };
-    const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-    navigator.mediaDevices.getUserMedia = async constraints => {
-      if (constraints.audio !== false) throw new Error('Microphone is not allowed');
-      window.__HEAD_TEST__.gum++;
-      const stream = await getUserMedia(constraints);
-      for (const track of stream.getTracks()) {
-        const stop = track.stop.bind(track);
-        track.stop = () => { window.__HEAD_TEST__.stops++; stop(); };
-      }
-      return stream;
-    };
-    const Context = AudioContext;
-    window.AudioContext = class extends Context {
-      constructor(...args) { super(...args); window.__HEAD_TEST__.contexts++; }
-      createOscillator() { throw new Error('oscillator forbidden'); }
-    };
-  });
-  await page.route('**/src/hooks/useHeadDirection.js*', async route => {
-    const response = await route.fetch();
-    const source = await response.text();
-    if (!source.includes('detectorLoader = defaultDetectorLoader')) throw new Error('Head hook detector injection point changed');
-    const instrumented = source.replace(
-      'detectorLoader = defaultDetectorLoader',
-      'detectorLoader=()=>Promise.resolve(window.DETECTOR)',
-    );
-    await route.fulfill({ response, body: instrumented });
-  });
-  await page.goto(`${origin}/?view=music`, { waitUntil: 'networkidle' });
-  await page.bringToFront();
-  if(await page.locator('#intro-skip').count())await page.locator('#intro-skip').click();
-  await page.locator('.head-start').click();
-  try { await page.waitForSelector('[data-camera-status="active"]',{timeout:10000}); }
-  catch(e){console.error(await page.evaluate(()=>({head:document.querySelector('.head-direction')?.innerText,spy:window.__HEAD_TEST__,pose:window.__HEAD_POSE__,current:document.querySelector('video')?.readyState})) ); throw e;}
-
-  for (const [label, yaw, pitch] of [
-    ['forward', 0, 0], ['right', 25, 0], ['left', -25, 0],
-    ['up', 0, 25], ['down', 0, -25], ['forward', 0, 0],
-  ]) {
-    await page.evaluate(pose => { window.__HEAD_POSE__ = { ...pose, missing: false }; }, { yaw, pitch });
-    await page.waitForFunction(value => document.querySelector('[data-direction]')?.dataset.direction === value, label, { timeout: 6000 });
+  assert.equal((await h.spy()).gum, 0, 'no camera request before Enable camera');
+  try { await h.enableCamera(); await enableHeadTravel(page); } catch (error) {
+    console.error(await page.evaluate(() => ({ head: document.querySelector('.head-direction')?.outerHTML, spy: window.__HEAD_TEST__, video: document.querySelector('video')?.readyState })));
+    throw error;
   }
-  assert.equal(await page.getByRole('checkbox', { name: 'Head travel' }).isChecked(), false);
-  await page.getByRole('checkbox', { name: 'Spatial sound (headphones)' }).setChecked(false);
-  await page.getByRole('checkbox', { name: 'Head travel' }).check();
-  assert.equal(await page.evaluate(() => window.__HEAD_TEST__.contexts), 0);
-  await page.getByRole('button', { name: 'Play remix', exact: true }).click();
-  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current?.isRunning, null, { timeout: 45000 });
-  await page.getByRole('button', { name: 'Calibrate forward from the current centered head', exact: true }).click();
-  await page.evaluate(() => { window.__HEAD_POSE__ = { yaw: 25, pitch: 0, missing: false }; });
-  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition.x === 2, null, { timeout: 6000 });
+  assert.equal(await page.getByRole('button', { name: 'Calibrate front', exact: true }).isEnabled(), true);
+
+  // Every coarse label reaches the DOM. Head travel is live whenever the camera is,
+  // so the final down -> forward return is a prompt recenter and commits one row south.
+  const labels = [];
+  for (const label of ['forward', 'right', 'left', 'up', 'down', 'forward']) {
+    await h.look(label);
+    labels.push(label);
+  }
+  await h.waitMarker('8');
+  await h.press('Home');
+  await h.waitMarker('0');
+  assert.equal((await h.spy()).contexts, 0, 'no AudioContext before explicit Play');
+
+  await h.play();
+  // Calibrate front from an offset head: 12 degrees right is neither forward nor right.
+  await h.look('uncertain', { yaw: 12, pitch: 0 });
+  await page.getByRole('button', { name: 'Calibrate front', exact: true }).click();
+  await h.waitDirection('forward');
+  await h.frames();
+  assert.equal(await h.direction(), 'forward', 'the calibrated front holds on later frames');
+  assert.equal(await h.marker(), '0', 'calibrating with no pending look commits nothing');
+
+  await h.look('right', { yaw: 37, pitch: 0 });
+  await h.waitSource(POSITIONS.right);
   const preview = await page.evaluate(() => {
     const spatial = window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics();
     return { enabled: spatial.enabled, sourcePosition: spatial.sourcePosition, route: spatial.route,
-      committed: document.querySelector('[data-exploration-region]').dataset.explorationRegion };
+      marker: document.querySelector('[data-exploration-region]').dataset.explorationRegion };
   });
-  assert.deepEqual(preview, { enabled: true, sourcePosition: { x: 2, y: 0, z: 0 }, route: 'panner-only', committed: '0' });
-  // A settled left detection without an intervening forward event must replace
-  // both source placement and preview model, without any grid movement.
-  await page.evaluate(() => { window.__HEAD_POSE__ = { yaw: -25, pitch: 0, missing: false }; });
-  await page.waitForFunction(() => document.querySelector('[data-direction]')?.dataset.direction === 'left', null, { timeout: 6000 });
-  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition.x === -2, null, { timeout: 1000 });
-  assert.equal(await page.locator('[data-exploration-region]').getAttribute('data-exploration-region'), '0');
-  await page.evaluate(() => { window.__HEAD_POSE__ = { yaw: 0, pitch: 0, missing: true }; });
-  await page.waitForFunction(() => document.querySelector('[data-direction]')?.dataset.direction === 'uncertain', null, { timeout: 6000 });
-  assert.deepEqual(await page.evaluate(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition), { x: 0, y: 0, z: 0 });
-  assert.equal(await page.locator('[data-exploration-region]').getAttribute('data-exploration-region'), '0');
-  await page.evaluate(() => { window.__HEAD_POSE__ = { yaw: 25, pitch: 0, missing: false }; });
-  await page.waitForFunction(() => document.querySelector('[data-direction]')?.dataset.direction === 'right', null, { timeout: 6000 });
-  await page.evaluate(() => { window.__HEAD_POSE__ = { yaw: 0, pitch: 0, missing: false }; });
-  await page.waitForFunction(() => document.querySelector('[data-direction]')?.dataset.direction === 'forward', null, { timeout: 6000 });
-  await page.waitForFunction(() => document.querySelector('[data-exploration-region]')?.dataset.explorationRegion === '1');
-  assert.deepEqual(await page.evaluate(() => window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition), { x: 0, y: 0, z: 0 });
-  await page.getByRole('button', { name: 'Stop camera', exact: true }).click();
+  assert.deepEqual(preview, { enabled: true, sourcePosition: POSITIONS.right, route: 'panner-only', marker: '1' },
+    'a look right of the calibrated front previews region 1');
+  // A settled left detection without an intervening forward event replaces the source
+  // placement and the preview (blocked at the west edge), without any grid movement.
+  await h.look('left', { yaw: -13, pitch: 0 });
+  await h.waitSource(POSITIONS.left);
+  await h.waitMarker('0');
+  // Losing the face cancels the look and recentres the source; nothing commits.
+  await h.loseFace();
+  assert.deepEqual((await h.diag()).sourcePosition, POSITIONS.forward);
+  assert.equal(await h.marker(), '0');
+  await h.look('right', { yaw: 37, pitch: 0 });
+  await h.look('forward', { yaw: 12, pitch: 0 });
+  await h.waitMarker('1');
+  assert.deepEqual((await h.diag()).sourcePosition, POSITIONS.forward);
+
+  await h.stopCamera();
+  const callsAtStop = (await h.spy()).calls;
+  await page.waitForTimeout(300);
   const outcome = await page.evaluate(() => ({
     ...window.__HEAD_TEST__, src: document.querySelector('.head-video').srcObject,
     viewport: innerWidth, bodyWidth: document.documentElement.scrollWidth,
-    contexts: window.__JUKEBOX_AUDIO_REF__.current.ctx.state,
+    direction: document.querySelector('[data-head-test]').dataset.direction,
+    sourcePosition: window.__JUKEBOX_AUDIO_REF__.current.spatial.getDiagnostics().sourcePosition,
+    marker: document.querySelector('[data-exploration-region]').dataset.explorationRegion,
   }));
-  assert.equal(outcome.src, null);
-  assert.equal(outcome.closes, 1);
-  assert.equal(outcome.stops, 1);
-  assert.equal(outcome.bodyWidth <= outcome.viewport, true);
-  assert.ok(outcome.timestamps.every((value, i, values) => i === 0 || value > values[i - 1]));
+  assert.equal(outcome.src, null, 'the video element releases the stream');
+  assert.equal(outcome.stops, 1, 'Stop camera stops the camera track');
+  assert.equal(outcome.closes, 1, 'Stop camera closes the detector');
+  assert.equal(outcome.calls, callsAtStop, 'no detector frames after Stop camera');
+  assert.equal(outcome.gum, 1);
+  assert.equal(outcome.direction, 'uncertain');
+  assert.deepEqual(outcome.sourcePosition, POSITIONS.forward);
+  assert.equal(outcome.marker, '1');
+  assert.equal(await page.getByRole('button', { name: 'Enable camera', exact: true }).isVisible(), true);
+  assert.equal(await page.getByRole('button', { name: 'Calibrate front', exact: true }).isDisabled(), true);
+  assert.equal(outcome.bodyWidth <= outcome.viewport, true, 'no horizontal overflow at 390px');
+  assert.ok(outcome.timestamps.every((value, i, values) => i === 0 || value > values[i - 1]), 'detector timestamps stay monotonic');
+  assert.equal(outcome.contexts, 1);
+  assert.equal(outcome.oscillators, 0);
   assert.deepEqual(errors, []);
-  console.log(JSON.stringify({ status: 'passed', origin, synthetic: true, preview, lostFaceCancelled: true, promptRecenterCommit: 1, errors, limitation: 'Synthetic camera frames and face matrices; not human tracking, physical pose accuracy, subjective HRTF, or speaker audibility.' }, null, 2));
+  console.log(JSON.stringify({ status: 'passed', origin, synthetic: true, labels, preview, calibratedFrontOffsetDegrees: 12,
+    lostFaceCancelled: true, promptRecenterCommit: 1, detectorFrames: outcome.calls, errors,
+    limitation: 'Synthetic camera frames and face matrices; not human tracking, physical pose accuracy, subjective HRTF, or speaker audibility.' }, null, 2));
 } finally { await browser.close(); }

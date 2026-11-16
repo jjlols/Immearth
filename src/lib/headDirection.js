@@ -3,10 +3,11 @@ export const DIRECTIONS = Object.freeze(['forward', 'up', 'left', 'right', 'down
 export const NEUTRAL_FORWARD = Object.freeze({ x: 0, y: 1, z: 0 });
 export const NEUTRAL_UP = Object.freeze({ x: 0, y: 0, z: 1 });
 export const HEAD_DIRECTION_DEFAULTS = Object.freeze({
-  forwardDegrees: 10, directionDegrees: 15, exitDegrees: 5, maximumDegrees: 75,
-  // Settled direction changes are fast; centering requires a deliberate small hold.
-  directionDwellMs: 0,
-  centerDwellMs: 80,
+  forwardDegrees: 10, directionDegrees: 25, exitDegrees: 5, maximumDegrees: 75,
+  // Brief glances must not commit a directional preview/travel window. Require
+  // a deliberate hold, while keeping center transitions short and intentional.
+  directionDwellMs: 250,
+  centerDwellMs: 150,
   lostGraceMs: 800,
   sampleIntervalMs: 32,
   minimumPublishMs: 55,

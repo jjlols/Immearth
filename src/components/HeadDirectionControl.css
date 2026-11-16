@@ -29,3 +29,7 @@
 .head-direction-footnote{font-size:.73rem;margin-bottom:0}
 @media(prefers-reduced-motion:reduce){.head-direction *{scroll-behavior:auto;transition:none!important;animation:none!important}.camera-live{box-shadow:none}}
 @media(max-width:640px){.head-direction{padding:1rem .5rem}.head-direction-heading{align-items:flex-start}.head-camera-status{align-items:flex-start}.head-tracking-toolbar button{flex:1 1 42%}.manual-direction-grid button{flex:1 1 28%}}
+.head-listening-mode{display:grid;gap:.25rem;color:inherit;line-height:1.35}
+.head-listening-mode label{display:flex;gap:.3rem;align-items:center;cursor:pointer}
+.head-listening-mode input{width:1rem;height:1rem;accent-color:var(--button-primary,#8eabcb)}
+.head-listening-mode small{color:inherit}

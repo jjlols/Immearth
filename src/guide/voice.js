@@ -16,13 +16,25 @@ export function createVoiceSession({ onHint, onListening, runCommand }) {
   let restartTimer = 0;
   let generation = 0;
 
-  const Ctor = recognitionConstructor();
-  if (Ctor?.available) {
-    Ctor.available({ langs: ["en-US"], processLocally: true }).then((status) => {
-      preferLocal = status === "available";
-    }).catch(() => {
-      preferLocal = false;
-    });
+  let localCheck = null;
+
+  /* Ask about on-device recognition only after the user starts voice.
+     Calling SpeechRecognition.available() on page load crashed the tab in
+     Chrome Headless Shell 159, and the page has no use for it before then. */
+  function checkLocalRecognition() {
+    if (localCheck) return localCheck;
+    const Ctor = recognitionConstructor();
+    if (!Ctor?.available) {
+      localCheck = Promise.resolve();
+      return localCheck;
+    }
+    const answer = Promise.resolve()
+      .then(() => Ctor.available({ langs: ["en-US"], processLocally: true }))
+      .then((status) => { preferLocal = status === "available"; })
+      .catch(() => { preferLocal = false; });
+    // Do not hold the user's click for long: a slow answer only affects later starts.
+    localCheck = Promise.race([answer, new Promise((resolve) => window.setTimeout(resolve, 1000))]);
+    return localCheck;
   }
 
   function listeningHint() {
@@ -152,6 +164,8 @@ export function createVoiceSession({ onHint, onListening, runCommand }) {
     startingVoice = true;
     generation += 1;
     try {
+      await checkLocalRecognition();
+      if (closed) return false;
       listening = true;
       openRecognizer(preferLocal);
       onListening?.(true);

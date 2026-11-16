@@ -131,6 +131,10 @@ test('liquid and frozen precipitation remain separate; invalid or overflow readi
  assert.equal(featureModel('precipitation', { classified_count: 0, status: 'silent' }).silent, true);
  // Overflow is intentionally unquantified; it cannot trigger a fabricated strongest tier.
  assert.equal(featureModel('precipitation', { rain_count: 3, snow_count: 0, max_value: 50, classified_count: 3 }).silent, true);
+ // The 20–50 mm/hour block (midpoint 35) is bounded, so it plays; only the arrow is overflow.
+ assert.ok(precipitationDensities({ rain_count: 3, snow_count: 0, max_value: 35 }).rain > 0);
+ // Frozen 20–50 and overflow share one NASA color and are stored at their 20 lower bound.
+ assert.ok(precipitationDensities({ rain_count: 0, snow_count: 3, max_value: 20 }).frozen > 0);
 });
 
 test('FRP has sparse finite accents and rejects inactive visibility without scheduling anything', async () => {
@@ -320,4 +324,15 @@ test('unsupported panners leave the approved recording playable and bypassed', a
  assert.throws(() => engine.setSpatialEnabled(true), /PannerNode/);
  assert.equal(engine.spatial.outputMode, false);
  await engine.dispose();
+});
+
+test('the recording URL comes from the caller, never the host root', async () => {
+ const urls = [];
+ globalThis.fetch = url => { urls.push(url); return okFetch(); };
+ const engine = new RemixEngine({ contextClass: MockContext, sourceUrl: '/sub/path/audio/deliberate-thought.mp3' });
+ await engine.play();
+ assert.deepEqual(urls, ['/sub/path/audio/deliberate-thought.mp3']);
+ await engine.dispose();
+ const fallback = new RemixEngine({ contextClass: MockContext });
+ assert.equal(fallback.sourceUrl.startsWith('/'), false, 'default resolves against the page, not the host root');
 });
