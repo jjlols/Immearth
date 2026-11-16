@@ -214,7 +214,7 @@ try {
  await page.getByRole('button', { name: 'Pause', exact: true }).click();
  await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'suspended');
  assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.timer), null);
- await page.getByRole('button', { name: 'Reset music playback' }).click();
+ await page.getByRole('button', { name: 'Start over', exact: true }).click();
  assert.equal(await engine(() => window.__JUKEBOX_AUDIO_REF__.current.original), null);
  assert.equal(await engine(() => window.__AUDIO_AUDIT__.contexts[0].state), 'suspended');
  await page.waitForFunction(() => window.__JUKEBOX_AUDIO_REF__.current.master.gain.value <= 0.001);

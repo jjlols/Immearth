@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { LAYER_OPTIONS, OPACITY_DEFAULTS } from "./layerOptions.js";
 import { RemixEngine } from "./audio/RemixEngine.js";
 import { featureModel } from "./audio/musicMappings.js";
-import { explorerPosition } from "./hooks/useExplorer.js";
 import { linkTo } from "./navigation.js";
 import { IconSpeaker } from "./Icons.jsx";
 import SpatialOriginMarker from "./components/SpatialOriginMarker.jsx";
@@ -55,8 +54,6 @@ export default function HomeLivePreview() {
   const wantPlay = useRef(true);
   const [playState, setPlayState] = useState("waiting");
   const [audioError, setAudioError] = useState(null);
-  const place = explorerPosition(FIXED_REGION);
-
   useEffect(() => {
     let cancelled = false;
     const player = new RemixEngine();
@@ -203,11 +200,6 @@ export default function HomeLivePreview() {
           <div className="geographic-canvas" role="img" aria-label="World map with your place fixed on region 1 of 48. Location cannot be changed here.">
             <img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="" />
             {LAYER_OPTIONS.map((layer, order) => <MapField key={layer.id} layer={{ ...layer, order }} />)}
-            <div className="home-place-pin" style={place} aria-hidden="true">
-              <span className="home-place-dot" />
-              <span className="home-place-line" />
-              <span className="home-place-label">You are here</span>
-            </div>
             <SpatialOriginMarker />
             <span className="map-longitude west">180° W</span>
             <span className="map-longitude east">180° E</span>

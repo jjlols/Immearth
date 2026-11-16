@@ -11,7 +11,7 @@ export default function HeadDirectionControl({engineRef,onReady,headInfluence=fa
   influenceRef.current?.(state.status==='active');
  },[state.status]);
  const running=state.status==='active'||state.status==='requesting';
- return <section className="head-direction" aria-label="Head direction" data-head-test={state.status}>
+ return <section className="head-direction" aria-label="Look around with the camera" data-head-test={state.status}>
   <button type="button" className="head-start" onClick={running?()=>tracking.stop():tracking.start} disabled={state.status==='requesting'}>{state.status==='active'?'Stop camera':state.status==='requesting'?'Requesting…':'Enable camera'}</button>
   <button type="button" className="head-start" onClick={()=>tracking.calibrate()} disabled={state.status!=='active'}>Calibrate front</button>
   {state.error&&<p className="head-direction-error" role="alert">{state.error}</p>}

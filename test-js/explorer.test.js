@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  regionCell, regionStep, explorerPosition, targetIsForm,
+  regionCell, regionStep, regionAtPoint, regionWords, explorerPosition, targetIsForm,
   EXPLORER_COLUMNS, EXPLORER_ROWS, EXPLORER_SIZE,
 } from '../src/hooks/useExplorer.js';
 
@@ -21,6 +21,15 @@ test('WASD and arrows navigate a shared clamped eight-by-six grid', () => {
   assert.equal(explorerPosition(0).left, '6.25%');
   assert.equal(explorerPosition(47).top, '91.66666666666666%');
   assert.throws(() => regionCell(48), RangeError);
+});
+
+test('a click on the map lands in the same 48-cell grid', () => {
+  assert.equal(regionAtPoint(0, 0, 800, 600), 0);
+  assert.equal(regionAtPoint(799, 599, 800, 600), 47);
+  assert.equal(regionAtPoint(-5, 10, 800, 600), 0);
+  assert.equal(regionAtPoint(10, 10, 0, 600), null);
+  assert.equal(regionWords(0), 'Region 1 of 48, row 1 of 6, column 1 of 8');
+  assert.equal(regionWords(47), 'Region 48 of 48, row 6 of 6, column 8 of 8');
 });
 
 test('movement does not steal keys from native controls or modifiers', () => {

@@ -1,14 +1,16 @@
 import { useState } from "react";
 import SiteChrome from "../SiteChrome.jsx";
-import SpaceWash, { SPACE_PHOTOS } from "../SpaceWash.jsx";
 import { linkTo } from "../navigation.js";
 import { IconArrow } from "../Icons.jsx";
 import { MAPS, filterMaps } from "./maps.js";
 import ListenSpeak from "./ListenSpeak.jsx";
+import EarthDataGlobe from "./EarthDataGlobe.jsx";
 
 export default function DataPage() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
+  const [globeFocus, setGlobeFocus] = useState("near_surface_temperature");
+  const [detailsFor, setDetailsFor] = useState(null);
   const shownMaps = filterMaps(query);
 
   function announce(message) {
@@ -23,15 +25,7 @@ export default function DataPage() {
       <ListenSpeak />
       <div className="visually-hidden" role="status">{status}</div>
       <main id="main">
-        <section className="page-banner" aria-labelledby="data-title">
-          <SpaceWash photo={SPACE_PHOTOS.night} />
-          <div className="page-banner-inner">
-            <p className="eyebrow">Earth data</p>
-            <h1 id="data-title" tabIndex={-1}>The five maps</h1>
-            <p className="lede">What each NASA map shows, where it comes from, and how its estimated values change the music on the Live Map.</p>
-          </div>
-        </section>
-
+        <EarthDataGlobe focus={globeFocus} onFocus={setGlobeFocus} detailsFor={detailsFor} onDetails={setDetailsFor} />
         <section className="band" id="maps" aria-labelledby="maps-title">
           <div className="section-head-row">
             <div className="section-head">
@@ -66,7 +60,10 @@ export default function DataPage() {
                   <p className="card-text">{map.text}</p>
                   <p className="remix"><span className="tag">In the music</span>{map.planned}</p>
                   <p className="source">{map.source} <a href={map.href} target="_blank" rel="noreferrer">{map.sourceLabel} <span className="visually-hidden">(opens in a new tab)</span></a></p>
-                  <p className="card-links"><a {...linkTo("music")}>Hear {map.label.toLowerCase()} on the Live Map</a></p>
+                  <p className="card-links">
+                    <button type="button" onClick={() => { setGlobeFocus(map.fieldId); setDetailsFor(map.fieldId); document.getElementById("data-globe")?.scrollIntoView({ block: "center" }); }}>Show {map.label.toLowerCase()} on the globe</button>
+                    <a {...linkTo("music")}>Hear {map.label.toLowerCase()} on the Live Map</a>
+                  </p>
                 </div>
               </article>
             ))}

@@ -4,14 +4,21 @@ import {RemixEngine} from './audio/RemixEngine.js';
 import HeadDirectionControl from './components/HeadDirectionControl.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
-import {explorerPosition,useExplorer,EXPLORER_SIZE} from './hooks/useExplorer.js';
+import {explorerPosition,useExplorer,EXPLORER_SIZE,regionAtPoint,regionWords} from './hooks/useExplorer.js';
 import useHeadPreviewTravel from './hooks/useHeadPreviewTravel.js';
+import LiveTour from './components/LiveTour.jsx';
 import SiteChrome from './SiteChrome.jsx';
 import ListenSpeak from './guide/ListenSpeak.jsx';
 import './listening.css';
 
-function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex}){
- return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration">
+function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex,onChooseRegion}){
+ function onMapClick(event){
+  if(!onChooseRegion)return;
+  const rect=event.currentTarget.getBoundingClientRect();
+  const index=regionAtPoint(event.clientX-rect.left,event.clientY-rect.top,rect.width,rect.height);
+  if(index!==null)onChooseRegion(index);
+ }
+ return <div className="geographic-canvas" role="group" aria-label="Earth map. Click or tap a place to move there." onClick={onMapClick}>
  {showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
  {layers.filter(layer=>settings[layer.id]?.visible!==false).map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
  <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span className="target-ring"/><span className="target-cross"/></div>
@@ -37,10 +44,10 @@ function MapField({layer,settings,solo}){
 
 function SourceControl({layer,visible,focus,onSelect,onVisible,onNavigate}){
  return <article className={`source-card ${focus?'is-focused':''} ${visible?'':'is-off'}`} style={{'--layer-accent':layer.color}} data-source-card={layer.id}>
- <label className="visibility-toggle"><input type="checkbox" checked={visible} onChange={event=>onVisible(layer.id,event.target.checked)} aria-label={`Show ${layer.label} on map and enable its musical layer`}/><span>{visible?'On':'Off'}</span></label>
+ <label className="visibility-toggle"><input type="checkbox" checked={visible} onChange={event=>onVisible(layer.id,event.target.checked)} aria-label={`Show ${layer.label} on map and enable its musical layer`}/><span>{visible?'Included':'Left out'}</span></label>
  <button type="button" className="source-select" data-source-select={layer.id} aria-pressed={focus} aria-label={`Explore ${layer.label} musical mapping`} tabIndex={focus?0:-1} onClick={()=>onSelect(layer.id)} onKeyDown={(event)=>onNavigate(event,layer.id)}>
  <span className="metric-symbol" aria-hidden="true">{layer.mark}</span>
- <span className="metric-text"><strong>{layer.label}</strong></span>
+ <span className="metric-text"><strong>{layer.label}</strong>{focus&&<span className="chosen-tag">Chosen</span>}</span>
  </button>
  </article>;
 }
@@ -63,7 +70,7 @@ export default function Jukebox(){
  const [manifest,setManifest]=useState(null),[features,setFeatures]=useState(null),[loadError,setLoadError]=useState(null);
  const [settings,setSettings]=useState(Object.fromEntries(LAYER_OPTIONS.map(layer=>[layer.id,{visible:true,opacity:OPACITY_DEFAULTS[layer.id]}])));
  const [focus,setFocus]=useState('nitrogen_oxides'),[mode,setMode]=useState('composition'),[onlySelected,setOnlySelected]=useState(false),[showGeography,setShowGeography]=useState(true);
- const {index:explorerIndex,choose:chooseExplorerRegion}=useExplorer();
+ const {index:explorerIndex,choose:chooseExplorerRegion,move:moveExplorerRegion}=useExplorer();
  const engine=useRef(null),modelsRef=useRef({}),visibilityRef=useRef({});
  const headSyncRef=useRef(()=>{});
  const [spatialEnabled,setSpatialEnabled]=useState(true),[headInfluence,setHeadInfluence]=useState(false);
@@ -162,27 +169,20 @@ export default function Jukebox(){
  <ListenSpeak />
  <div className="jukebox-shell live-page">
  <h1 className="live-title" id="music-title" tabIndex={-1}>Live Map</h1>
- <section className="live-how" aria-labelledby="how-title">
-  <h2 id="how-title">How it works</h2>
-  <p className="live-how-short">Press Play remix, then turn maps on or off. W A S D moves through 48 regions while the music plays.</p>
-  <ol>
-   <li><strong>Play</strong><span>Press Play remix. Music stays off until then.</span></li>
-   <li><strong>Mix</strong><span>Turn a map on to include it. Turn it off to leave it out.</span></li>
-   <li><strong>Move</strong><span>W A S D steps through 48 regions while the music plays.</span></li>
-  </ol>
- </section>
+ <LiveTour />
  <section className="music-console live-transport" id="music-player" tabIndex={-1} aria-label="Music controls">
   <div className="transport-buttons">
    <button type="button" className="main-action" onClick={togglePlayback} disabled={loading||playState==='loading'}>{playState==='playing'?'Pause':playState==='paused'?'Resume':playState==='loading'?'Loading…':playState==='unavailable'?'Retry':'Play remix'}<span aria-hidden="true">{playState==='playing'?'❚❚':'▶'}</span></button>
-   <div className="secondary-peripherals"><button className="secondary-action" type="button" onClick={resetMusic} aria-label="Reset music playback">↻ <span>Reset</span></button>
-   <button className={`secondary-action ${muted?'muted-off':''}`} type="button" onClick={()=>{setMuted(!muted);engine.current?.setMute(!muted)}}><span>{muted?'Unmute':'Mute'}</span></button></div>
-   <label className="master-volume"><span>Master volume</span><input type="range" min="0" max="50" step="0.01" aria-label="Master volume" value={volume*100} onChange={event=>{const v=Number(event.target.value)/100;setVolume(v);engine.current?.setVolume(v)}}/> <span className="volume-cap">{Math.round(volume*100)}%</span></label>
+   <div className="secondary-peripherals"><button className="secondary-action" type="button" onClick={resetMusic}>Start over</button>
+   <button className={`secondary-action ${muted?'muted-off':''}`} type="button" aria-pressed={muted} onClick={()=>{setMuted(!muted);engine.current?.setMute(!muted)}}><span>{muted?'Unmute':'Mute'}</span></button></div>
+   <label className="master-volume"><span>Volume</span><input type="range" min="0" max="50" step="1" aria-label="Volume. Loudest is 50 percent." value={Math.round(volume*100)} onChange={event=>{const v=Number(event.target.value)/100;setVolume(v);engine.current?.setVolume(v)}}/> <span className="volume-cap">{Math.round(volume*100)}%</span></label>
   </div>
   <div className="progress-wrap">
-   <div className="progress-rail" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,progress))} aria-label="Music position"><span style={{width:`${Math.min(100,progress)}%`}}/></div>
+   <span id="song-position">Song position</span>
+   <div className="progress-rail" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(Math.min(100,progress))} aria-valuetext={`${Math.round(Math.min(100,progress))} percent`} aria-labelledby="song-position"><span style={{width:`${Math.min(100,progress)}%`}}/></div>
    <span className="progress-percent">{Math.round(Math.min(100,progress))}%</span>
   </div>
-  <p role="status" aria-live="polite" className={`playback-status state-${playState}`}><span aria-hidden="true">{ws_icon(playState)}</span> {audioDescription(playState,muted)} {playbackCaption(playState, muted)}</p>
+  <p role="status" aria-live="polite" className={`playback-status state-${playState}`}><span aria-hidden="true">{ws_icon(playState)}</span> {audioDescription(playState,muted)}</p>
   <p className="source-license">“Deliberate Thought” · Kevin MacLeod · <a href={TRACK.licenseUrl} target="_blank" rel="noreferrer">CC BY 4.0 (opens in a new tab)</a> · <a className="license-detail" href="#attribution">License details</a></p>
  </section>
 
@@ -190,27 +190,35 @@ export default function Jukebox(){
  {loadError&&<div role="alert" className="app-alert">{loadError}<span> Existing geographic work is unchanged.</span></div>}
  <div className="workspace-shared live-board">
   <main className="map-workspace">
-   <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
-   <p className="current-region" role="status" aria-live="polite">{currentLayer.label}. Use W, A, S, and D to move.</p>
+   <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} onChooseRegion={chooseExplorer} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
+   <div className="map-move-row">
+    <div className="map-move" role="group" aria-label="Move on the map">
+     <button type="button" className="map-move-north" aria-label="Move north" onClick={()=>moveExplorerRegion('w')}><span aria-hidden="true">↑ </span>North</button>
+     <button type="button" className="map-move-west" aria-label="Move west" onClick={()=>moveExplorerRegion('a')}><span aria-hidden="true">← </span>West</button>
+     <button type="button" className="map-move-south" aria-label="Move south" onClick={()=>moveExplorerRegion('s')}><span aria-hidden="true">↓ </span>South</button>
+     <button type="button" className="map-move-east" aria-label="Move east" onClick={()=>moveExplorerRegion('d')}><span aria-hidden="true">→ </span>East</button>
+    </div>
+    <p className="current-region" role="status" aria-live="polite">{regionWords(currentIndex)}. {currentLayer.label} is chosen.</p>
+   </div>
   </main>
   <div className="live-toolbar">
    <aside className="explorer-panel" id="map-controls" aria-label="Map layers">
     <HeadDirectionControl engineRef={engine} onReady={callback=>{headSyncRef.current=callback;}} headInfluence={headInfluence} onDirection={onHeadDirection} onHeadInfluenceChange={onHeadInfluence}/>
-    <div className="map-options"><label><input type="checkbox" checked={showGeography} onChange={e=>setShowGeography(e.target.checked)}/> Show land and coasts</label><label><input type="checkbox" checked={onlySelected} onChange={e=>setOnlySelected(e.target.checked)}/> Selected map only</label>
-    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>↻ Reset layers</button></div>
-    <div className="source-controllers" aria-label="Geographic layers and their visibility">
+    <div className="map-options"><label><input type="checkbox" checked={showGeography} onChange={e=>setShowGeography(e.target.checked)}/> Show land and coasts</label><label><input type="checkbox" checked={onlySelected} onChange={e=>setOnlySelected(e.target.checked)}/> Show only the chosen map</label>
+    <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>Turn all maps on</button></div>
+    <div className="source-controllers" role="group" aria-label="Maps you can include">
     {layers.map(layer=><SourceControl key={layer.id} layer={layer} focus={focus===layer.id} visible={settings[layer.id]?.visible!==false} onSelect={selectMetric} onVisible={(id,visible)=>{setSettings(current=>({...current,[id]:{...current[id],visible}}));engine.current?.setVisibility(id,visible);}} onNavigate={navigateCards}/>)}
     </div>
-    <div className="interaction-modes" role="group" aria-label="Map and sonification modes"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>Solo / Explore</strong></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>Ensemble</strong></button></div>
+    <div className="interaction-modes" role="group" aria-label="What you hear"><button type="button" aria-pressed={mode==='solo'} className={mode==='solo'?'selected-mode':''} onClick={()=>{setMode('solo'); if(!focus)setFocus('nitrogen_oxides');engine.current?.setMode('solo');}}><strong>One map</strong><span className="sr-only"> Solo / Explore</span></button><button type="button" aria-pressed={mode==='composition'} className={mode==='composition'?'selected-mode':''} onClick={()=>{setMode('composition');engine.current?.setMode('composition');}}><strong>All maps</strong><span className="sr-only"> Ensemble</span></button></div>
    </aside>
   </div>
  </div>
- <section className="sr-only" id="learning" aria-labelledby="voice-title">
-  <h2 id="voice-title">Hearing {currentLayer.label}</h2>
+ <details className="hearing-card" id="learning">
+  <summary id="voice-title">What you are hearing: {currentLayer.label}</summary>
   <p>{INSTRUMENT_INFO[currentLayer.id]?.explanation || 'Estimated palette positions reshape this field’s part of the recording.'}</p>
   <p>{INSTRUMENT_INFO[currentLayer.id]?.caveat}</p>
   <p>{describeFeature(focus,currentFeature)}</p>
- </section>
+ </details>
 
  <details id="attribution" className="license-paper"><summary>Details & attribution</summary><div><p><strong>“Deliberate Thought” — Kevin MacLeod, incompetech.com — Creative Commons Attribution 4.0 International.</strong><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">Read the license (CC BY 4.0, opens in a new tab)</a>. The local recording is decoded once per engine lifetime. Generic filters, playback-rate changes and gain envelopes modify the original recording; no oscillator or generated guide tone exists. No official stems are claimed. Attribution is preserved in the interface and project license files.</p>
  <p>NASA palette stations support semantic tools not medical/population statements. The same source aspect ratio is not identical geographically verified projection or acquisition time. Continuous global fields drawn as a colored image can be inspected as whole pixels (maps) and reduced to bounded classifications (music). This is an interpretive educational listening aid, not physical truth sonification or a weather warning service. Scientific data must come from verified underlying measurement input for any absolute calibration.</p>
@@ -235,7 +243,7 @@ function playbackCaption(playState, muted) {
 }
 
 const ws_icon=state=>({playing:'▸',paused:'Ⅱ',loading:'⋯',idle:'○',unavailable:'!'})[state]||'○';
-const audioDescription=(state,muted)=>({idle:'No music yet. Set the scene and listen.',loading:'Reading the shared recording and estimated feature map…',paused:'Music paused. Your map and estimated palette analyses remain readable.',playing:muted?'Muted; musical map mode stays readable.':'Playing a gentle data-led remix.',unavailable:'Audio unavailable; you can explore readably without playing.'}[state]||'Make up your own map.');
+const audioDescription=(state,muted)=>({idle:'Music is off. Press Play remix when you are ready.',loading:'Loading the music.',paused:'Music is paused. Press Resume to continue.',playing:muted?'Music is muted. Press Unmute to hear it.':'Music is playing.',unavailable:'Music is not available. You can still look at the map and read the descriptions.'}[state]||'Music is off. Press Play remix when you are ready.');
 const popularCreativeVoice=(state)=>state==='playing'?`One recording. One shared clock. ${'Gentle foreground voices each cycle. '}`:'No audio until you call the musical field, card and play control.';
 const divergedScientificSources=mapRecord=>{
  const known=new Set(LAYER_OPTIONS.map(l=>l.id));if(mapRecord.layers.some(layer=>!known.has(layer.id)))return true;const distinct=new Set(mapRecord.layers.map(l=>l.id));return distinct.size!==mapRecord.layers.length;

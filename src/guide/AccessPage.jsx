@@ -38,11 +38,12 @@ export default function AccessPage() {
                 <li><kbd>Esc</kbd> <span>Close the page overview.</span></li>
               </ul>
               <p>The menu at the top of every page has Home, Live Map, Earth data, and Accessibility &amp; help.</p>
+              <p>On Earth data, the page opens on black space and a globe. The Show menu chooses which map is on the globe. About opens the written description and the NASA page for that map, including precipitation and active fires. Turn left and Turn right are buttons. The globe picture is optional.</p>
               <p>Dark mode and Color blind colors are at the top of every page. Your choices are remembered on this browser. NASA map pictures keep their published colors either way.</p>
             </div>
             <div className="tile">
               <h3><IconPlay /> Live Map</h3>
-              <p>Nothing plays until you press Play remix. Pause, Reset, Mute, and Master volume are next to it. Headphones are recommended.</p>
+              <p>Nothing plays until you press Play remix. Pause, Start over, Mute, and Volume are with it. Loudest is 50%. Headphones are recommended. A short tour opens beside each control and stays until you press Finish on the last step. Camera and spatial sound come right after Play.</p>
               <ul className="key-list">
                 <li><kbd>W ↑</kbd> <span>Move one region north.</span></li>
                 <li><kbd>A ←</kbd> <span>Move one region west.</span></li>
@@ -50,7 +51,8 @@ export default function AccessPage() {
                 <li><kbd>D →</kbd> <span>Move one region east.</span></li>
                 <li><kbd>Home</kbd> <span>Go back to region 1.</span></li>
               </ul>
-              <p>The 48 regions are a grid of 6 rows and 8 columns. These keys do nothing while you are on a button, link, slider, or search box. Each move is described in words. Moving changes the music only while it is already playing.</p>
+              <p>The same moves are buttons labeled North, West, South, and East. You can also click or tap the map. The 48 regions are a grid of 6 rows and 8 columns. These keys do nothing while you are on a button, link, slider, or text field. Each move is described in words. Moving changes the music only while it is already playing.</p>
+              <p>Each map has Included or Left out, and a name. Press the name to choose that map. The chosen map says Chosen in words, not only with a color. One map plays only the chosen map. All maps plays every included map together. Show only the chosen map hides the others. Turn all maps on brings them back.</p>
             </div>
             <div className="tile">
               <h3><IconSpeaker /> Listen and speak</h3>
@@ -95,7 +97,7 @@ export default function AccessPage() {
             </div>
             <div className="tile">
               <h3><IconSpeaker /> Sound</h3>
-              <p>The Live Map stays silent until you press Play remix. What you hear is also written out in words, so the music can be followed without sound. Pause suspends the music, and Reset stops it.</p>
+              <p>The Live Map stays silent until you press Play remix. What you hear is also written out under What you are hearing, so the music can be followed without sound. Pause suspends the music, and Start over stops it.</p>
               <p>An opening animation plays when you arrive. Press Space, Escape, or Skip, or click the animation, and it fades away. It stays off when your device is set to reduce motion.</p>
             </div>
           </div>
@@ -186,7 +188,7 @@ export default function AccessPage() {
             <li>Text and buttons meet the enhanced contrast level, at least 7 to 1.</li>
             <li>Every control works from the keyboard and shows a clear focus outline.</li>
             <li>Links in text are underlined. Meaning is never shown by color alone.</li>
-            <li>Each map has a written description of what the picture shows, plus its source.</li>
+            <li>Each map has a written description of what the picture shows, plus its source. On Earth data, About opens that description and the NASA page without requiring the globe picture.</li>
             <li>Text can be enlarged, and the layout reflows on narrow screens and at high zoom.</li>
             <li>Search results, section changes, and music changes are announced to screen readers.</li>
             <li>The microphone turns on only after you press Start voice. Speech stays on this computer when the browser can recognize it there.</li>

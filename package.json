@@ -21,6 +21,7 @@
     "@mediapipe/tasks-vision": "1.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "three": "^0.187.0",
     "vite": "^7.1.9"
   },
   "devDependencies": {
