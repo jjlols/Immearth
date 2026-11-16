@@ -27,6 +27,20 @@ export function regionStep(current, key) {
   );
 }
 
+/** The grid cell under a point on the map: column = floor(x/width*8), row = floor(y/height*6), clamped. */
+export function regionAtPoint(x, y, width, height) {
+  if (![x, y, width, height].every(Number.isFinite) || width <= 0 || height <= 0) return null;
+  const column = Math.max(0, Math.min(EXPLORER_COLUMNS - 1, Math.floor((x / width) * EXPLORER_COLUMNS)));
+  const row = Math.max(0, Math.min(EXPLORER_ROWS - 1, Math.floor((y / height) * EXPLORER_ROWS)));
+  return row * EXPLORER_COLUMNS + column;
+}
+
+/** Plain words for screen readers and the hover label: 1-based region, row and column. */
+export function regionWords(index) {
+  const { row, column } = regionCell(index);
+  return `Region ${index + 1} of ${EXPLORER_SIZE}, row ${row + 1} of ${EXPLORER_ROWS}, column ${column + 1} of ${EXPLORER_COLUMNS}`;
+}
+
 export function explorerPosition(index) {
   const { row, column } = regionCell(index);
   return { left: `${((column + 0.5) / EXPLORER_COLUMNS) * 100}%`, top: `${((row + 0.5) / EXPLORER_ROWS) * 100}%` };
@@ -62,6 +76,8 @@ export function useExplorer({ onRegionChange } = {}) {
   return {
     ...cell,
     choose: index => dispatch({ type: 'select', index }),
+    /* The same step W A S D and the arrow keys take, for the on-screen arrow buttons. */
+    move: key => dispatch({ type: 'move', key }),
     reset: () => dispatch({ type: 'select', index: 0 }),
     rowCount: EXPLORER_ROWS,
     columnCount: EXPLORER_COLUMNS,

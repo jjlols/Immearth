@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { LAYER_OPTIONS, OPACITY_DEFAULTS } from "./layerOptions.js";
 import { RemixEngine } from "./audio/RemixEngine.js";
-import { featureModel } from "./audio/musicMappings.js";
+import { featureModel, TRACK } from "./audio/musicMappings.js";
 import { explorerPosition } from "./hooks/useExplorer.js";
 import { linkTo } from "./navigation.js";
 import { IconSpeaker } from "./Icons.jsx";
@@ -59,7 +59,7 @@ export default function HomeLivePreview() {
 
   useEffect(() => {
     let cancelled = false;
-    const player = new RemixEngine();
+    const player = new RemixEngine({ sourceUrl: `${import.meta.env.BASE_URL}${TRACK.file}` });
     engine.current = player;
     player.setVolume(0.32);
     player.setModel(modelsFor(null), {

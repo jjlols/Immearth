@@ -173,6 +173,19 @@ html[data-theme=dark] .live-page .live-title,html[data-theme=dark] .live-page .l
 html[data-theme=dark] .live-page .live-how li{background:#0c2340;border-color:#345;color:#e7f2fc}
 html[data-theme=dark] .jukebox-shell .head-direction{background:transparent;color:#e7f2fc}
 html[data-theme=dark] .jukebox-shell .head-direction .head-start{background:transparent;color:#e7f2fc;border-color:#8eabcb}
+/* Map pointer input (hover cell, arrow buttons). Taps keep native scroll and pinch. */
+.jukebox-shell .live-board .geographic-canvas{cursor:pointer;touch-action:manipulation}
+.geographic-canvas .region-hover{position:absolute;z-index:131;pointer-events:none;box-sizing:border-box;border:2px solid #fff;outline:1px solid #000;background:rgba(255,255,255,.12)}
+.geographic-canvas .region-hover span{position:absolute;left:4px;top:3px;padding:0 .3rem;border-radius:4px;background:#000;color:#fff;font:700 .75rem/1.4 system-ui,sans-serif}
+.jukebox-shell .map-move-row{display:flex;align-items:center;gap:.75rem;margin-top:.45rem}
+.jukebox-shell .map-move-row .current-region{margin:0;flex:1 1 auto;min-width:0}
+.jukebox-shell .map-move{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,44px);gap:2px;flex:0 0 auto}
+.jukebox-shell .map-move button{min-width:44px;min-height:44px;padding:0;border:1px solid #8eabcb;border-radius:8px;background:#fff;color:#0a2447;font-weight:700;font-size:1.05rem}
+.jukebox-shell .map-move .map-move-north{grid-column:2;grid-row:1}
+.jukebox-shell .map-move .map-move-west{grid-column:1;grid-row:2}
+.jukebox-shell .map-move .map-move-south{grid-column:2;grid-row:2}
+.jukebox-shell .map-move .map-move-east{grid-column:3;grid-row:2}
+html[data-theme=dark] .jukebox-shell .map-move button{background:transparent;color:#e7f2fc;border-color:#8eabcb}
 @media(max-width:900px){
  .live-page .live-title{margin-bottom:0}
  .live-page .live-how{margin-bottom:.15rem}

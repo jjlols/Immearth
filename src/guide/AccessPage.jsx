@@ -113,14 +113,14 @@ export default function AccessPage() {
               <ul className="key-list">
                 <li><span>Face the camera. That first look is forward, and the sound stays centered. Calibrate front sets the way you are facing now as forward again.</span></li>
                 <li><span>Turn left to preview west, right to preview east, up to preview north, and down to preview south.</span></li>
-                <li><span>Come back to center within 1.5 seconds to take exactly one step. The marker stays on the current region while you look.</span></li>
+                <li><span>Come back to center to finish listening, and nothing moves by default. Your current music returns to center. To move with head movement, first turn on Return with head movement; only then can a prompt return take exactly one step within 1.5 seconds. The marker stays on the current region while you look.</span></li>
                 <li><span>Looking the same way again does not keep walking. A blocked edge does not invent a move.</span></li>
               </ul>
             </div>
             <div className="tile">
               <h3>What you hear</h3>
               <p>Headphones make the preview easier to place. A look shifts the same recording about two meters to that side. It does not use your location, and it does not turn latitude or longitude into pitch.</p>
-              <p>Stop camera, look away, or press a region or a movement key, and the preview ends. Keyboard movement still works if the camera is off.</p>
+              <p>The default listening mode prevents head-gesture travel entirely. Stop camera, look away, or press a region or movement key, and the preview ends. WASD and arrow navigation work independently if the camera is off.</p>
             </div>
           </div>
         </section>

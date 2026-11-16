@@ -9,7 +9,9 @@ const FIRE_INTERVAL_SECONDS = 8.4;
  * Inputs are bounded palette-derived or caller-provided scientific feature models.
  */
 export class RemixEngine {
-  constructor({ contextClass, sourceUrl = '/audio/deliberate-thought.mp3', maxAccents = 8 } = {}) {
+  /* sourceUrl comes from the caller, which knows the site's base URL.
+   * The relative default resolves against the page, never the host root. */
+  constructor({ contextClass, sourceUrl = 'audio/deliberate-thought.mp3', maxAccents = 8 } = {}) {
     this.contextClass = contextClass;
     this.sourceUrl = sourceUrl;
     this.maxAccents = Math.min(8, Math.max(1, maxAccents));

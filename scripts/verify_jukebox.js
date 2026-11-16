@@ -230,6 +230,18 @@ try {
  await page.getByRole('button', { name: 'Mute', exact: true }).click();
  await page.getByRole('button', { name: 'Unmute', exact: true }).click();
 
+ // Leaving the Live Map in-app must stop its music (it once kept playing and Home added a second copy).
+ const liveContext = await engine(() => { const e = window.__JUKEBOX_AUDIO_REF__.current; return { running: e.isRunning, state: e.ctx.state }; });
+ assert.deepEqual(liveContext, { running: true, state: 'running' });
+ await page.locator('a.wordmark').first().click();
+ await page.waitForFunction(() => new URLSearchParams(location.search).get('view') === null);
+ await page.waitForFunction(() => window.__AUDIO_AUDIT__.contexts[0].state === 'closed', null, { timeout: 5000 });
+ await page.waitForTimeout(500);
+ assert.ok(await engine(() => window.__AUDIO_AUDIT__.contexts.filter(context => context.state === 'running').length) <= 1, 'Home never runs a second copy beside the Live Map');
+ const leftLiveMap = await engine(() => ({ liveMapContext: window.__AUDIO_AUDIT__.contexts[0].state, contexts: window.__AUDIO_AUDIT__.contexts.map(context => context.state) }));
+ await page.goto(musicUrl.href, { waitUntil: 'networkidle' });
+ await enterPage();
+
  const failedPage = await browser.newPage();
  const failureUrl = new URL(origin);
  failureUrl.searchParams.set('view', 'music');
@@ -253,7 +265,7 @@ try {
  assert.ok(responsive.scroll <= responsive.viewport);
  assert.equal(responsive.transport, true);
  assert.deepEqual(errors, []);
- console.log(JSON.stringify({ status: 'passed', origin, mp3Requests: requests, initial, live, sustained, spatial, spatialSignals, spatialLeftSignals, muteSpatial, responsive,
+ console.log(JSON.stringify({ status: 'passed', origin, mp3Requests: requests, leftLiveMap, initial, live, sustained, spatial, spatialSignals, spatialLeftSignals, muteSpatial, responsive,
   contextCount: 1, decodedBuffers: 1, resetReplayUsesOriginalDecode: true,
   caveat: 'Headless analysers measure final-channel stereo RMS/peak, not subjective audibility or binaural localization. Manual headphone listening remains unverified. Check OS/browser/output volume before changing source gain.' }, null, 2));
 } finally {

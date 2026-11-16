@@ -4,16 +4,48 @@ import {RemixEngine} from './audio/RemixEngine.js';
 import HeadDirectionControl from './components/HeadDirectionControl.jsx';
 import './styles-origin.css';
 import {featureModel,describeFeature,INSTRUMENT_INFO,TRACK} from './audio/musicMappings.js';
-import {explorerPosition,useExplorer,EXPLORER_SIZE} from './hooks/useExplorer.js';
+import {explorerPosition,useExplorer,EXPLORER_SIZE,EXPLORER_COLUMNS,EXPLORER_ROWS,regionAtPoint,regionWords} from './hooks/useExplorer.js';
 import useHeadPreviewTravel from './hooks/useHeadPreviewTravel.js';
 import SiteChrome from './SiteChrome.jsx';
 import ListenSpeak from './guide/ListenSpeak.jsx';
 import './listening.css';
 
-function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex}){
- return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration">
+/* A tap or click picks the grid cell under it with the same choose() the keys use.
+ * Hover only highlights a cell and shows its number. Only a primary pointer that
+ * barely moved counts as a tap, so scrolling, wheel, pinch and two-finger swipes
+ * stay with the browser. Nothing here touches audio. */
+const TAP_SLOP_PX=10;
+function useMapPointer(onChooseRegion){
+ const [hover,setHover]=useState(null);
+ const press=useRef(null);
+ const cellAt=event=>{const rect=event.currentTarget.getBoundingClientRect();return regionAtPoint(event.clientX-rect.left,event.clientY-rect.top,rect.width,rect.height);};
+ return {hover,handlers:{
+  onPointerDown:event=>{
+   if(!event.isPrimary||(event.pointerType==='mouse'&&event.button!==0)){press.current=null;return;}
+   press.current={id:event.pointerId,x:event.clientX,y:event.clientY};
+  },
+  onPointerMove:event=>{
+   const start=press.current;
+   if(start&&start.id===event.pointerId&&Math.hypot(event.clientX-start.x,event.clientY-start.y)>TAP_SLOP_PX)press.current=null;
+   if(event.pointerType==='mouse'||event.pointerType==='pen')setHover(cellAt(event));
+  },
+  onPointerUp:event=>{
+   const start=press.current;press.current=null;
+   if(!start||start.id!==event.pointerId||Math.hypot(event.clientX-start.x,event.clientY-start.y)>TAP_SLOP_PX)return;
+   const index=cellAt(event);if(index!==null)onChooseRegion(index);
+  },
+  onPointerCancel:()=>{press.current=null;},
+  onPointerLeave:()=>{setHover(null);},
+ }};
+}
+
+function GeographicCanvas({layers,settings,focus,onlySelected,showGeography,loading,explorerIndex,onChooseRegion}){
+ const pointer=useMapPointer(onChooseRegion);
+ const hover=pointer.hover;
+ return <div className="geographic-canvas" role="group" aria-label="Natural Earth polygons and NASA fields with image-region exploration. Click or tap a region to move there." {...pointer.handlers}>
  {showGeography&&<img src={`${import.meta.env.BASE_URL}assets/basemap.png`} className="geoplanes" alt="Natural Earth coastline and land polygons, without any metric data"/>}
  {layers.filter(layer=>settings[layer.id]?.visible!==false).map(layer=><MapField key={layer.id} layer={layer} settings={settings} solo={onlySelected?focus:null}/>) }
+ {hover!==null&&<div className="region-hover" data-hover-region={hover} aria-hidden="true" style={{left:`${(hover%EXPLORER_COLUMNS)/EXPLORER_COLUMNS*100}%`,top:`${Math.floor(hover/EXPLORER_COLUMNS)/EXPLORER_ROWS*100}%`,width:`${100/EXPLORER_COLUMNS}%`,height:`${100/EXPLORER_ROWS}%`}}><span>{hover+1}</span></div>}
  <div className="exploration-marker" data-exploration-region={explorerIndex} style={explorerPosition(explorerIndex)} aria-hidden="true"><span className="target-ring"/><span className="target-cross"/></div>
  {loading&&<div className="loading-scrim" role="status">Loading geography and palette features…</div>}
  <span className="map-longitude west">180° W</span><span className="map-longitude east">180° E</span>
@@ -45,38 +77,25 @@ function SourceControl({layer,visible,focus,onSelect,onVisible,onNavigate}){
  </article>;
 }
 
-function SoundMeter({playState,engineRef}){
- const [level,setLevel]=useState(0);
- useEffect(()=>{
-  if(playState!=='playing'){setLevel(0);return undefined;}
-  const timer=setInterval(()=>{
-   const metrics=engineRef.current?.getOutputMetrics();
-   setLevel(metrics?Math.min(1,metrics.rms/0.05):0);
-  },200);
-  return()=>clearInterval(timer);
- },[playState,engineRef]);
- const words=playState!=='playing'?'silent':level<0.12?'very quiet':level<0.28?'quiet':level<0.6?'medium':'strong';
- return <div className="sound-meter"><span className="sound-meter-label">Sound level: {words}.</span><span className="sound-meter-bars" aria-hidden="true">{[0.12,0.28,0.45,0.6,0.8].map(step=><i key={step} className={level>=step?'is-on':''}/>)}</span></div>;
-}
-
 export default function Jukebox(){
  const [manifest,setManifest]=useState(null),[features,setFeatures]=useState(null),[loadError,setLoadError]=useState(null);
  const [settings,setSettings]=useState(Object.fromEntries(LAYER_OPTIONS.map(layer=>[layer.id,{visible:true,opacity:OPACITY_DEFAULTS[layer.id]}])));
  const [focus,setFocus]=useState('nitrogen_oxides'),[mode,setMode]=useState('composition'),[onlySelected,setOnlySelected]=useState(false),[showGeography,setShowGeography]=useState(true);
- const {index:explorerIndex,choose:chooseExplorerRegion}=useExplorer();
+ const {index:explorerIndex,choose:chooseExplorerRegion,move:moveExplorerRegion}=useExplorer();
  const engine=useRef(null),modelsRef=useRef({}),visibilityRef=useRef({});
  const headSyncRef=useRef(()=>{});
- const [spatialEnabled,setSpatialEnabled]=useState(true),[headInfluence,setHeadInfluence]=useState(false);
+ const [spatialEnabled,setSpatialEnabled]=useState(true),[headInfluence,setHeadInfluence]=useState(false),[headTravelOnRecenter,setHeadTravelOnRecenter]=useState(false);
  const [playState,setPlayState]=useState('idle'),[audioError,setAudioError]=useState(null),[muted,setMuted]=useState(false),[volume,setVolume]=useState(.32),[progress,setProgress]=useState(0);
  const layers=useMemo(()=>dataLayers(manifest?.layers),[manifest]);
  const featureById=features?.[focus];
 
  const chooseExplorer=useCallback(index=>{chooseExplorerRegion(index);},[chooseExplorerRegion]);
- const travel=useHeadPreviewTravel({index:explorerIndex,choose:chooseExplorer,enabled:spatialEnabled && headInfluence,engineRef:engine});
+ const travel=useHeadPreviewTravel({index:explorerIndex,choose:chooseExplorer,enabled:spatialEnabled && headInfluence,travelOnRecenter:headTravelOnRecenter,engineRef:engine});
 
  const currentLayer=layers.find(l=>l.id===focus)||layers[0]||LAYER_OPTIONS[0];
  const currentIndex=travel.previewing?travel.regionIndex:explorerIndex;
  const currentFeature=featureById?.[currentIndex];
+ const regionStatus=`${regionWords(explorerIndex)}. ${currentLayer.label}: ${describeFeature(currentLayer.id,features?.[currentLayer.id]?.[explorerIndex])}`;
 
  /* Load local data side-effects only. Music not fetched here, let alone starts. */
  useEffect(()=>{
@@ -105,7 +124,8 @@ export default function Jukebox(){
  useEffect(()=>{applyPreviewPosition(engine.current, travel.position);},[travel.position,engine]);
  useEffect(()=>{modelsRef.current=musicalModels;visibilityRef.current=audibleVisibilities;},[musicalModels,audibleVisibilities]);
  useEffect(()=>{if(engine.current){engine.current.setModel(musicalModels,{visibility:audibleVisibilities,selection:focus,mode});}},[focus,mode,musicalModels,audibleVisibilities]);
- useEffect(()=>{const engineInstance=engine.current; return()=>engineInstance?.dispose();},[]);
+ /* Read engine.current at unmount: the engine is created later, by Play. */
+ useEffect(()=>()=>{engine.current?.dispose();engine.current=null;},[]);
  useEffect(()=>{if(typeof window!=='undefined')window.__JUKEBOX_AUDIO_REF__=engine;return()=>{if(window.__JUKEBOX_AUDIO_REF__===engine)delete window.__JUKEBOX_AUDIO_REF__;};},[]);
  useEffect(()=>{
   const timer=setInterval(()=>{if(engine.current){setProgress(engine.current.elapsed/(engine.current.duration||177.456)*100);}},250);
@@ -136,7 +156,7 @@ export default function Jukebox(){
   event.preventDefault();document.querySelector(`[data-source-select="${ray[nextIndex]}"]`)?.focus();selectMetric(ray[nextIndex]);
  };
  async function togglePlayback(){
-  if(!engine.current){engine.current=new RemixEngine();headSyncRef.current();}
+  if(!engine.current){engine.current=new RemixEngine({sourceUrl:`${import.meta.env.BASE_URL}${TRACK.file}`});headSyncRef.current();}
   const player=engine.current;
   player.setModel(musicalModels,{visibility:audibleVisibilities,selection:focus,mode});
   player.setMute(muted);player.setVolume(volume);player.setSpatialEnabled(spatialEnabled);
@@ -164,11 +184,11 @@ export default function Jukebox(){
  <h1 className="live-title" id="music-title" tabIndex={-1}>Live Map</h1>
  <section className="live-how" aria-labelledby="how-title">
   <h2 id="how-title">How it works</h2>
-  <p className="live-how-short">Press Play remix, then turn maps on or off. W A S D moves through 48 regions while the music plays.</p>
+  <p className="live-how-short">Press Play remix, then turn maps on or off. W A S D, the arrow buttons, or a click on the map move through 48 regions.</p>
   <ol>
    <li><strong>Play</strong><span>Press Play remix. Music stays off until then.</span></li>
    <li><strong>Mix</strong><span>Turn a map on to include it. Turn it off to leave it out.</span></li>
-   <li><strong>Move</strong><span>W A S D steps through 48 regions while the music plays.</span></li>
+   <li><strong>Move</strong><span>W A S D, the arrow buttons, or a click or tap on the map steps through 48 regions.</span></li>
   </ol>
  </section>
  <section className="music-console live-transport" id="music-player" tabIndex={-1} aria-label="Music controls">
@@ -190,12 +210,20 @@ export default function Jukebox(){
  {loadError&&<div role="alert" className="app-alert">{loadError}<span> Existing geographic work is unchanged.</span></div>}
  <div className="workspace-shared live-board">
   <main className="map-workspace">
-   <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
-   <p className="current-region" role="status" aria-live="polite">{currentLayer.label}. Use W, A, S, and D to move.</p>
+   <div className="map-frame"><GeographicCanvas explorerIndex={travel.regionIndex} onChooseRegion={chooseExplorer} layers={layers} settings={settings} focus={focus} onlySelected={onlySelected} showGeography={showGeography} loading={loading}/></div>
+   <div className="map-move-row">
+    <div className="map-move" role="group" aria-label="Move between regions">
+     <button type="button" className="map-move-north" aria-label="Move north" onClick={()=>moveExplorerRegion('w')}><span aria-hidden="true">↑</span></button>
+     <button type="button" className="map-move-west" aria-label="Move west" onClick={()=>moveExplorerRegion('a')}><span aria-hidden="true">←</span></button>
+     <button type="button" className="map-move-south" aria-label="Move south" onClick={()=>moveExplorerRegion('s')}><span aria-hidden="true">↓</span></button>
+     <button type="button" className="map-move-east" aria-label="Move east" onClick={()=>moveExplorerRegion('d')}><span aria-hidden="true">→</span></button>
+    </div>
+    <p className="current-region" role="status" aria-live="polite">{regionStatus} <span className="current-region-hint">Use W, A, S and D, the arrow buttons, or click the map to move.</span></p>
+   </div>
   </main>
   <div className="live-toolbar">
    <aside className="explorer-panel" id="map-controls" aria-label="Map layers">
-    <HeadDirectionControl engineRef={engine} onReady={callback=>{headSyncRef.current=callback;}} headInfluence={headInfluence} onDirection={onHeadDirection} onHeadInfluenceChange={onHeadInfluence}/>
+    <HeadDirectionControl travelOnRecenter={headTravelOnRecenter} onTravelOnRecenterChange={setHeadTravelOnRecenter} engineRef={engine} onReady={callback=>{headSyncRef.current=callback;}} headInfluence={headInfluence} onDirection={onHeadDirection} onHeadInfluenceChange={onHeadInfluence}/>
     <div className="map-options"><label><input type="checkbox" checked={showGeography} onChange={e=>setShowGeography(e.target.checked)}/> Show land and coasts</label><label><input type="checkbox" checked={onlySelected} onChange={e=>setOnlySelected(e.target.checked)}/> Selected map only</label>
     <button className="reset-composition" type="button" onClick={()=>{setSettings(Object.fromEntries(LAYER_OPTIONS.map(l=>[l.id,{visible:true,opacity:OPACITY_DEFAULTS[l.id]}])));setFocus(null);setOnlySelected(false);setMode('composition');setShowGeography(true);}}>↻ Reset layers</button></div>
     <div className="source-controllers" aria-label="Geographic layers and their visibility">
@@ -236,7 +264,6 @@ function playbackCaption(playState, muted) {
 
 const ws_icon=state=>({playing:'▸',paused:'Ⅱ',loading:'⋯',idle:'○',unavailable:'!'})[state]||'○';
 const audioDescription=(state,muted)=>({idle:'No music yet. Set the scene and listen.',loading:'Reading the shared recording and estimated feature map…',paused:'Music paused. Your map and estimated palette analyses remain readable.',playing:muted?'Muted; musical map mode stays readable.':'Playing a gentle data-led remix.',unavailable:'Audio unavailable; you can explore readably without playing.'}[state]||'Make up your own map.');
-const popularCreativeVoice=(state)=>state==='playing'?`One recording. One shared clock. ${'Gentle foreground voices each cycle. '}`:'No audio until you call the musical field, card and play control.';
 const divergedScientificSources=mapRecord=>{
  const known=new Set(LAYER_OPTIONS.map(l=>l.id));if(mapRecord.layers.some(layer=>!known.has(layer.id)))return true;const distinct=new Set(mapRecord.layers.map(l=>l.id));return distinct.size!==mapRecord.layers.length;
 };

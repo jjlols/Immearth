@@ -19,6 +19,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
+from sonification.image_masks import LEGEND_MASKS
+
 ROOT = Path(__file__).resolve().parent
 IMAGE_DIR = ROOT / "data" / "images"
 SCALE_DIR = ROOT / "color_scales" / "output"
@@ -38,27 +40,9 @@ DEFAULT_DELTA_E = {
     "near_surface_temperature": 18.0,
 }
 
-# Rectangles are (x0, y0, x1, y1) in source pixels, x1/y1 exclusive.
-# Measured on the images in data/images/ on 2026-11-14, not copied from guesses.
-#
-# active_fires.png (4096x2048): white date "13 Nov 2026" sits at about
-# y=1722-1763, x=154-498; the "Fire Radiative Power" label at y=1813-1832;
-# the colorbar and its arrow at y=1856-1898, x=64-619; tick numbers at
-# y=1911-1926; "MW" at y=1944-1954. One rectangle covers that whole legend.
-#
-# The three GMAO frames (2048x1024) share a layout. The logo plaque is a flat
-# color from x=0 through x=340 and y=0 through y=70, and the map color resumes
-# by x=350 and y=74. The date badge is a grey rounded rectangle along the
-# bottom: carbon monoxide turns from map yellow to badge grey between y=920
-# and y=928 and ends near x=499; temperature and nitrogen oxides use the same
-# corner. near_surface_temperature.png has no colorbar drawn on the map.
-OVERLAYS = {
-    "precipitation": [],
-    "active_fires": [(48, 1690, 670, 1980)],
-    "carbon_monoxide": [(0, 0, 348, 74), (0, 924, 512, 1024)],
-    "nitrogen_oxides": [(0, 0, 348, 74), (0, 926, 512, 1024)],
-    "near_surface_temperature": [(0, 0, 348, 74), (0, 924, 512, 1024)],
-}
+# Legend, logo and date-badge rectangles live in sonification/image_masks.py,
+# shared with the music feature builder.
+OVERLAYS = {layer: list(record["boxes"]) for layer, record in LEGEND_MASKS.items()}
 
 LAYER_TITLES = {
     "precipitation": "Precipitation rate",
@@ -186,8 +170,9 @@ def _precipitation_samples(scale: dict) -> list[ColorSample]:
     the edges are irregular and roughly logarithmic. The last color starts at
     the 50 mm/hour tick and is unbounded, so it is stored as 50.
 
-    The category description strings in the same file are shifted one bin
-    relative to those ticks. The ticks are what this grid uses.
+    The ticks are what this grid uses. (Until 2026-11-15 the category
+    description strings in the same file were shifted one bin; the extractor
+    now writes them from the same tick-at-left-edge reading.)
     """
     samples: list[ColorSample] = []
     for legend in scale["legends"]:

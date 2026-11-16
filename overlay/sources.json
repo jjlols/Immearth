@@ -3,7 +3,7 @@
   "projection": "Flat 2:1 normalized display geography; shared aspect ratio is a preview assumption, not a verified identical affine geotransform.",
   "basemap": {
     "url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson",
-    "path": "assets/natural-earth-land.geojson",
+    "path": "overlay/inputs/natural-earth-land.geojson",
     "license": "https://www.naturalearthdata.com/about/terms-of-use/",
     "credit": "Made with Natural Earth, public domain 1:110m land geometry",
     "size": [4096,2048],

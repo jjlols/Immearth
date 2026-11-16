@@ -35,11 +35,11 @@ try {
  assert.deepEqual(await page.evaluate(() => window.__VISIBILITY_ERRORS__), []);
  await page.locator("[data-source-card]").first().screenshot({ path: "/tmp/map-layer-checkbox.png" });
   assert.equal(await page.locator(".primary-nav").getByRole("link", { name: "Layer explorer", exact: true }).count(), 0);
- await page.getByLabel("Show geographic land & coasts", { exact: true }).uncheck();
+ await page.getByLabel("Show land and coasts", { exact: true }).uncheck();
  assert.equal(await page.locator(".geoplanes").count(), 0);
   assert.equal(await page.locator(".primary-nav").getByRole("link", { name: "Layer explorer", exact: true }).count(), 0);
- await page.getByLabel("Show geographic land & coasts", { exact: true }).check();
- await page.getByLabel("Selected field only", { exact: true }).check();
+ await page.getByLabel("Show land and coasts", { exact: true }).check();
+ await page.getByLabel("Selected map only", { exact: true }).check();
  assert.deepEqual(await canvasIds(), [], "selection must not silently re-enable hidden fields");
  await page.getByRole("button", { name: "Explore Active fires musical mapping" }).click();
  assert.deepEqual(await canvasIds(), [], "focused fields remain subject to their checkbox");
@@ -50,7 +50,7 @@ try {
  await page.waitForSelector("canvas[data-map-field=precipitation]");
  assert.deepEqual(await canvasIds(), ["precipitation"]);
  await visibleRain.uncheck();
- await page.getByLabel("Selected field only", { exact: true }).uncheck();
+ await page.getByLabel("Selected map only", { exact: true }).uncheck();
  assert.equal(await page.locator("canvas[data-map-field=precipitation]").count(), 0);
  await page.getByRole("button", { name: "Solo / Explore" }).click();
  const focusedRain = page.getByRole("button", { name: "Explore Precipitation musical mapping" });

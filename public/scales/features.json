@@ -7,14 +7,14 @@
   "categories": {
     "precipitation": [
       {
-        "classified_count": 12086,
+        "classified_count": 1395,
         "sample_count": 135000,
-        "unclassified_count": 122914,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 133605,
         "estimated": true,
-        "rain_count": 3789,
-        "snow_count": 8297,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 1395,
+        "max_value": 4.0,
         "region": {
           "id": "precipitation-region-0-0",
           "row": 0,
@@ -34,19 +34,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 7377,
+        "classified_count": 247,
         "sample_count": 135000,
-        "unclassified_count": 127623,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 134753,
         "estimated": true,
-        "rain_count": 876,
-        "snow_count": 6501,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 247,
+        "max_value": 1.5,
         "region": {
           "id": "precipitation-region-0-1",
           "row": 0,
@@ -66,19 +68,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 7115,
+        "classified_count": 4211,
         "sample_count": 135000,
-        "unclassified_count": 127885,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 130789,
         "estimated": true,
-        "rain_count": 495,
-        "snow_count": 6620,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 4211,
+        "max_value": 2.5,
         "region": {
           "id": "precipitation-region-0-2",
           "row": 0,
@@ -98,19 +102,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 7756,
+        "classified_count": 5451,
         "sample_count": 135000,
-        "unclassified_count": 127244,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 129549,
         "estimated": true,
-        "rain_count": 3100,
-        "snow_count": 4656,
-        "max_value": 50.0,
+        "rain_count": 2756,
+        "snow_count": 2695,
+        "max_value": 4.0,
         "region": {
           "id": "precipitation-region-0-3",
           "row": 0,
@@ -130,19 +136,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 19024,
+        "classified_count": 14650,
         "sample_count": 135000,
-        "unclassified_count": 115976,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 120350,
         "estimated": true,
-        "rain_count": 12711,
-        "snow_count": 6313,
-        "max_value": 50.0,
+        "rain_count": 9101,
+        "snow_count": 5549,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-0-4",
           "row": 0,
@@ -162,19 +170,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 18075,
+        "classified_count": 9929,
         "sample_count": 135000,
-        "unclassified_count": 116925,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 125071,
         "estimated": true,
-        "rain_count": 5135,
-        "snow_count": 12940,
-        "max_value": 50.0,
+        "rain_count": 1169,
+        "snow_count": 8760,
+        "max_value": 2.5,
         "region": {
           "id": "precipitation-region-0-5",
           "row": 0,
@@ -194,19 +204,19 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 14922,
+        "status": "silent",
+        "classified_count": 0,
         "sample_count": 135000,
-        "unclassified_count": 120078,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 135000,
         "estimated": true,
-        "rain_count": 5194,
-        "snow_count": 9728,
-        "max_value": 50.0,
         "region": {
           "id": "precipitation-region-0-6",
           "row": 0,
@@ -226,19 +236,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 21880,
+        "classified_count": 21,
         "sample_count": 135000,
-        "unclassified_count": 113120,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 134979,
         "estimated": true,
-        "rain_count": 6410,
-        "snow_count": 15470,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 21,
+        "max_value": 0.75,
         "region": {
           "id": "precipitation-region-0-7",
           "row": 0,
@@ -258,19 +270,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 23905,
+        "classified_count": 20920,
         "sample_count": 135000,
-        "unclassified_count": 111095,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 114080,
         "estimated": true,
-        "rain_count": 23189,
-        "snow_count": 716,
-        "max_value": 50.0,
+        "rain_count": 20312,
+        "snow_count": 608,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-1-0",
           "row": 1,
@@ -290,19 +304,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 49600,
+        "classified_count": 10702,
         "sample_count": 135000,
-        "unclassified_count": 85400,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 124298,
         "estimated": true,
-        "rain_count": 34511,
-        "snow_count": 15089,
-        "max_value": 50.0,
+        "rain_count": 9771,
+        "snow_count": 931,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-1-1",
           "row": 1,
@@ -322,19 +338,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 35101,
+        "classified_count": 12244,
         "sample_count": 135000,
-        "unclassified_count": 99899,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 122756,
         "estimated": true,
-        "rain_count": 30674,
-        "snow_count": 4427,
-        "max_value": 50.0,
+        "rain_count": 11883,
+        "snow_count": 361,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-1-2",
           "row": 1,
@@ -354,19 +372,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 30770,
+        "classified_count": 21864,
         "sample_count": 135000,
-        "unclassified_count": 104230,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 113136,
         "estimated": true,
-        "rain_count": 28842,
-        "snow_count": 1928,
-        "max_value": 50.0,
+        "rain_count": 21864,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-1-3",
           "row": 1,
@@ -386,19 +406,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 68184,
+        "classified_count": 7842,
         "sample_count": 135000,
-        "unclassified_count": 66816,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 127158,
         "estimated": true,
-        "rain_count": 65129,
-        "snow_count": 3055,
-        "max_value": 50.0,
+        "rain_count": 7791,
+        "snow_count": 51,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-1-4",
           "row": 1,
@@ -418,19 +440,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 57703,
+        "classified_count": 7031,
         "sample_count": 135000,
-        "unclassified_count": 77297,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 127969,
         "estimated": true,
-        "rain_count": 33433,
-        "snow_count": 24270,
-        "max_value": 50.0,
+        "rain_count": 5161,
+        "snow_count": 1870,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-1-5",
           "row": 1,
@@ -450,19 +474,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 58214,
+        "classified_count": 7720,
         "sample_count": 135000,
-        "unclassified_count": 76786,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 127280,
         "estimated": true,
-        "rain_count": 41764,
-        "snow_count": 16450,
-        "max_value": 50.0,
+        "rain_count": 6710,
+        "snow_count": 1010,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-1-6",
           "row": 1,
@@ -482,18 +508,20 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 20489,
+        "classified_count": 18229,
         "sample_count": 135000,
-        "unclassified_count": 114511,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 116771,
         "estimated": true,
-        "rain_count": 16913,
-        "snow_count": 3576,
+        "rain_count": 16221,
+        "snow_count": 2008,
         "max_value": 50.0,
         "region": {
           "id": "precipitation-region-1-7",
@@ -514,19 +542,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 14824,
+        "classified_count": 14336,
         "sample_count": 135000,
-        "unclassified_count": 120176,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 120664,
         "estimated": true,
-        "rain_count": 14817,
-        "snow_count": 7,
-        "max_value": 50.0,
+        "rain_count": 14336,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-2-0",
           "row": 2,
@@ -546,19 +576,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 17111,
+        "classified_count": 8177,
         "sample_count": 135000,
-        "unclassified_count": 117889,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 126823,
         "estimated": true,
-        "rain_count": 13738,
-        "snow_count": 3373,
-        "max_value": 50.0,
+        "rain_count": 8177,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-2-1",
           "row": 2,
@@ -578,18 +610,20 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 22858,
+        "classified_count": 13939,
         "sample_count": 135000,
-        "unclassified_count": 112142,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 121061,
         "estimated": true,
-        "rain_count": 22070,
-        "snow_count": 788,
+        "rain_count": 13939,
+        "snow_count": 0,
         "max_value": 50.0,
         "region": {
           "id": "precipitation-region-2-2",
@@ -610,19 +644,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 38346,
+        "classified_count": 10777,
         "sample_count": 135000,
-        "unclassified_count": 96654,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 124223,
         "estimated": true,
-        "rain_count": 37779,
-        "snow_count": 567,
-        "max_value": 50.0,
+        "rain_count": 10777,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-2-3",
           "row": 2,
@@ -642,19 +678,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 89376,
+        "classified_count": 1616,
         "sample_count": 135000,
-        "unclassified_count": 45624,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 133384,
         "estimated": true,
-        "rain_count": 80118,
-        "snow_count": 9258,
-        "max_value": 50.0,
+        "rain_count": 1616,
+        "snow_count": 0,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-2-4",
           "row": 2,
@@ -674,18 +712,20 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 45514,
+        "classified_count": 13475,
         "sample_count": 135000,
-        "unclassified_count": 89486,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 121525,
         "estimated": true,
-        "rain_count": 36568,
-        "snow_count": 8946,
+        "rain_count": 13475,
+        "snow_count": 0,
         "max_value": 50.0,
         "region": {
           "id": "precipitation-region-2-5",
@@ -706,19 +746,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 39173,
+        "classified_count": 13183,
         "sample_count": 135000,
-        "unclassified_count": 95827,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 121817,
         "estimated": true,
-        "rain_count": 37946,
-        "snow_count": 1227,
-        "max_value": 50.0,
+        "rain_count": 13183,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-2-6",
           "row": 2,
@@ -738,19 +780,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 7979,
+        "classified_count": 7923,
         "sample_count": 135000,
-        "unclassified_count": 127021,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 127077,
         "estimated": true,
-        "rain_count": 7979,
+        "rain_count": 7923,
         "snow_count": 0,
-        "max_value": 50.0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-2-7",
           "row": 2,
@@ -770,19 +814,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 18246,
+        "classified_count": 18707,
         "sample_count": 135000,
-        "unclassified_count": 116754,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 116293,
         "estimated": true,
-        "rain_count": 18246,
+        "rain_count": 18707,
         "snow_count": 0,
-        "max_value": 15.0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-3-0",
           "row": 3,
@@ -802,19 +848,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 6494,
+        "classified_count": 7546,
         "sample_count": 135000,
-        "unclassified_count": 128506,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 127454,
         "estimated": true,
-        "rain_count": 6493,
-        "snow_count": 1,
-        "max_value": 50.0,
+        "rain_count": 7546,
+        "snow_count": 0,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-3-1",
           "row": 3,
@@ -834,19 +882,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 21577,
+        "classified_count": 11982,
         "sample_count": 135000,
-        "unclassified_count": 113423,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 123018,
         "estimated": true,
-        "rain_count": 11180,
-        "snow_count": 10397,
-        "max_value": 50.0,
+        "rain_count": 11979,
+        "snow_count": 3,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-3-2",
           "row": 3,
@@ -866,19 +916,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 9071,
+        "classified_count": 6024,
         "sample_count": 135000,
-        "unclassified_count": 125929,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 128976,
         "estimated": true,
-        "rain_count": 7258,
-        "snow_count": 1813,
-        "max_value": 50.0,
+        "rain_count": 6024,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-3-3",
           "row": 3,
@@ -898,19 +950,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 43997,
+        "classified_count": 12033,
         "sample_count": 135000,
-        "unclassified_count": 91003,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 122967,
         "estimated": true,
-        "rain_count": 22966,
-        "snow_count": 21031,
-        "max_value": 50.0,
+        "rain_count": 12033,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-3-4",
           "row": 3,
@@ -930,18 +984,20 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 12178,
+        "classified_count": 12041,
         "sample_count": 135000,
-        "unclassified_count": 122822,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 122959,
         "estimated": true,
-        "rain_count": 11205,
-        "snow_count": 973,
+        "rain_count": 12041,
+        "snow_count": 0,
         "max_value": 50.0,
         "region": {
           "id": "precipitation-region-3-5",
@@ -962,18 +1018,20 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 35352,
+        "classified_count": 8549,
         "sample_count": 135000,
-        "unclassified_count": 99648,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 126451,
         "estimated": true,
-        "rain_count": 16698,
-        "snow_count": 18654,
+        "rain_count": 8549,
+        "snow_count": 0,
         "max_value": 50.0,
         "region": {
           "id": "precipitation-region-3-6",
@@ -994,19 +1052,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 25232,
+        "classified_count": 14089,
         "sample_count": 135000,
-        "unclassified_count": 109768,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 120911,
         "estimated": true,
-        "rain_count": 15967,
-        "snow_count": 9265,
-        "max_value": 50.0,
+        "rain_count": 14089,
+        "snow_count": 0,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-3-7",
           "row": 3,
@@ -1026,19 +1086,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 9445,
+        "classified_count": 7503,
         "sample_count": 135000,
-        "unclassified_count": 125555,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 127497,
         "estimated": true,
-        "rain_count": 7321,
-        "snow_count": 2124,
-        "max_value": 7.5,
+        "rain_count": 6244,
+        "snow_count": 1259,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-4-0",
           "row": 4,
@@ -1058,19 +1120,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 14635,
+        "classified_count": 12885,
         "sample_count": 135000,
-        "unclassified_count": 120365,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 122115,
         "estimated": true,
-        "rain_count": 14429,
-        "snow_count": 206,
-        "max_value": 7.5,
+        "rain_count": 12861,
+        "snow_count": 24,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-4-1",
           "row": 4,
@@ -1090,19 +1154,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 30497,
+        "classified_count": 14698,
         "sample_count": 135000,
-        "unclassified_count": 104503,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 120302,
         "estimated": true,
-        "rain_count": 17965,
-        "snow_count": 12532,
-        "max_value": 50.0,
+        "rain_count": 13447,
+        "snow_count": 1251,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-4-2",
           "row": 4,
@@ -1122,19 +1188,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 8166,
+        "classified_count": 6040,
         "sample_count": 135000,
-        "unclassified_count": 126834,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 128960,
         "estimated": true,
-        "rain_count": 5288,
-        "snow_count": 2878,
-        "max_value": 4.0,
+        "rain_count": 4142,
+        "snow_count": 1898,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-4-3",
           "row": 4,
@@ -1154,19 +1222,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 6343,
+        "classified_count": 3700,
         "sample_count": 135000,
-        "unclassified_count": 128657,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 131300,
         "estimated": true,
-        "rain_count": 1743,
-        "snow_count": 4600,
-        "max_value": 50.0,
+        "rain_count": 1945,
+        "snow_count": 1755,
+        "max_value": 4.0,
         "region": {
           "id": "precipitation-region-4-4",
           "row": 4,
@@ -1186,19 +1256,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 14392,
+        "classified_count": 14242,
         "sample_count": 135000,
-        "unclassified_count": 120608,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 120758,
         "estimated": true,
-        "rain_count": 10231,
-        "snow_count": 4161,
-        "max_value": 7.5,
+        "rain_count": 8702,
+        "snow_count": 5540,
+        "max_value": 15.0,
         "region": {
           "id": "precipitation-region-4-5",
           "row": 4,
@@ -1218,19 +1290,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 18731,
+        "classified_count": 15165,
         "sample_count": 135000,
-        "unclassified_count": 116269,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 119835,
         "estimated": true,
-        "rain_count": 13430,
-        "snow_count": 5301,
-        "max_value": 50.0,
+        "rain_count": 11919,
+        "snow_count": 3246,
+        "max_value": 7.5,
         "region": {
           "id": "precipitation-region-4-6",
           "row": 4,
@@ -1250,19 +1324,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 29540,
+        "classified_count": 21050,
         "sample_count": 135000,
-        "unclassified_count": 105460,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 113950,
         "estimated": true,
-        "rain_count": 23335,
-        "snow_count": 6205,
-        "max_value": 50.0,
+        "rain_count": 20914,
+        "snow_count": 136,
+        "max_value": 35.0,
         "region": {
           "id": "precipitation-region-4-7",
           "row": 4,
@@ -1282,19 +1358,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 2127,
+        "classified_count": 307,
         "sample_count": 135000,
-        "unclassified_count": 132873,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 134693,
         "estimated": true,
-        "rain_count": 109,
-        "snow_count": 2018,
-        "max_value": 50.0,
+        "rain_count": 1,
+        "snow_count": 306,
+        "max_value": 0.75,
         "region": {
           "id": "precipitation-region-5-0",
           "row": 5,
@@ -1314,19 +1392,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 18858,
+        "classified_count": 23365,
         "sample_count": 135000,
-        "unclassified_count": 116142,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 111635,
         "estimated": true,
-        "rain_count": 3406,
-        "snow_count": 15452,
-        "max_value": 50.0,
+        "rain_count": 3619,
+        "snow_count": 19746,
+        "max_value": 4.0,
         "region": {
           "id": "precipitation-region-5-1",
           "row": 5,
@@ -1346,19 +1426,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 1722,
+        "classified_count": 802,
         "sample_count": 135000,
-        "unclassified_count": 133278,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 134198,
         "estimated": true,
-        "rain_count": 85,
-        "snow_count": 1637,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 802,
+        "max_value": 2.5,
         "region": {
           "id": "precipitation-region-5-2",
           "row": 5,
@@ -1378,19 +1460,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 10070,
+        "classified_count": 1040,
         "sample_count": 135000,
-        "unclassified_count": 124930,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 133960,
         "estimated": true,
         "rain_count": 0,
-        "snow_count": 10070,
-        "max_value": 7.5,
+        "snow_count": 1040,
+        "max_value": 0.4,
         "region": {
           "id": "precipitation-region-5-3",
           "row": 5,
@@ -1410,19 +1494,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 7509,
+        "classified_count": 4258,
         "sample_count": 135000,
-        "unclassified_count": 127491,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 130742,
         "estimated": true,
-        "rain_count": 2,
-        "snow_count": 7507,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 4258,
+        "max_value": 1.5,
         "region": {
           "id": "precipitation-region-5-4",
           "row": 5,
@@ -1442,19 +1528,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 2066,
+        "classified_count": 1649,
         "sample_count": 135000,
-        "unclassified_count": 132934,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 133351,
         "estimated": true,
-        "rain_count": 11,
-        "snow_count": 2055,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 1649,
+        "max_value": 1.5,
         "region": {
           "id": "precipitation-region-5-5",
           "row": 5,
@@ -1474,19 +1562,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 4737,
+        "classified_count": 4002,
         "sample_count": 135000,
-        "unclassified_count": 130263,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 130998,
         "estimated": true,
-        "rain_count": 19,
-        "snow_count": 4718,
-        "max_value": 50.0,
+        "rain_count": 0,
+        "snow_count": 4002,
+        "max_value": 1.5,
         "region": {
           "id": "precipitation-region-5-6",
           "row": 5,
@@ -1506,19 +1596,21 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 5703,
+        "classified_count": 3127,
         "sample_count": 135000,
-        "unclassified_count": 129297,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 131873,
         "estimated": true,
-        "rain_count": 747,
-        "snow_count": 4956,
-        "max_value": 50.0,
+        "rain_count": 725,
+        "snow_count": 2402,
+        "max_value": 1.5,
         "region": {
           "id": "precipitation-region-5-7",
           "row": 5,
@@ -1538,7 +1630,9 @@
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/rainbarblack2.png",
             "https://svs.gsfc.nasa.gov/vis/a000000/a004200/a004285/snowbarblack2.png"
           ],
-          "scale_extraction_time": "2026-11-14T19:51:09Z",
+          "raster": "public/assets/precipitation.png",
+          "masked_rectangles": [],
+          "scale_extraction_time": "2026-11-16T04:03:48Z",
           "ticks_status": "estimated"
         }
       }
@@ -1567,6 +1661,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1594,6 +1697,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1621,6 +1733,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1648,6 +1769,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1675,6 +1805,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1702,6 +1841,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1729,6 +1877,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1756,6 +1913,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1783,6 +1949,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1810,6 +1985,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1837,6 +2021,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1864,6 +2057,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1891,6 +2093,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1918,6 +2129,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1945,6 +2165,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1972,6 +2201,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -1999,6 +2237,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2026,6 +2273,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2053,6 +2309,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2080,6 +2345,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2107,6 +2381,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2134,6 +2417,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2161,6 +2453,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2188,6 +2489,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2215,6 +2525,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2242,6 +2561,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2269,6 +2597,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2296,6 +2633,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2323,6 +2669,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2350,6 +2705,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2377,6 +2741,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2404,6 +2777,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2412,8 +2794,8 @@
         "status": "silent",
         "classified_count": 0,
         "sample_count": 174592,
-        "unclassified_count": 174592,
-        "no_data_count": 0,
+        "unclassified_count": 167168,
+        "no_data_count": 7424,
         "estimated": true,
         "region": {
           "id": "active_fires-region-4-0",
@@ -2431,6 +2813,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2439,8 +2830,8 @@
         "status": "silent",
         "classified_count": 0,
         "sample_count": 174592,
-        "unclassified_count": 174592,
-        "no_data_count": 0,
+        "unclassified_count": 172064,
+        "no_data_count": 2528,
         "estimated": true,
         "region": {
           "id": "active_fires-region-4-1",
@@ -2458,6 +2849,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2485,6 +2885,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2512,6 +2921,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2539,6 +2957,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2566,6 +2993,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2593,6 +3029,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2620,20 +3065,26 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 20310,
+        "status": "silent",
+        "classified_count": 0,
         "sample_count": 175104,
-        "unclassified_count": 154794,
-        "no_data_count": 0,
+        "unclassified_count": 47968,
+        "no_data_count": 127136,
         "estimated": true,
-        "median": 3.663827735818737,
-        "q20": 0.1909367138236351,
-        "q80": 6.385412349772068,
-        "max_value": 8.0,
         "region": {
           "id": "active_fires-region-5-0",
           "row": 5,
@@ -2650,20 +3101,26 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 2592,
+        "status": "silent",
+        "classified_count": 0,
         "sample_count": 175104,
-        "unclassified_count": 172512,
-        "no_data_count": 0,
+        "unclassified_count": 131812,
+        "no_data_count": 43292,
         "estimated": true,
-        "median": 6.012815199719468,
-        "q20": 6.012815199719468,
-        "q80": 7.813701424973701,
-        "max_value": 8.0,
         "region": {
           "id": "active_fires-region-5-1",
           "row": 5,
@@ -2680,6 +3137,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2707,6 +3173,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2734,6 +3209,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2761,6 +3245,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2788,6 +3281,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2815,6 +3317,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2842,6 +3353,15 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5113/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005113/fires_frp_VIIRS_2048p30.mp4",
+          "raster": "data/images/active_fires.png",
+          "masked_rectangles": [
+            [
+              48,
+              1690,
+              670,
+              1980
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2849,13 +3369,13 @@
     ],
     "carbon_monoxide": [
       {
-        "classified_count": 27732,
+        "classified_count": 24573,
         "sample_count": 43520,
-        "unclassified_count": 15788,
-        "no_data_count": 0,
+        "unclassified_count": 3,
+        "no_data_count": 18944,
         "estimated": true,
         "median": 82.1638717754423,
-        "q20": 79.04062201429842,
+        "q20": 80.60224689487036,
         "q80": 91.5336210588739,
         "max_value": 490.0206324476821,
         "region": {
@@ -2874,15 +3394,30 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 36530,
+        "classified_count": 36445,
         "sample_count": 43520,
-        "unclassified_count": 6990,
-        "no_data_count": 0,
+        "unclassified_count": 267,
+        "no_data_count": 6808,
         "estimated": true,
         "median": 79.04062201429842,
         "q20": 77.47899713372648,
@@ -2904,6 +3439,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2934,6 +3484,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2964,6 +3529,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -2994,6 +3574,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3024,6 +3619,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3054,6 +3664,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3084,6 +3709,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3114,6 +3754,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3144,6 +3799,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3174,6 +3844,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3204,6 +3889,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3234,6 +3934,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3264,6 +3979,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3294,6 +4024,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3324,6 +4069,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3354,6 +4114,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3384,6 +4159,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3414,6 +4204,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3444,6 +4249,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3474,6 +4294,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3504,6 +4339,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3534,6 +4384,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3564,6 +4429,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3594,6 +4474,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3624,6 +4519,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3654,6 +4564,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3684,6 +4609,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3714,6 +4654,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3744,6 +4699,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3774,6 +4744,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3804,6 +4789,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3834,6 +4834,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3864,6 +4879,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3894,6 +4924,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3924,6 +4969,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3954,6 +5014,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -3984,6 +5059,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4014,6 +5104,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4044,20 +5149,35 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 20599,
+        "classified_count": 18176,
         "sample_count": 43776,
-        "unclassified_count": 23177,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 25600,
         "estimated": true,
-        "median": 55.61624880571937,
+        "median": 57.177873686291306,
         "q20": 55.61624880571937,
         "q80": 57.177873686291306,
-        "max_value": 490.0206324476821,
+        "max_value": 57.177873686291306,
         "region": {
           "id": "carbon_monoxide-region-5-0",
           "row": 5,
@@ -4074,15 +5194,30 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 21791,
+        "classified_count": 18155,
         "sample_count": 43776,
-        "unclassified_count": 21985,
-        "no_data_count": 0,
+        "unclassified_count": 21,
+        "no_data_count": 25600,
         "estimated": true,
         "median": 55.61624880571937,
         "q20": 55.61624880571937,
@@ -4104,6 +5239,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4134,6 +5284,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4164,6 +5329,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4194,6 +5374,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4224,6 +5419,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4254,6 +5464,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4284,6 +5509,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5115/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005153/CO_colorbar_plain.png",
+          "raster": "data/images/carbon_monoxide.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:10Z",
           "ticks_status": "estimated"
         }
@@ -4291,14 +5531,14 @@
     ],
     "nitrogen_oxides": [
       {
-        "classified_count": 38904,
+        "classified_count": 24495,
         "sample_count": 43520,
-        "unclassified_count": 4616,
-        "no_data_count": 0,
+        "unclassified_count": 81,
+        "no_data_count": 18944,
         "estimated": true,
-        "median": 0.08627998372557684,
-        "q20": 0.0097446758982809,
-        "q80": 0.8271327310651594,
+        "median": 0.03295956918157513,
+        "q20": 0.008586889557629334,
+        "q80": 0.13722775369960716,
         "max_value": 10.0,
         "region": {
           "id": "nitrogen_oxides-region-0-0",
@@ -4316,19 +5556,34 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 31270,
+        "classified_count": 27438,
         "sample_count": 43520,
-        "unclassified_count": 12250,
-        "no_data_count": 0,
+        "unclassified_count": 9274,
+        "no_data_count": 6808,
         "estimated": true,
-        "median": 0.021035275928094687,
-        "q20": 0.0058754523785579105,
-        "q80": 0.4544967577335206,
+        "median": 0.014314520404303567,
+        "q20": 0.00551538139146509,
+        "q80": 0.08627998372557684,
         "max_value": 10.0,
         "region": {
           "id": "nitrogen_oxides-region-0-1",
@@ -4346,6 +5601,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4376,6 +5646,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4406,6 +5691,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4436,6 +5736,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4466,6 +5781,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4496,6 +5826,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4526,6 +5871,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4556,6 +5916,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4586,6 +5961,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4616,6 +6006,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4646,6 +6051,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4676,6 +6096,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4706,6 +6141,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4736,6 +6186,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4766,6 +6231,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4796,6 +6276,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4826,6 +6321,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4856,6 +6366,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4886,6 +6411,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4916,6 +6456,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4946,6 +6501,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -4976,6 +6546,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5006,6 +6591,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5036,6 +6636,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5066,6 +6681,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5096,6 +6726,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5126,6 +6771,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5156,6 +6816,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5186,6 +6861,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5216,6 +6906,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5246,6 +6951,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5276,6 +6996,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5306,6 +7041,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5336,6 +7086,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5366,6 +7131,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5396,6 +7176,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5426,6 +7221,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5456,6 +7266,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5486,19 +7311,34 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 1582,
+        "classified_count": 301,
         "sample_count": 43776,
-        "unclassified_count": 42194,
-        "no_data_count": 0,
+        "unclassified_count": 18387,
+        "no_data_count": 25088,
         "estimated": true,
-        "median": 0.001,
-        "q20": 0.001,
-        "q80": 0.0011348318658207137,
+        "median": 0.004562241452841883,
+        "q20": 0.0021359404141599756,
+        "q80": 0.01107462920785694,
         "max_value": 10.0,
         "region": {
           "id": "nitrogen_oxides-region-5-0",
@@ -5516,19 +7356,34 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 1688,
+        "classified_count": 144,
         "sample_count": 43776,
-        "unclassified_count": 42088,
-        "no_data_count": 0,
+        "unclassified_count": 18544,
+        "no_data_count": 25088,
         "estimated": true,
-        "median": 0.001,
-        "q20": 0.001,
-        "q80": 0.0010652848754303765,
+        "median": 0.002275385018025116,
+        "q20": 0.002005041527785749,
+        "q80": 0.4544967577335206,
         "max_value": 10.0,
         "region": {
           "id": "nitrogen_oxides-region-5-1",
@@ -5546,6 +7401,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5576,6 +7446,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5606,6 +7491,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5636,6 +7536,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5666,6 +7581,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5696,6 +7626,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5726,6 +7671,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5154/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005154/NOx_colorbar_plain.png",
+          "raster": "data/images/nitrogen_oxides.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              926,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5733,15 +7693,15 @@
     ],
     "near_surface_temperature": [
       {
-        "classified_count": 43436,
+        "classified_count": 24576,
         "sample_count": 43520,
-        "unclassified_count": 84,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 18944,
         "estimated": true,
-        "median": 3.9929133858267734,
-        "q20": -38.754473872584114,
-        "q80": 8.925196850393695,
-        "max_value": 39.68544110557609,
+        "median": 7.6921259842519705,
+        "q20": 3.9929133858267734,
+        "q80": 10.164862204724407,
+        "max_value": 17.229330708661422,
         "region": {
           "id": "near_surface_temperature-region-0-0",
           "row": 0,
@@ -5758,18 +7718,33 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 43519,
+        "classified_count": 36711,
         "sample_count": 43520,
         "unclassified_count": 1,
-        "no_data_count": 0,
+        "no_data_count": 6808,
         "estimated": true,
-        "median": 0.29370078740157624,
-        "q20": -8.685203412073493,
+        "median": 0.9102362204724386,
+        "q20": -5.474081364829395,
         "q80": 5.225984251968504,
         "max_value": 38.112646633456535,
         "region": {
@@ -5788,6 +7763,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5818,6 +7808,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5848,6 +7853,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5878,6 +7898,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5908,6 +7943,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5938,6 +7988,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5968,6 +8033,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -5998,6 +8078,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6028,6 +8123,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6058,6 +8168,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6088,6 +8213,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6118,6 +8258,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6148,6 +8303,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6178,6 +8348,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6208,6 +8393,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6238,6 +8438,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6268,6 +8483,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6298,6 +8528,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6328,6 +8573,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6358,6 +8618,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6388,6 +8663,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6418,6 +8708,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6448,6 +8753,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6478,6 +8798,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6508,6 +8843,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6538,6 +8888,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6568,6 +8933,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6598,6 +8978,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6628,6 +9023,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6658,6 +9068,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6688,6 +9113,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6718,6 +9158,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6748,6 +9203,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6778,6 +9248,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6808,6 +9293,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6838,6 +9338,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6868,6 +9383,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6898,6 +9428,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -6928,20 +9473,35 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 43195,
+        "classified_count": 18176,
         "sample_count": 43776,
-        "unclassified_count": 581,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 25600,
         "estimated": true,
         "median": 8.925196850393695,
-        "q20": 6.459055118110234,
-        "q80": 39.37088221115218,
-        "max_value": 39.68544110557609,
+        "q20": 7.6921259842519705,
+        "q80": 8.925196850393695,
+        "max_value": 11.44931102362205,
         "region": {
           "id": "near_surface_temperature-region-5-0",
           "row": 5,
@@ -6958,20 +9518,35 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
       },
       {
-        "classified_count": 43539,
+        "classified_count": 18176,
         "sample_count": 43776,
-        "unclassified_count": 237,
-        "no_data_count": 0,
+        "unclassified_count": 0,
+        "no_data_count": 25600,
         "estimated": true,
-        "median": 9.541732283464569,
-        "q20": 0.29370078740157624,
-        "q80": 39.05632331672827,
-        "max_value": 39.68544110557609,
+        "median": 7.6921259842519705,
+        "q20": 3.376377952755905,
+        "q80": 9.541732283464569,
+        "max_value": 13.375984251968507,
         "region": {
           "id": "near_surface_temperature-region-5-1",
           "row": 5,
@@ -6988,6 +9563,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -7018,6 +9608,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -7048,6 +9653,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -7078,6 +9698,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -7108,6 +9743,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -7138,6 +9788,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }
@@ -7168,6 +9833,21 @@
         "source": {
           "url": "https://svs.gsfc.nasa.gov/5147/",
           "asset_url": "https://svs.gsfc.nasa.gov/vis/a000000/a005100/a005147/NearSurfaceTemperature_colorbar_plain.png",
+          "raster": "data/images/near_surface_temperature.png",
+          "masked_rectangles": [
+            [
+              0,
+              0,
+              348,
+              74
+            ],
+            [
+              0,
+              924,
+              512,
+              1024
+            ]
+          ],
           "scale_extraction_time": "2026-11-14T19:51:12Z",
           "ticks_status": "estimated"
         }

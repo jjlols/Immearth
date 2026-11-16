@@ -11,12 +11,10 @@ LICENSE=ROOT/'LICENSES.md'
 def adapt_record_data(directory=ROOT/'public', write=True):
     (directory/'assets').mkdir(exist_ok=True)
     for path in (ROOT/'overlay-site/assets').glob('*.png'):
-        if path.name in {'latest-fire-color.png','latest-fire-approved.png','sources-approved-active-fire-color.png','fires-float.exr'}:
+        # Build inputs and the fire colormap are not served layers.
+        if path.name.endswith('-source.png') or path.name in {'latest-fire-color.png','latest-fire-approved.png','sources-approved-active-fire-color.png','fires-float.exr'}:
             continue
         shutil.copyfile(path,directory/'assets'/path.name)
-    geo=next((p for p in (ROOT/'overlay-site/assets').glob('*.geojson')),None)
-    if geo:
-        shutil.copyfile(geo,directory/'assets/natural-earth-source.geojson')
     (directory/'scales').mkdir(exist_ok=True)
     for path in (ROOT/'overlay-site/scales').glob('*.json'):
         shutil.copyfile(path,directory/'scales'/path.name)

@@ -119,9 +119,9 @@
             129,
             20
           ],
-          "description": "below the first displayed 0.1 mm/hour boundary",
-          "lower_bound": null,
-          "upper_bound": null,
+          "description": "between 0.1 and 0.2 mm/hour",
+          "lower_bound": 0.1,
+          "upper_bound": 0.2,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -133,9 +133,9 @@
             139,
             82
           ],
-          "description": "between 0.1 and 0.2 mm/hour",
-          "lower_bound": 0.1,
-          "upper_bound": 0.2,
+          "description": "between 0.2 and 0.3 mm/hour",
+          "lower_bound": 0.2,
+          "upper_bound": 0.3,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -147,9 +147,9 @@
             179,
             48
           ],
-          "description": "between 0.2 and 0.3 mm/hour",
-          "lower_bound": 0.2,
-          "upper_bound": 0.3,
+          "description": "between 0.3 and 0.5 mm/hour",
+          "lower_bound": 0.3,
+          "upper_bound": 0.5,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -161,9 +161,9 @@
             211,
             0
           ],
-          "description": "between 0.3 and 0.5 mm/hour",
-          "lower_bound": 0.3,
-          "upper_bound": 0.5,
+          "description": "between 0.5 and 1.0 mm/hour",
+          "lower_bound": 0.5,
+          "upper_bound": 1.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -175,9 +175,9 @@
             231,
             0
           ],
-          "description": "between 0.5 and 1.0 mm/hour",
-          "lower_bound": 0.5,
-          "upper_bound": 1.0,
+          "description": "between 1.0 and 2.0 mm/hour",
+          "lower_bound": 1.0,
+          "upper_bound": 2.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -189,9 +189,9 @@
             251,
             0
           ],
-          "description": "between 1.0 and 2.0 mm/hour",
-          "lower_bound": 1.0,
-          "upper_bound": 2.0,
+          "description": "between 2.0 and 3.0 mm/hour",
+          "lower_bound": 2.0,
+          "upper_bound": 3.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -203,9 +203,9 @@
             196,
             0
           ],
-          "description": "between 2.0 and 3.0 mm/hour",
-          "lower_bound": 2.0,
-          "upper_bound": 3.0,
+          "description": "between 3.0 and 5.0 mm/hour",
+          "lower_bound": 3.0,
+          "upper_bound": 5.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -217,9 +217,9 @@
             147,
             0
           ],
-          "description": "between 3.0 and 5.0 mm/hour",
-          "lower_bound": 3.0,
-          "upper_bound": 5.0,
+          "description": "between 5.0 and 10.0 mm/hour",
+          "lower_bound": 5.0,
+          "upper_bound": 10.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -231,9 +231,9 @@
             0,
             0
           ],
-          "description": "between 5.0 and 10.0 mm/hour",
-          "lower_bound": 5.0,
-          "upper_bound": 10.0,
+          "description": "between 10.0 and 20.0 mm/hour",
+          "lower_bound": 10.0,
+          "upper_bound": 20.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -245,9 +245,9 @@
             0,
             0
           ],
-          "description": "between 10.0 and 20.0 mm/hour",
-          "lower_bound": 10.0,
-          "upper_bound": 20.0,
+          "description": "between 20.0 and 50.0 mm/hour",
+          "lower_bound": 20.0,
+          "upper_bound": 50.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -260,7 +260,7 @@
             0
           ],
           "description": "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)",
-          "lower_bound": 20.0,
+          "lower_bound": 50.0,
           "upper_bound": null,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
@@ -369,9 +369,9 @@
             255,
             255
           ],
-          "description": "below the first displayed 0.1 mm/hour boundary",
-          "lower_bound": null,
-          "upper_bound": null,
+          "description": "between 0.1 and 0.2 mm/hour",
+          "lower_bound": 0.1,
+          "upper_bound": 0.2,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -383,9 +383,9 @@
             221,
             255
           ],
-          "description": "between 0.1 and 0.2 mm/hour",
-          "lower_bound": 0.1,
-          "upper_bound": 0.2,
+          "description": "between 0.2 and 0.3 mm/hour",
+          "lower_bound": 0.2,
+          "upper_bound": 0.3,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -397,9 +397,9 @@
             187,
             255
           ],
-          "description": "between 0.2 and 0.3 mm/hour",
-          "lower_bound": 0.2,
-          "upper_bound": 0.3,
+          "description": "between 0.3 and 0.5 mm/hour",
+          "lower_bound": 0.3,
+          "upper_bound": 0.5,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -411,9 +411,9 @@
             154,
             255
           ],
-          "description": "between 0.3 and 0.5 mm/hour",
-          "lower_bound": 0.3,
-          "upper_bound": 0.5,
+          "description": "between 0.5 and 1.0 mm/hour",
+          "lower_bound": 0.5,
+          "upper_bound": 1.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -425,9 +425,9 @@
             122,
             255
           ],
-          "description": "between 0.5 and 1.0 mm/hour",
-          "lower_bound": 0.5,
-          "upper_bound": 1.0,
+          "description": "between 1.0 and 2.0 mm/hour",
+          "lower_bound": 1.0,
+          "upper_bound": 2.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -439,9 +439,9 @@
             93,
             255
           ],
-          "description": "between 1.0 and 2.0 mm/hour",
-          "lower_bound": 1.0,
-          "upper_bound": 2.0,
+          "description": "between 2.0 and 3.0 mm/hour",
+          "lower_bound": 2.0,
+          "upper_bound": 3.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -453,9 +453,9 @@
             70,
             255
           ],
-          "description": "between 2.0 and 3.0 mm/hour",
-          "lower_bound": 2.0,
-          "upper_bound": 3.0,
+          "description": "between 3.0 and 5.0 mm/hour",
+          "lower_bound": 3.0,
+          "upper_bound": 5.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -467,9 +467,9 @@
             47,
             217
           ],
-          "description": "between 3.0 and 5.0 mm/hour",
-          "lower_bound": 3.0,
-          "upper_bound": 5.0,
+          "description": "between 5.0 and 10.0 mm/hour",
+          "lower_bound": 5.0,
+          "upper_bound": 10.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -481,9 +481,9 @@
             33,
             187
           ],
-          "description": "between 5.0 and 10.0 mm/hour",
-          "lower_bound": 5.0,
-          "upper_bound": 10.0,
+          "description": "between 10.0 and 20.0 mm/hour",
+          "lower_bound": 10.0,
+          "upper_bound": 20.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
           "tick_is_at_bin_left_edge": true
@@ -495,12 +495,15 @@
             20,
             156
           ],
-          "description": "between 10.0 and 20.0 mm/hour",
-          "lower_bound": 10.0,
-          "upper_bound": 20.0,
+          "description": "between 20.0 and 50.0 mm/hour",
+          "lower_bound": 20.0,
+          "upper_bound": 50.0,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
-          "tick_is_at_bin_left_edge": true
+          "tick_is_at_bin_left_edge": true,
+          "rgb_shared_with_categories": [
+            10
+          ]
         },
         {
           "category_index": 10,
@@ -510,11 +513,14 @@
             156
           ],
           "description": "overflow at or above 50 mm/hour (left endpoint approximate; right side unbounded)",
-          "lower_bound": 20.0,
+          "lower_bound": 50.0,
           "upper_bound": null,
           "left_tick_approximate": true,
           "right_tick_approximate": true,
-          "tick_is_at_bin_left_edge": true
+          "tick_is_at_bin_left_edge": true,
+          "rgb_shared_with_categories": [
+            9
+          ]
         }
       ],
       "tick_labels": [
@@ -606,7 +612,7 @@
         129,
         20
       ],
-      "category": "below the first displayed 0.1 mm/hour boundary"
+      "category": "between 0.1 and 0.2 mm/hour"
     },
     {
       "legend": "liquid",
@@ -615,7 +621,7 @@
         139,
         82
       ],
-      "category": "between 0.1 and 0.2 mm/hour"
+      "category": "between 0.2 and 0.3 mm/hour"
     },
     {
       "legend": "liquid",
@@ -624,7 +630,7 @@
         179,
         48
       ],
-      "category": "between 0.2 and 0.3 mm/hour"
+      "category": "between 0.3 and 0.5 mm/hour"
     },
     {
       "legend": "liquid",
@@ -633,7 +639,7 @@
         211,
         0
       ],
-      "category": "between 0.3 and 0.5 mm/hour"
+      "category": "between 0.5 and 1.0 mm/hour"
     },
     {
       "legend": "liquid",
@@ -642,7 +648,7 @@
         231,
         0
       ],
-      "category": "between 0.5 and 1.0 mm/hour"
+      "category": "between 1.0 and 2.0 mm/hour"
     },
     {
       "legend": "liquid",
@@ -651,7 +657,7 @@
         251,
         0
       ],
-      "category": "between 1.0 and 2.0 mm/hour"
+      "category": "between 2.0 and 3.0 mm/hour"
     },
     {
       "legend": "liquid",
@@ -660,7 +666,7 @@
         196,
         0
       ],
-      "category": "between 2.0 and 3.0 mm/hour"
+      "category": "between 3.0 and 5.0 mm/hour"
     },
     {
       "legend": "liquid",
@@ -669,7 +675,7 @@
         147,
         0
       ],
-      "category": "between 3.0 and 5.0 mm/hour"
+      "category": "between 5.0 and 10.0 mm/hour"
     },
     {
       "legend": "liquid",
@@ -678,7 +684,7 @@
         0,
         0
       ],
-      "category": "between 5.0 and 10.0 mm/hour"
+      "category": "between 10.0 and 20.0 mm/hour"
     },
     {
       "legend": "liquid",
@@ -687,7 +693,7 @@
         0,
         0
       ],
-      "category": "between 10.0 and 20.0 mm/hour"
+      "category": "between 20.0 and 50.0 mm/hour"
     },
     {
       "legend": "liquid",
@@ -705,7 +711,7 @@
         255,
         255
       ],
-      "category": "below the first displayed 0.1 mm/hour boundary"
+      "category": "between 0.1 and 0.2 mm/hour"
     },
     {
       "legend": "frozen",
@@ -714,7 +720,7 @@
         221,
         255
       ],
-      "category": "between 0.1 and 0.2 mm/hour"
+      "category": "between 0.2 and 0.3 mm/hour"
     },
     {
       "legend": "frozen",
@@ -723,7 +729,7 @@
         187,
         255
       ],
-      "category": "between 0.2 and 0.3 mm/hour"
+      "category": "between 0.3 and 0.5 mm/hour"
     },
     {
       "legend": "frozen",
@@ -732,7 +738,7 @@
         154,
         255
       ],
-      "category": "between 0.3 and 0.5 mm/hour"
+      "category": "between 0.5 and 1.0 mm/hour"
     },
     {
       "legend": "frozen",
@@ -741,7 +747,7 @@
         122,
         255
       ],
-      "category": "between 0.5 and 1.0 mm/hour"
+      "category": "between 1.0 and 2.0 mm/hour"
     },
     {
       "legend": "frozen",
@@ -750,7 +756,7 @@
         93,
         255
       ],
-      "category": "between 1.0 and 2.0 mm/hour"
+      "category": "between 2.0 and 3.0 mm/hour"
     },
     {
       "legend": "frozen",
@@ -759,7 +765,7 @@
         70,
         255
       ],
-      "category": "between 2.0 and 3.0 mm/hour"
+      "category": "between 3.0 and 5.0 mm/hour"
     },
     {
       "legend": "frozen",
@@ -768,7 +774,7 @@
         47,
         217
       ],
-      "category": "between 3.0 and 5.0 mm/hour"
+      "category": "between 5.0 and 10.0 mm/hour"
     },
     {
       "legend": "frozen",
@@ -777,7 +783,7 @@
         33,
         187
       ],
-      "category": "between 5.0 and 10.0 mm/hour"
+      "category": "between 10.0 and 20.0 mm/hour"
     },
     {
       "legend": "frozen",
@@ -786,7 +792,7 @@
         20,
         156
       ],
-      "category": "between 10.0 and 20.0 mm/hour"
+      "category": "between 20.0 and 50.0 mm/hour"
     },
     {
       "legend": "frozen",
@@ -821,13 +827,15 @@
       74
     ]
   ],
-  "extraction_timestamp": "2026-11-14T19:51:09Z",
+  "extraction_timestamp": "2026-11-16T04:03:48Z",
   "verification_status": "estimated",
   "warnings": [],
   "limitations": [
     "RGB samples alone do not establish a scientific color-to-value mapping.",
     "NASA supplied ten regular rain/snow interval patches plus an overflow extension; interval boundary inclusivity is not encoded in official metadata.",
     "A separate grey swatch exists on the left and may indicate no rain/missing/other; no numeric meaning is assigned.",
+    "Each tick marks the left edge of its colored block: block 1 is 0.1-0.2 mm/hour and the block after the 20 tick is 20-50 mm/hour; only the arrow is overflow.",
+    "The frozen bar uses one RGB (140, 20, 156) for both the 20-50 mm/hour block and the overflow arrow; a pixel of that color is at least 20 mm/hour with no upper bound.",
     "Numeric bins were read and manually reviewed from official raster labels. No authoritative machine-readable mapping was found."
   ],
   "source_notes": {},

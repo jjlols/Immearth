@@ -7,6 +7,8 @@ export const TRACK = Object.freeze({
   title: 'Deliberate Thought',
   artist: 'Kevin MacLeod',
   licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+  /* Path under the site's base URL. Callers add the base (Vite BASE_URL). */
+  file: 'audio/deliberate-thought.mp3',
 });
 export const CO_PAD_GAINS = Object.freeze([0.008, 0.025, 0.05, 0.075, 0.10]);
 export const clamp = (value, min = 0, max = 1) =>
@@ -38,9 +40,14 @@ export function coPadGain(value) {
   return Number.isFinite(value) ? CO_PAD_GAINS[coTier(value)] : 0;
 }
 
+/* NASA's rain and snow bars: each tick marks the left edge of its block, so the
+ * last bounded block is 20–50 mm/hour and only the arrow (stored at its 50 lower
+ * bound) is overflow. Overflow is unquantified and keeps the region silent. */
+export const RAIN_OVERFLOW_MM_PER_HOUR = 50;
+
 /** Keep liquid/frozen classes separate rather than invent one shared rate scale. */
 export function precipitationDensities({ rain_count = 0, snow_count = 0, max_value } = {}) {
-  if (!Number.isFinite(max_value) || max_value > 20) return { rain: 0, frozen: 0 };
+  if (!Number.isFinite(max_value) || max_value >= RAIN_OVERFLOW_MM_PER_HOUR) return { rain: 0, frozen: 0 };
   const density = count => count > 0 ? Math.max(1, Math.min(8, Math.round(Math.log2(count + 1)))) : 0;
   return { rain: density(rain_count), frozen: density(snow_count) };
 }

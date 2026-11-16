@@ -30,22 +30,7 @@ def linear(pixel,lo,hi,p0,p1,log=False):
 def build_library(category,record=None):
     record=record or read_palette(category)
     if category=='precipitation':
-        entries=[]
-        for color in record['sampled_rgb_colors']:
-            legend=color.get('legend')
-            if legend not in ('liquid','frozen'):continue
-            label=color['category']
-            if label.startswith('between '):
-                left,right=label.split()[1],label.split()[3];low,high=float(left),float(right)
-                class_value=(low+high)/2
-            elif label.startswith('below '):
-                low,high,class_value=0.,.1,.05
-            elif label.startswith('overflow '):
-                low,high,class_value=20.,None,50.
-            else:
-                raise ValueError('Unknown rain class')
-            entries.append({'rgb':tuple(color['rgb']),'value':class_value,'interval':{'lower':low,'upper':high},'legend':legend,'label':label})
-        return entries
+        return precipitation_library(record)
     if not record['numeric_interpolation_supported']:
         return []
     ticks=sorted(record['tick_labels'], key=lambda tick:float(tick['pixel_position']))
@@ -62,6 +47,38 @@ def build_library(category,record=None):
         value=linear(position,low,high,pixel0,pixel1,record.get('scale_type')=='logarithmic')
         output.append({'rgb':tuple(color['rgb']),'value':value,'legend':'continuous','label':f'about {value:g}','interval':{'lower':low,'upper':high}})
     return output
+
+
+def precipitation_library(record):
+    """One entry per distinct liquid/frozen color, from the legends' recorded bounds.
+
+    Each NASA tick marks the left edge of its block, so block i is bins[i]..bins[i+1]
+    and only the arrow is overflow (lower 50, no upper bound). A bounded class is
+    stored at its interval midpoint; an unbounded one at its lower bound, never an
+    invented highest value. Where NASA draws two classes in one RGB (the frozen
+    20-50 block and its overflow arrow) the pixel cannot tell them apart, so they
+    merge into one class: at least 20 mm/hour, no upper bound.
+    """
+    entries=[]
+    for legend in record['legends']:
+        kind=legend['name']
+        if kind not in ('liquid','frozen'):continue
+        by_rgb={}
+        for category in legend['categories']:
+            by_rgb.setdefault(tuple(category['rgb']),[]).append(category)
+        for rgb,group in by_rgb.items():
+            lowers=[c['lower_bound'] for c in group];uppers=[c['upper_bound'] for c in group]
+            if any(value is None for value in lowers):raise ValueError('Rain class without a recorded lower bound')
+            low=float(min(lowers))
+            high=None if any(value is None for value in uppers) else float(max(uppers))
+            value=low if high is None else (low+high)/2
+            if len(group)==1:
+                label=group[0]['description']
+            else:
+                label=f'at or above {low:g} mm/hour (NASA draws '+' and '.join(c['description'] for c in group)+' in one color)'
+            entries.append({'rgb':rgb,'value':value,'interval':{'lower':low,'upper':high},'legend':kind,'label':label})
+    if not entries:raise ValueError('No liquid or frozen rain classes recorded')
+    return entries
 
 
 def span_position_default(span,index,count):

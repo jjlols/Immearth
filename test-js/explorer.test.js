@@ -31,3 +31,16 @@ test('movement does not steal keys from native controls or modifiers', () => {
   assert.equal(targetIsForm({ closest: () => null, isContentEditable: false }), false);
   assert.equal(targetIsForm(null), false);
 });
+
+test('a point on the map picks the cell under it, clamped to the 6 x 8 grid', async () => {
+  const { regionAtPoint, regionWords } = await import('../src/hooks/useExplorer.js');
+  assert.equal(regionAtPoint(0, 0, 800, 400), 0);
+  assert.equal(regionAtPoint(799.9, 399.9, 800, 400), 47);
+  // column = floor(x/width*8), row = floor(y/height*6): (350, 150) on 800x400 is row 2, column 3.
+  assert.equal(regionAtPoint(350, 150, 800, 400), 2 * 8 + 3);
+  assert.equal(regionAtPoint(800, 400, 800, 400), 47, 'the far edge stays in the last cell');
+  assert.equal(regionAtPoint(-5, -5, 800, 400), 0);
+  assert.equal(regionAtPoint(10, 10, 0, 400), null);
+  assert.equal(regionWords(0), 'Region 1 of 48, row 1 of 6, column 1 of 8');
+  assert.equal(regionWords(19), 'Region 20 of 48, row 3 of 6, column 4 of 8');
+});
