@@ -21,7 +21,8 @@
     "test:head-direction": "node scripts/verify_head_direction_mapping.js && node scripts/verify_head_live_synthetic.js && node scripts/verify_head_lifecycle.js",
     "test:head-model": "node scripts/check_head_calibration_live.mjs",
     "test:head-preview": "node scripts/test_head_preview.mjs",
-    "test:listening": "node scripts/verify_listening_default.js"
+    "test:listening": "node scripts/verify_listening_default.js",
+    "test:live-tour": "node scripts/verify_live_tour_ui.mjs"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "1.2.3",
